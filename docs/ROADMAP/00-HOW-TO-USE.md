@@ -45,6 +45,7 @@ Executed by coding agents in 3 days. Read this leaf, then only your current phas
 - **Shared files** (`package.json`, lockfile, `tsconfig*.json`, `vite.config.ts`, `tests/architecture/modules.json`, `.dependency-cruiser.cjs`, `biome.json`, CI workflow) are written in Step 0. A later change is made by lane A alone, at a milestone, announced to all lanes.
 - Modules with `ui/` export it through `ui/index.ts`, pre-wired in Step 0, so lane C never edits a B-owned `index.ts` (SPEC-ARCH-11).
 - Every `index.ts` declares its full public API from Step 0 (3.2). Lanes replace stub bodies, never signatures; a signature change follows the kernel change rule.
+- UI component names in `ui/index.ts` are frozen at G0; their `Props` interfaces are lane C's and may gain optional fields without the kernel change rule.
 
 ## Kernel change rule (after G0)
 
