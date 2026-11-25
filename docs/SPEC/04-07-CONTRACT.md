@@ -37,7 +37,7 @@ export const ContractScreen, RequirementRow, RequirementEditor: React.FC<…>;
 4. Map `checkKind` + `matchHint` + `expectedText/Count` → `CheckSpec`; checkType: `region-diff` → visual; `judged` and `position` → judged (S21); `colour` → measured (Judged at Run when no DOM); `presence` → visual (image ink test) unless a `matchHint` exists, then measured; others → measured. `expectedCount`/`expectedText` are proposals: their source tag is `contract` and only counts once the user accepts the Requirement (S7).
 5. Dedupe: same category and kernel `iou` ≥ 0.6 (`SPEC-KERNEL-10`) → keep the first. Cap 8 per band, `MAX_REQUIREMENTS` total. IDs `R-01…` in document order (top, then left).
 6. Every AI Requirement: `origin:'ai'`, `engine` from the response (PRD-F-03.2), `accepted:false`. Each call appends a `TraceStep` (engine, duration, bytes, mode, prompt version).
-7. Failures: `AI_BAD_OUTPUT` on a band → that band yields nothing and a notice "Band n could not be read — add requirements manually"; other bands continue (PRD-P-09).
+7. Failures: `AI_BAD_OUTPUT` on a band → that band yields nothing and a notice "Band n could not be read. Add requirements manually."; other bands continue (PRD-P-09).
 8. Output: per `SPEC-CON-09` (§4.7.5).
 9. Then Inferred generation runs (`SPEC-CON-04`).
 
@@ -65,7 +65,7 @@ Inferred statements start with "Expected on <viewport> (inferred):" and are advi
 |---|---|
 | `SPEC-CON-05` | Review (PRD-F-03.3): accept (one or all), edit statement/condition text, delete, add manual. Edits never change `check` except through the add form. Runs verify **accepted** Requirements only; unaccepted ones are listed as "Not in contract yet" and not verified. |
 | `SPEC-CON-06` | Lock (PRD-F-03.5): the Run service saves `lockContract(c)` after saving a Run (`SPEC-RUN-01` step 4). Any edit on a locked Contract creates `nextContractVersion(c)` (`SPEC-KERNEL-11`: `version+1`, new id, unlocked, same Requirement ids); `activeContractId` points to it. Every Run stores `contractId`. Editing via the API on a locked Contract without copy → `CONTRACT_LOCKED`. [P1] version history list. |
-| `SPEC-CON-07` | Region display: snapped rect outlined on the design; unresolved shown dashed with "Region not found — image checks need review". [P1] draw/adjust region (`setRegion`, source `user`). |
+| `SPEC-CON-07` | Region display: snapped rect outlined on the design; unresolved shown dashed with "Region not found: image checks need review". [P1] draw/adjust region (`setRegion`, source `user`). |
 | `SPEC-CON-08` | Each Requirement row shows: id, viewport, category, label (Explicit/Inferred, text + icon), check type, statement, condition, Engine badge (`ai`) or "Added by you"/"Rule"/"Sample (verified)". |
 | `SPEC-CON-09` | Extraction output (PRD-F-03.5): with no Contract yet → a new unlocked Contract v1. With an existing Contract → a new **unlocked version** (`nextContractVersion`, `SPEC-KERNEL-11`) holding the new AI items plus the user's manual (`origin:'user'`) items; it becomes active. On a sample Project the result is stored as `pendingAiContractId` and shown in the comparison panel; it becomes active only on **Use AI contract** (`SPEC-DEMO-03`). |
 

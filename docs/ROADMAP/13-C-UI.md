@@ -7,14 +7,14 @@
 | **Depends on** | G0. Budget 2.8 h, lane C. 13.1 Day 1; 13.2–13.6 Day 2 |
 | **Delivers** | Tokens, copy, `StateNotice`, every screen and component of SPEC §5.1 under `src/features/*/ui/` |
 | **Read** | SPEC §5, §4.12 (components), §4.5.1, §4.7.5, §4.8.1, §4.9, §4.11.1, §6.2 (SPEC-SEC-06), §9 (S10, S13) |
-| **Covers** | SPEC-UI-01..06, SPEC-PROJ-03, SPEC-PROJ-04, PRD-F-02.3, PRD-F-04.4, SPEC-SET-06, SPEC-SET-08..10, SPEC-DEEP-01, SPEC-SEC-06, PRD-P-06, PRD-P-08, PRD-P-12, PRD-F-05.4, PRD-F-11.5, PRD-F-12.2, PRD-F-13.1, PRD §11 items 12, 13 |
+| **Covers** | SPEC-UI-01..07, S30, SPEC-PROJ-03, SPEC-PROJ-04, PRD-F-02.3, PRD-F-04.4, SPEC-SET-06, SPEC-SET-08..10, SPEC-DEEP-01, SPEC-SEC-06, PRD-P-06, PRD-P-08, PRD-P-12, PRD-F-05.4, PRD-F-11.5, PRD-F-12.2, PRD-F-13.1, PRD §11 items 12, 13 |
 
 Components take services and data as props; navigation is a callback prop (SPEC-ARCH-07). No free-text chat input anywhere (PRD-P-08). Component tests in `tests/component/`.
 
 ### 13.1 Tokens, copy, StateNotice · C · 0.4 h · needs G0
-- [ ] `app/styles/tokens.css` + `@theme` per SPEC-UI-02; light/dark by `prefers-color-scheme` (S10).
-- [ ] `tests/unit/contrast.test.ts` (SPEC-UI-03); grep test: no hex literal in `src/**/*.{ts,tsx,css}` except `app/styles/tokens.css`.
-- [ ] `app/copy.ts`: every string of SPEC §5.4, privacy statement (PRD §6); `StateNotice` keyed by `ErrorCode`/reason (SPEC-UI-05).
+- [ ] `app/styles/tokens.css` + `app/styles/tokens.tailwind.css` (`@theme`) copied from the files generated from `design/tokens.json` per SPEC-UI-02 (S30); light/dark by `prefers-color-scheme` (S10); IBM Plex imported only as `@fontsource/ibm-plex-sans/latin-{400,500,600}.css` and `@fontsource/ibm-plex-mono/latin-{400,500}.css` (SPEC-PWA-03).
+- [ ] `tests/unit/contrast.test.ts` (SPEC-UI-03); grep test: no hex literal in `src/**/*.{ts,tsx,css}` except `app/styles/tokens.css` and `app/styles/tokens.tailwind.css`.
+- [ ] `app/copy.ts`: every string of SPEC §5.4, privacy statement (PRD §6); `StateNotice` keyed by `ErrorCode`/reason (SPEC-UI-05); no em dash in any string (SPEC-UI-07).
 - [ ] `copy.ts` also holds the SPEC-APP-02/03/06 and SPEC-PWA-05 strings (header pills, error screen, "Configuration error", update toast, not found); A imports them.
 
 **Accept:** contrast test green and fails when a token drops below its ratio; one component test per `ErrorCode` copy.
@@ -27,7 +27,7 @@ Components take services and data as props; navigation is a callback prop (SPEC-
 
 ### 13.3 Projects, Project page, snippet UI · C · 0.4 h · needs 11.1, 13.1
 - [ ] `ProjectsScreen` (cards, empty state), `ProjectInputs` with stepper and per-viewport columns, `ImageDropZone` (button, picker, drop, paste; formats and limits printed) (SPEC §5.1, SPEC-PROJ-01, SPEC-PROJ-02).
-- [ ] Viewport select prefilled from `suggestViewport`, changeable before save (SPEC-PROJ-03, PRD-F-02.3); stale notice "Captures changed — Re-verify" per viewport (derived: latest Run `captureIds` ≠ current capture) (SPEC-PROJ-04).
+- [ ] Viewport select prefilled from `suggestViewport`, changeable before save (SPEC-PROJ-03, PRD-F-02.3); stale notice "Captures changed: Re-verify" per viewport (derived: latest Run `captureIds` ≠ current capture) (SPEC-PROJ-04).
 - [ ] `SnippetPanel` (code block, Copy, 3 steps, privacy line) and `SnapshotPasteField` (errors, "Use anyway") (PRD-F-13.1, SPEC-SNIP-08).
 
 **Accept:** drop zone is a keyboard-operable button; each input path calls the service; viewport can be changed before save; stale notice only on the replaced viewport; invalid snapshot shows ≤ 5 messages.

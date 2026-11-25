@@ -37,7 +37,7 @@ A small script the user copies from the app and runs on **their own page** (DevT
 | Use | Example |
 |---|---|
 | Measured size/position | "CTA width 132 px vs design 220 px." |
-| Typography hierarchy | "h1 is 28 px; subtitle is 32 px — heading is not the dominant text." |
+| Typography hierarchy | "h1 is 28 px; subtitle is 32 px: heading is not the dominant text." |
 | Presence and content | "Navigation has 3 links; design shows 4." |
 | Overflow and overlap | "Page scrolls horizontally by 64 px at 390 px width; nav overlaps hero heading." |
 | Fix prompt precision | Selectors and computed values go into the Fix prompt. |

@@ -35,10 +35,10 @@ Owns `src/app/**` except `app/styles/` and `app/copy.ts` (lane C). Feature UI ar
 
 ### 7.4 Manifest, icons, service worker · A · 0.5 h · needs 4.1
 - [ ] Manifest fields of SPEC §4.13.3 (no `share_target`, P1); icons from `npm run icons` committed (SPEC-PWA-01).
-- [ ] `sw.ts`: precache incl. lazy chunks and sample assets, `NavigationRoute`, no cross-origin caching (SPEC-PWA-03, SPEC-PWA-04, SPEC-DEMO-06).
+- [ ] `sw.ts`: precache incl. lazy chunks, sample assets and the 5 Latin `.woff2` font files (`globPatterns` with `woff2`, no `woff`), `NavigationRoute`, no cross-origin caching (SPEC-PWA-03, SPEC-PWA-04, SPEC-DEMO-06).
 - [ ] Install button from `beforeinstallprompt` (SPEC-PWA-02); update toast via `workbox-window` (SPEC-PWA-05).
 
-**Accept:** manifest field test; route/denylist config test; no cross-origin strategy; update toast test with a stubbed `waiting` event.
+**Accept:** manifest field test; route/denylist config test; no cross-origin strategy; precache manifest lists exactly 5 `.woff2` font files and no `.woff`; update toast test with a stubbed `waiting` event.
 
 ## Exit gate
 

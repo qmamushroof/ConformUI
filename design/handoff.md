@@ -4,7 +4,7 @@ For the agents building ROADMAP phase 13 (UI). Read alongside `DESIGN.md`, which
 
 ## Tokens
 - The source is `design/tokens.json`. Regenerate with `node <do-design>/scripts/tokens.mjs design/tokens.json design --tailwind`.
-- `tokens.css` holds the CSS variables, light/dark through `prefers-color-scheme` plus `[data-theme]`. Copy it to `src/app/styles/tokens.css`.
+- `tokens.css` holds the CSS variables, light/dark through `prefers-color-scheme` plus `[data-theme]` (the `[data-theme]` blocks are inert in release 1, S10: no manual toggle). Copy it to `src/app/styles/tokens.css`.
 - `tokens.tailwind.css` holds the `@theme` mapping; import it after `@import "tailwindcss"`.
 - SPEC-UI-03's contrast test should assert the pairs in `tokens.json` (`$pairs` + roles); 64 pairs pass AA today.
 - The no-hex grep test still applies. The sample-artwork SVGs are exempt because they are images.
@@ -37,7 +37,7 @@ Breakpoints: 640 (sheets become bottom sheets; the stepper collapses to "Step n 
 
 ## Signature: dimension lines (ComparisonView, Contract canvas)
 - SVG overlays use the same coordinate system as the design image (design px). Design region: solid `--accent`, 3 px. Implementation region: dashed ink (`#111827` on the white capture), 3 px, dash 8/6.
-- A dimension line is a 2 px line with 16 px end ticks. Its label is Plex Mono 600 at 17 design-px, with a white knockout rect behind it, placed outside the region.
+- A dimension line is a 2 px line with 16 px end ticks. Its label is Plex Mono 500 at 17 design-px, with a white knockout rect behind it, placed outside the region.
 - The delta bracket on the implementation is a red dashed segment from the actual end to the expected end, labelled with the signed difference ("−88").
 - Diff overlay: `--diff` at 60 % opacity, toggled by an `aria-pressed` button. The note below the images states the percentage in text.
 - Helpers are in run.html (`dimH`, `dimV`, `outline`). Port them as `<DimensionLine>`, `<RegionOutline>` and `<DiffMask>` inside `ComparisonView`.

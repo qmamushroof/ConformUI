@@ -179,6 +179,7 @@ export function resolveMode(i: { setting: Settings['mode']; purpose: 'first-pass
 | `AI_BLOCKED` / `AI_FAILED` | safety block / other SDK, network, timeout | no / yes |
 | `CONSENT_REQUIRED` | cloud-capable mode without matching token (defect guard) | no |
 | `CONTRACT_LOCKED` / `STORAGE_FAILED` | edit of locked Contract / IndexedDB | no / yes |
+| `STORAGE_UNAVAILABLE` | IndexedDB cannot be opened at start (`openStorage`, `SPEC-STORE-04`) | yes (Reload) |
 
 ## 4.1.6 Runtime values (`kernel/runtime-values.ts`, PRD-H-07)
 

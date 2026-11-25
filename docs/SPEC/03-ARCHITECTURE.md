@@ -30,7 +30,7 @@ src/
   features/demo/          sample loader, sample/ assets (incl. sample/precomputed/) (+ ui/)
   features/settings/      engine panel, mode, consent, privacy counter, onboarding (+ ui/)
   app/                    compose.ts, routes, layout, sw.ts, main.tsx, env.ts,
-                          copy.ts, styles/tokens.css, testing/fake-ai-engine.ts (E2E seam only)
+                          copy.ts, styles/tokens.css + styles/tokens.tailwind.css, testing/fake-ai-engine.ts (E2E seam only)
 tests/{unit,component,architecture,e2e}/  tests/fixtures/  tests/tsconfig.json
 tests/architecture/modules.json (single module table, §3.5)  tests/architecture/fixtures/violation/ (§3.6)
 ```

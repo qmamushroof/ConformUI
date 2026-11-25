@@ -2,7 +2,7 @@
 
 **[◀ 1. Document Identity](01-DOCUMENT-IDENTITY.md)** · [SPEC index](../SPEC.md) · **[3. Architecture ▶](03-ARCHITECTURE.md)**
 
-Implements PRD-D-02. Versions verified against the npm registry and nodejs.org on 2026-11-24; additions (`pixelmatch`, `pngjs`, `@types/pngjs`) and `firebase` were re-checked on 2026-11-25 with `npm view <pkg> version peerDependencies engines`. Where the registry `latest` is newer (`@biomejs/biome` 2.6.9, `react-router` 8.5.3, `typescript` 7.0.2) the verified version is kept (S2).
+Implements PRD-D-02. Versions verified against the npm registry and nodejs.org on 2026-11-24; additions (`pixelmatch`, `pngjs`, `@types/pngjs`, `@fontsource/ibm-plex-sans`, `@fontsource/ibm-plex-mono`) and `firebase` were re-checked on 2026-11-25 with `npm view <pkg> version peerDependencies engines`. Where the registry `latest` is newer (`@biomejs/biome` 2.6.9, `react-router` 8.5.3, `typescript` 7.0.2) the verified version is kept (S2).
 
 `SPEC-STACK-01`: pin **exact** versions in `package.json` (no `^`/`~`); commit `package-lock.json`; `npm ci` everywhere. An architecture test asserts no range specifiers (`SPEC-ARCH-06`).
 
@@ -29,8 +29,10 @@ Implements PRD-D-02. Versions verified against the npm registry and nodejs.org o
 | idb | 8.0.4 | Typed IndexedDB wrapper (§4.6) |
 | pixelmatch | **8.0.0** (published 2026-10-06; ESM, ships `index.d.ts`; `index.js` has no imports) | Region pixel diff with anti-aliasing detection (`includeAA:false`) and OKLab HyAB colour distance (§4.4). Its `pngjs` dependency is used only by its CLI, so the browser bundle stays dependency-free |
 | workbox-window | 7.4.1 | Service worker registration/update (§4.13) |
+| @fontsource/ibm-plex-sans | 5.3.0 (published 2026-07-19; OFL-1.1) | UI font, weights 400/500/600, Latin subset woff2 only; self-hosted and precached (§5.2, `SPEC-PWA-03`, S30) |
+| @fontsource/ibm-plex-mono | 5.3.0 (published 2026-07-19; OFL-1.1) | Code, IDs, selectors, dimension labels; weights 400/500, Latin subset woff2 only (§5.2, S30) |
 
-No state library, no UI kit, no icon font (inline SVG), no analytics, no canvas/image library besides `pixelmatch` (decode/resize use browser `createImageBitmap` + `OffscreenCanvas`, §4.4).
+No state library, no UI kit, no icon font (inline SVG), no font CDN (fonts are bundled), no analytics, no canvas/image library besides `pixelmatch` (decode/resize use browser `createImageBitmap` + `OffscreenCanvas`, §4.4).
 
 ## 2.3 Dev dependencies
 
@@ -66,3 +68,4 @@ No state library, no UI kit, no icon font (inline SVG), no analytics, no canvas/
 - Node 26.13.1 satisfies engines of Vite, Vitest, jsdom, dependency-cruiser, react-router, pngjs.
 - `firebase` 13.4.0 = registry `latest` on 2026-11-25; `@firebase/ai` 3.1.0 typings inspected (§4.3.1).
 - pixelmatch 8.0.0 is `latest`, older than two weeks, no peer dependencies, no engines constraint.
+- `@fontsource/ibm-plex-sans` and `@fontsource/ibm-plex-mono` 5.3.0 = registry `latest` on 2026-11-25, older than two weeks, CSS + font files only (no JS, no peers).

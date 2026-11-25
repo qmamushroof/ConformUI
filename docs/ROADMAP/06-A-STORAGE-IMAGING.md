@@ -14,9 +14,9 @@ Until this merges (M2), features use the in-memory stores from 3.6. Touches only
 ### 6.1 openStorage · A · 0.75 h · needs G0
 - [ ] DB `conformui` v1, stores and indexes, upgrade switch, newer-DB read-only (SPEC-STORE-01).
 - [ ] `ProjectStore`, `BlobStore`, `SettingsStore` implementations; one-transaction cascade `remove`; `clearAll` keeps `deepUsage` (SPEC-STORE-02).
-- [ ] zod-validated reads, invalid record skipped and counted (SPEC-STORE-03); `STORAGE_FAILED` mapping and one-time `persist()` (SPEC-STORE-04); no network (SPEC-STORE-05).
+- [ ] zod-validated reads, invalid record skipped and counted (SPEC-STORE-03); `STORAGE_UNAVAILABLE` (open fails) and `STORAGE_FAILED` mapping and one-time `persist()` (SPEC-STORE-04); no network (SPEC-STORE-05).
 
-**Accept:** SPEC §4.6.4 storage tests with `fake-indexeddb`: round trip per store, cascade leaves no orphan blobs, corrupt record skipped, `clearAll` keeps `deepUsage`, newer version read-only.
+**Accept:** SPEC §4.6.4 storage tests with `fake-indexeddb`: round trip per store, cascade leaves no orphan blobs, corrupt record skipped, `clearAll` keeps `deepUsage`, newer version read-only, open failure (stubbed `indexedDB.open` error) → `CuiError` `STORAGE_UNAVAILABLE` with no store touched.
 
 ### 6.2 createImageCodec · A · 0.5 h · needs G0
 - [ ] `normalise`: accepted MIME and limits, decode, resample to `cssWidth`, height cap, PNG output (SPEC-MEAS-01, SPEC-MEAS-02).

@@ -51,7 +51,7 @@ PRD column uses short form; read as `PRD-<id>`.
 | D-02, D-03, D-14 | §2, §3, ARCH-10/11 |
 | D-13, D-30 | DEPLOY-04 |
 | D-28 | DEMO §4.11.2, S28 |
-| D-31 | UI-02, PWA-01, S19 |
+| D-31 | UI-02, PWA-01, S19, S30 |
 
 ## 10.2 Open VERIFY items (each = a spike in the first build step; record results per §1.2). Closed: A5 (the SDK always sets `inferenceSource`; the missing-value branch is defensive only), `initialPrompts` content form (typings), D2 (no deploy workflow).
 
