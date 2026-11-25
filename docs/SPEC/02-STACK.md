@@ -60,7 +60,7 @@ No state library, no UI kit, no icon font (inline SVG), no font CDN (fonts are b
 |---|---|
 | `SPEC-STACK-02` | Lint/format = Biome; boundaries = dependency-cruiser + TS project references. Adding ESLint, a state library, a UI kit or an image library requires an `S#` entry. |
 | `SPEC-STACK-03` | `pixelmatch` is imported only in `features/measure` (`SPEC-ARCH-05`). Its `threshold` semantics changed in v8 (OKLab HyAB); thresholds in §4.1.6 are tuned for 8.0.0 and pinned with it. |
-| `SPEC-STACK-04` | Compatibility proof = `npm ci && npm run typecheck && npm run build && npm test` on a clean clone. Peer warnings are fixed by pinning, never `--force`/`--legacy-peer-deps`. |
+| `SPEC-STACK-04` | Compatibility proof = `npm ci && npm run typecheck && npm run build && npm test` on a clean clone. Peer warnings are fixed by pinning, never `--force`/`--legacy-peer-deps`. The one `overrides` entry (`@grpc/grpc-js` under `@firebase/firestore`) is recorded in S31. |
 
 ## 2.5 Compatibility checks done
 
