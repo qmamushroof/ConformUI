@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="ConformUI">
+  <title>ConformUI</title>
+  <!-- Logo spec: straight segments only. C = 40x40 square with the right side open in the middle
+       (stubs of 10 at top and bottom). Inside, centred at (32,32): U (three segments) and I (one
+       segment), every segment 12 long, 6 apart (U right leg x=35, I x=41). Stroke 2, square caps,
+       miter joins. Colour = primary token #2563EB. -->
+  <g fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">
+    <path d="M52 22 V12 H12 V52 H52 V42"/>
+    <path d="M23 26 V38 H35 V26"/>
+    <path d="M41 26 V38"/>
+  </g>
+</svg>
