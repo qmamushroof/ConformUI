@@ -4,4 +4,6 @@
 
 @docs/SPEC.md
 
-@docs/ROADMAP.md
+Follow docs/ROADMAP.md
+
+Final UI/UX must be exactly like @design/prototype/
