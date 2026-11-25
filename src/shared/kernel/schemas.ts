@@ -65,21 +65,23 @@ export * from './enums';
 
 // Vocabulary: each zod enum must equal its TypeScript union in both directions (compile-time only).
 type Same<A, B> = [A] extends [B] ? ([B] extends [A] ? true : never) : never;
-export type VocabularyChecks = [
-  Same<z.infer<typeof ViewportIdSchema>, ViewportId>,
-  Same<z.infer<typeof EngineSchema>, Engine>,
-  Same<z.infer<typeof OriginSchema>, Origin>,
-  Same<z.infer<typeof CategorySchema>, Category>,
-  Same<z.infer<typeof LabelSchema>, Label>,
-  Same<z.infer<typeof CheckTypeSchema>, CheckType>,
-  Same<z.infer<typeof StatusSchema>, Status>,
-  Same<z.infer<typeof NotCheckedReasonSchema>, NotCheckedReason>,
-  Same<z.infer<typeof SeveritySchema>, Severity>,
-  Same<z.infer<typeof ConfidenceSchema>, Confidence>,
-  Same<z.infer<typeof ChangeSchema>, Change>,
-  Same<z.infer<typeof SourceTagSchema>, SourceTag>,
-  Same<z.infer<typeof AiModeSchema>, AiMode>,
-  Same<z.infer<typeof AiTaskSchema>, AiTask>,
+type MustBeTrue<T extends true> = T;
+// biome-ignore lint/correctness/noUnusedVariables: compile-time assertion only
+type VocabularyChecks = [
+  MustBeTrue<Same<z.infer<typeof ViewportIdSchema>, ViewportId>>,
+  MustBeTrue<Same<z.infer<typeof EngineSchema>, Engine>>,
+  MustBeTrue<Same<z.infer<typeof OriginSchema>, Origin>>,
+  MustBeTrue<Same<z.infer<typeof CategorySchema>, Category>>,
+  MustBeTrue<Same<z.infer<typeof LabelSchema>, Label>>,
+  MustBeTrue<Same<z.infer<typeof CheckTypeSchema>, CheckType>>,
+  MustBeTrue<Same<z.infer<typeof StatusSchema>, Status>>,
+  MustBeTrue<Same<z.infer<typeof NotCheckedReasonSchema>, NotCheckedReason>>,
+  MustBeTrue<Same<z.infer<typeof SeveritySchema>, Severity>>,
+  MustBeTrue<Same<z.infer<typeof ConfidenceSchema>, Confidence>>,
+  MustBeTrue<Same<z.infer<typeof ChangeSchema>, Change>>,
+  MustBeTrue<Same<z.infer<typeof SourceTagSchema>, SourceTag>>,
+  MustBeTrue<Same<z.infer<typeof AiModeSchema>, AiMode>>,
+  MustBeTrue<Same<z.infer<typeof AiTaskSchema>, AiTask>>,
 ];
 
 // Geometry and images
