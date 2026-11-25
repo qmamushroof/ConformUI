@@ -132,11 +132,19 @@ describe('SPEC-KERNEL-04: purpose deep', () => {
     ).toEqual({ kind: 'blocked', reason: 'offline' });
   });
 
-  it('SPEC-KERNEL-06 [P1]: on-device-only never reaches the cloud, deep included', () => {
+  it('SPEC-KERNEL-04, S32, PRD-H-04: on-device-only never reaches the cloud, deep included -> blocked mode-on-device-only', () => {
     expect(resolveMode(first({ purpose: 'deep', setting: 'on-device-only', deepConsent: deep }))).toEqual({
       kind: 'blocked',
-      reason: 'cloud-disabled',
+      reason: 'mode-on-device-only',
     });
+  });
+
+  it('SPEC-KERNEL-04, S32: offline is checked before on-device-only (deep)', () => {
+    expect(
+      resolveMode(
+        first({ purpose: 'deep', setting: 'on-device-only', deepConsent: deep, status: status({ online: false }) }),
+      ),
+    ).toEqual({ kind: 'blocked', reason: 'offline' });
   });
 });
 

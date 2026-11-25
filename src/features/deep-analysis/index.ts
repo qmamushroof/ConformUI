@@ -40,7 +40,7 @@ export interface DeepPreview {
 
 export type DeepAvailability =
   | { ok: true }
-  | { ok: false; reason: 'offline' | 'cloud-disabled' | 'daily-cap' | 'nothing-to-refine' };
+  | { ok: false; reason: 'offline' | 'cloud-disabled' | 'mode-on-device-only' | 'daily-cap' | 'nothing-to-refine' };
 
 export interface DeepService {
   availability(run: Run, status: EngineStatus): Promise<DeepAvailability>;

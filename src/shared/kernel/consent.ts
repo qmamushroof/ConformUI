@@ -45,9 +45,9 @@ export function resolveMode(i: {
   const deviceUsable = status.device === 'available' && (!i.needsImage || status.deviceImage === true);
 
   if (i.purpose === 'deep') {
-    // SPEC-KERNEL-04. `on-device-only` [P1] never reaches the cloud, Deep Analysis included.
-    if (i.setting === 'on-device-only') return cloudDisabled;
+    // SPEC-KERNEL-04, S32. Offline first; then `on-device-only` [P1] never reaches the cloud, Deep Analysis included.
     if (!status.online) return offline;
+    if (i.setting === 'on-device-only') return { kind: 'blocked', reason: 'mode-on-device-only' };
     if (status.cloud === 'disabled') return cloudDisabled;
     if (!deep) return { kind: 'needs-consent', why: 'cloud-only-mode' };
     return { kind: 'call', mode: 'ONLY_IN_CLOUD', consent: deep };

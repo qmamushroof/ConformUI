@@ -31,6 +31,7 @@ export const NotCheckedReasonSchema = z.enum([
   'ai-invalid-output',
   'ai-failed',
   'cloud-disabled',
+  'mode-on-device-only',
   'no-inferred-items',
 ]);
 export const SeveritySchema = z.enum(['critical', 'major', 'minor']);

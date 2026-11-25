@@ -33,6 +33,7 @@ export type NotCheckedReason =
   | 'ai-invalid-output'
   | 'ai-failed'
   | 'cloud-disabled'
+  | 'mode-on-device-only'
   | 'no-inferred-items';
 export type Severity = 'critical' | 'major' | 'minor';
 export type Confidence = 'high' | 'medium' | 'low';

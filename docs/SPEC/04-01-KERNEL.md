@@ -19,7 +19,7 @@ export type Label = 'explicit' | 'inferred';
 export type CheckType = 'measured' | 'visual' | 'judged';
 export type Status = 'pass' | 'fail' | 'needs-review' | 'not-checked';
 export type NotCheckedReason = 'no-capture' | 'no-dom-snapshot' | 'offline' | 'consent-declined' | 'device-unavailable'
-  | 'region-unresolved' | 'misaligned' | 'outside-capture' | 'ai-invalid-output' | 'ai-failed' | 'cloud-disabled' | 'no-inferred-items';
+  | 'region-unresolved' | 'misaligned' | 'outside-capture' | 'ai-invalid-output' | 'ai-failed' | 'cloud-disabled' | 'mode-on-device-only' | 'no-inferred-items';
 export type Severity = 'critical' | 'major' | 'minor';
 export type Confidence = 'high' | 'medium' | 'low';
 export type Change = 'resolved' | 'remaining' | 'new' | 'regressed' | 'still-passing';
@@ -150,7 +150,7 @@ export function resolveMode(i: { setting: Settings['mode']; purpose: 'first-pass
 
 | ID | Rule (`resolveMode`, pure, table-tested) |
 |---|---|
-| `SPEC-KERNEL-04` | `deep` → `ONLY_IN_CLOUD` with `deepConsent`; without it → `needs-consent cloud-only-mode`. Offline → `blocked offline` (checked first, with or without consent); `cloud:'disabled'` → `blocked cloud-disabled`; [P1] setting `on-device-only` → `blocked cloud-disabled`. A token of the wrong scope counts as no consent. |
+| `SPEC-KERNEL-04` | `deep` → `ONLY_IN_CLOUD` with `deepConsent`; without it → `needs-consent cloud-only-mode`. Offline → `blocked offline` (checked first, with or without consent); `cloud:'disabled'` → `blocked cloud-disabled`; [P1] setting `on-device-only` (checked after offline) → `blocked mode-on-device-only` (S32). A token of the wrong scope counts as no consent. |
 | `SPEC-KERNEL-05` | `auto` + no project consent: device `available` and (`!needsImage` or `deviceImage===true`) → `ONLY_ON_DEVICE`; device available, `needsImage`, no image support → `needs-consent device-no-image`; `downloading` → `needs-consent device-downloading` (UI offers wait or cloud, PRD-H-06); `downloadable`/`unavailable` → `needs-consent device-unavailable`. Never `PREFER_*`. Table rows include: available + `deviceImage:false` + `needsImage:false` → `ONLY_ON_DEVICE` (text-only judge, §4.8.2). |
 | `SPEC-KERNEL-06` | `auto` + project consent → `PREFER_ON_DEVICE` (offline and device not usable → `blocked offline`; `cloud:'disabled'` → `ONLY_ON_DEVICE` when the device is usable, else `blocked cloud-disabled`, since `SPEC-AI-09` rejects any cloud-capable call). `cloud-only` → `ONLY_IN_CLOUD`, needs project consent else `needs-consent cloud-only-mode`; offline → `blocked offline`, `cloud:'disabled'` → `blocked cloud-disabled` (both before the consent check). [P1] `on-device-only` → `ONLY_ON_DEVICE` or `blocked device-unavailable`, never cloud. |
 
