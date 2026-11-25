@@ -10,19 +10,19 @@
 | **Covers** | SPEC-STACK-01..04, SPEC-ARCH-00..06, SPEC-ARCH-10, SPEC-ARCH-11, SPEC-KERNEL-01..12, SPEC-AI-12, SPEC-TEST-01, SPEC-TEST-02, SPEC-DEPLOY-03, SPEC-SEC-10 |
 
 ### 3.1 Toolchain and pins · 0 · 0.5 h · needs 2.1
-- [ ] `.nvmrc` (`26`); `package.json` with every package of SPEC §2.1–2.3 at its exact version, `engines`, `"license": "Apache-2.0"`, `"repository"` (SPEC-DEPLOY-04).
-- [ ] Scripts: `dev`, `build`, `preview`, `typecheck` (`tsc -b`), `lint` (`biome ci`), `depcruise`, `test`, `test:e2e`, `icons`, `sample:capture`, `check:fast`, `check` (SPEC §7.7 order).
-- [ ] `package-lock.json`; `biome.json` (no `any`, no `dangerouslySetInnerHTML`, `console.*` only per SPEC-SEC-04); `.gitignore` (SPEC-DEPLOY-04); `.env.example` (SPEC-DEPLOY-02).
+- [x] `.nvmrc` (`26`); `package.json` with every package of SPEC §2.1–2.3 at its exact version, `engines`, `"license": "Apache-2.0"`, `"repository"` (SPEC-DEPLOY-04).
+- [x] Scripts: `dev`, `build`, `preview`, `typecheck` (`tsc -b`), `lint` (`biome ci`), `depcruise`, `test`, `test:e2e`, `icons`, `sample:capture`, `check:fast`, `check` (SPEC §7.7 order).
+- [x] `package-lock.json`; `biome.json` (no `any`, no `dangerouslySetInnerHTML`, `console.*` only per SPEC-SEC-04); `.gitignore` (SPEC-DEPLOY-04); `.env.example` (SPEC-DEPLOY-02).
 
 **Accept:** SPEC-STACK-04 proof on a clean clone with no peer warnings; SPEC-STACK-01.
 
 ### 3.2 Module table and skeletons · 0 · 0.6 h · needs 3.1
-- [ ] `tests/architecture/modules.json` = SPEC §3.2 table (SPEC-ARCH-10).
-- [ ] Each module: composite `tsconfig.json` whose `references` come from `modules.json`, `lib`/`types` per SPEC-ARCH-04; `ui/index.ts` (empty, re-exported by `index.ts`) where the module has UI; empty `prompts/` where SPEC §3.1 lists them.
-- [ ] Each `index.ts` declares the module's public API from its SPEC §4.x.1 block. Interfaces are complete; each factory is a stub that throws `new Error('not implemented')`. Lanes replace the bodies, never the signatures (a signature change follows the kernel change rule). Includes `RunService.rejudge`, `DeepService.applyPrecomputed` and `ContractService.loadPrecomputedExtraction` (S29).
-- [ ] `tsconfig.base.json` paths, root solution `tsconfig.json`, `tests/tsconfig.json`.
-- [ ] `vite.config.ts`: aliases read from `modules.json`; react, `@tailwindcss/vite`, `vite-plugin-pwa` (`injectManifest`, `registerType: 'prompt'`, placeholder `src/app/sw.ts`); `--mode e2e`; `define`/env injection of `VITE_APP_VERSION` from the git sha. Vitest (node + jsdom) and `playwright.config.ts` (e2e build + preview).
-- [ ] Placeholders for later lanes: `index.html` (SPEC-APP-04 metas), `src/app/main.tsx`, `src/app/styles/tokens.css`, `src/app/copy.ts`, `public/icon.svg` and `public/favicon.svg` copied unchanged from `docs/brand/` (SPEC-PWA-01), `firebase.json` per SPEC §8.1 without CSP and with `"remoteconfig": { "template": "remoteconfig.template.json" }`, `.firebaserc`.
+- [x] `tests/architecture/modules.json` = SPEC §3.2 table (SPEC-ARCH-10).
+- [x] Each module: composite `tsconfig.json` whose `references` come from `modules.json`, `lib`/`types` per SPEC-ARCH-04; `ui/index.ts` (empty, re-exported by `index.ts`) where the module has UI; empty `prompts/` where SPEC §3.1 lists them.
+- [x] Each `index.ts` declares the module's public API from its SPEC §4.x.1 block. Interfaces are complete; each factory is a stub that throws `new Error('not implemented')`. Lanes replace the bodies, never the signatures (a signature change follows the kernel change rule). Includes `RunService.rejudge`, `DeepService.applyPrecomputed` and `ContractService.loadPrecomputedExtraction` (S29).
+- [x] `tsconfig.base.json` paths, root solution `tsconfig.json`, `tests/tsconfig.json`.
+- [x] `vite.config.ts`: aliases read from `modules.json`; react, `@tailwindcss/vite`, `vite-plugin-pwa` (`injectManifest`, `registerType: 'prompt'`, placeholder `src/app/sw.ts`); `--mode e2e`; `define`/env injection of `VITE_APP_VERSION` from the git sha. Vitest (node + jsdom) and `playwright.config.ts` (e2e build + preview).
+- [x] Placeholders for later lanes: `index.html` (SPEC-APP-04 metas), `src/app/main.tsx`, `src/app/styles/tokens.css`, `src/app/copy.ts`, `public/icon.svg` and `public/favicon.svg` copied unchanged from `docs/brand/` (SPEC-PWA-01), `firebase.json` per SPEC §8.1 without CSP and with `"remoteconfig": { "template": "remoteconfig.template.json" }`, `.firebaserc`.
 
 **Accept:** `tsc -b` and `npm run build` pass; build emits a service worker; every SPEC §4.x.1 export exists with its signature; SPEC-ARCH-00, SPEC-ARCH-04.
 

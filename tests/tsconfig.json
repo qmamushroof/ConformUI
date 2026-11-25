@@ -1,0 +1,58 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "../node_modules/.cache/tsc/tests",
+    "tsBuildInfoFile": "../node_modules/.cache/tsc/tests/tsconfig.tsbuildinfo",
+    "types": ["node"]
+  },
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["architecture/fixtures"],
+  "references": [
+    {
+      "path": "../src/shared/kernel"
+    },
+    {
+      "path": "../src/platform/firebase"
+    },
+    {
+      "path": "../src/platform/ai-engine"
+    },
+    {
+      "path": "../src/platform/storage"
+    },
+    {
+      "path": "../src/platform/imaging"
+    },
+    {
+      "path": "../src/features/measure"
+    },
+    {
+      "path": "../src/features/dom-snippet"
+    },
+    {
+      "path": "../src/features/projects"
+    },
+    {
+      "path": "../src/features/contract"
+    },
+    {
+      "path": "../src/features/run"
+    },
+    {
+      "path": "../src/features/deep-analysis"
+    },
+    {
+      "path": "../src/features/export"
+    },
+    {
+      "path": "../src/features/demo"
+    },
+    {
+      "path": "../src/features/settings"
+    },
+    {
+      "path": "../src/app"
+    }
+  ]
+}

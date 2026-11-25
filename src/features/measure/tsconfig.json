@@ -1,0 +1,16 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "../../../node_modules/.cache/tsc/features/measure",
+    "tsBuildInfoFile": "../../../node_modules/.cache/tsc/features/measure/tsconfig.tsbuildinfo",
+    "lib": ["ES2023"],
+    "types": []
+  },
+  "include": ["**/*.ts", "**/*.tsx"],
+  "references": [
+    {
+      "path": "../../shared/kernel"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "../../../node_modules/.cache/tsc/features/demo",
+    "tsBuildInfoFile": "../../../node_modules/.cache/tsc/features/demo/tsconfig.tsbuildinfo",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": ["vite/client"]
+  },
+  "include": ["**/*.ts", "**/*.tsx"],
+  "references": [
+    {
+      "path": "../../shared/kernel"
+    }
+  ]
+}

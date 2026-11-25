@@ -1,0 +1,55 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "../../node_modules/.cache/tsc/app",
+    "tsBuildInfoFile": "../../node_modules/.cache/tsc/app/tsconfig.tsbuildinfo",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": ["vite/client"]
+  },
+  "include": ["**/*.ts", "**/*.tsx"],
+  "references": [
+    {
+      "path": "../shared/kernel"
+    },
+    {
+      "path": "../platform/firebase"
+    },
+    {
+      "path": "../platform/ai-engine"
+    },
+    {
+      "path": "../platform/storage"
+    },
+    {
+      "path": "../platform/imaging"
+    },
+    {
+      "path": "../features/measure"
+    },
+    {
+      "path": "../features/dom-snippet"
+    },
+    {
+      "path": "../features/projects"
+    },
+    {
+      "path": "../features/contract"
+    },
+    {
+      "path": "../features/run"
+    },
+    {
+      "path": "../features/deep-analysis"
+    },
+    {
+      "path": "../features/export"
+    },
+    {
+      "path": "../features/demo"
+    },
+    {
+      "path": "../features/settings"
+    }
+  ]
+}

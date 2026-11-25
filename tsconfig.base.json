@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": [],
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "composite": true,
+    "paths": {
+      "@kernel": ["./src/shared/kernel/index.ts"],
+      "@fb": ["./src/platform/firebase/index.ts"],
+      "@ai": ["./src/platform/ai-engine/index.ts"],
+      "@store": ["./src/platform/storage/index.ts"],
+      "@imaging": ["./src/platform/imaging/index.ts"],
+      "@measure": ["./src/features/measure/index.ts"],
+      "@snippet": ["./src/features/dom-snippet/index.ts"],
+      "@projects": ["./src/features/projects/index.ts"],
+      "@contract": ["./src/features/contract/index.ts"],
+      "@run": ["./src/features/run/index.ts"],
+      "@deep": ["./src/features/deep-analysis/index.ts"],
+      "@export": ["./src/features/export/index.ts"],
+      "@demo": ["./src/features/demo/index.ts"],
+      "@settings": ["./src/features/settings/index.ts"]
+    }
+  }
+}

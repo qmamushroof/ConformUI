@@ -1,0 +1,16 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "../../../node_modules/.cache/tsc/platform/firebase",
+    "tsBuildInfoFile": "../../../node_modules/.cache/tsc/platform/firebase/tsconfig.tsbuildinfo",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": ["vite/client"]
+  },
+  "include": ["**/*.ts", "**/*.tsx"],
+  "references": [
+    {
+      "path": "../../shared/kernel"
+    }
+  ]
+}

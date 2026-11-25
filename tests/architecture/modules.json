@@ -1,0 +1,155 @@
+{
+  "$comment": "Single module table (SPEC-ARCH-10, SPEC §3.2). Source for tsconfig paths and references, Vite/Vitest aliases and dependency-cruiser rules. `mayImport` lists aliases; `npm` lists allowed packages.",
+  "modules": [
+    {
+      "name": "shared/kernel",
+      "path": "src/shared/kernel",
+      "alias": "@kernel",
+      "mayImport": [],
+      "npm": ["zod"],
+      "ui": false,
+      "prompts": false
+    },
+    {
+      "name": "platform/firebase",
+      "path": "src/platform/firebase",
+      "alias": "@fb",
+      "mayImport": ["@kernel"],
+      "npm": ["firebase/app", "firebase/app-check", "firebase/remote-config"],
+      "ui": false,
+      "prompts": false
+    },
+    {
+      "name": "platform/ai-engine",
+      "path": "src/platform/ai-engine",
+      "alias": "@ai",
+      "mayImport": ["@kernel", "@fb"],
+      "npm": ["firebase/ai"],
+      "ui": false,
+      "prompts": false
+    },
+    {
+      "name": "platform/storage",
+      "path": "src/platform/storage",
+      "alias": "@store",
+      "mayImport": ["@kernel"],
+      "npm": ["idb"],
+      "ui": false,
+      "prompts": false
+    },
+    {
+      "name": "platform/imaging",
+      "path": "src/platform/imaging",
+      "alias": "@imaging",
+      "mayImport": ["@kernel"],
+      "npm": [],
+      "ui": false,
+      "prompts": false
+    },
+    {
+      "name": "features/measure",
+      "path": "src/features/measure",
+      "alias": "@measure",
+      "mayImport": ["@kernel"],
+      "npm": ["pixelmatch"],
+      "ui": false,
+      "prompts": false
+    },
+    {
+      "name": "features/dom-snippet",
+      "path": "src/features/dom-snippet",
+      "alias": "@snippet",
+      "mayImport": ["@kernel"],
+      "npm": ["react"],
+      "ui": true,
+      "prompts": false
+    },
+    {
+      "name": "features/projects",
+      "path": "src/features/projects",
+      "alias": "@projects",
+      "mayImport": ["@kernel"],
+      "npm": ["react"],
+      "ui": true,
+      "prompts": false
+    },
+    {
+      "name": "features/contract",
+      "path": "src/features/contract",
+      "alias": "@contract",
+      "mayImport": ["@kernel", "@measure"],
+      "npm": ["react"],
+      "ui": true,
+      "prompts": true
+    },
+    {
+      "name": "features/run",
+      "path": "src/features/run",
+      "alias": "@run",
+      "mayImport": ["@kernel", "@measure"],
+      "npm": ["react"],
+      "ui": true,
+      "prompts": true
+    },
+    {
+      "name": "features/deep-analysis",
+      "path": "src/features/deep-analysis",
+      "alias": "@deep",
+      "mayImport": ["@kernel"],
+      "npm": ["react"],
+      "ui": true,
+      "prompts": true
+    },
+    {
+      "name": "features/export",
+      "path": "src/features/export",
+      "alias": "@export",
+      "mayImport": ["@kernel"],
+      "npm": [],
+      "ui": false,
+      "prompts": false
+    },
+    {
+      "name": "features/demo",
+      "path": "src/features/demo",
+      "alias": "@demo",
+      "mayImport": ["@kernel"],
+      "npm": ["react"],
+      "ui": true,
+      "prompts": false
+    },
+    {
+      "name": "features/settings",
+      "path": "src/features/settings",
+      "alias": "@settings",
+      "mayImport": ["@kernel"],
+      "npm": ["react"],
+      "ui": true,
+      "prompts": false
+    },
+    {
+      "name": "app",
+      "path": "src/app",
+      "alias": null,
+      "mayImport": [
+        "@kernel",
+        "@fb",
+        "@ai",
+        "@store",
+        "@imaging",
+        "@measure",
+        "@snippet",
+        "@projects",
+        "@contract",
+        "@run",
+        "@deep",
+        "@export",
+        "@demo",
+        "@settings"
+      ],
+      "npm": ["react", "react-dom", "react-router", "workbox-window", "workbox-*"],
+      "ui": false,
+      "prompts": false
+    }
+  ]
+}

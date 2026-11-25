@@ -1,0 +1,16 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "../../../node_modules/.cache/tsc/platform/storage",
+    "tsBuildInfoFile": "../../../node_modules/.cache/tsc/platform/storage/tsconfig.tsbuildinfo",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": []
+  },
+  "include": ["**/*.ts", "**/*.tsx"],
+  "references": [
+    {
+      "path": "../../shared/kernel"
+    }
+  ]
+}
