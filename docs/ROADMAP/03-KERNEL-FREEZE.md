@@ -53,10 +53,10 @@
 **Accept:** one test per status scenario; cloud mode without a token rejected with `CONSENT_REQUIRED`.
 
 ### 3.7 CI and gates · 0 · 0.2 h · needs 3.3
-- [ ] `scripts/check-size.mjs` with SPEC-PERF-04 and SPEC-DEMO-06 budgets.
-- [ ] Build test: `dist/` has no `__CUI_FAKE__`, `FakeAiEngine`, `FIREBASE_APPCHECK_DEBUG_TOKEN` (SPEC-TEST-02, SPEC-FB-04).
-- [ ] One Playwright smoke spec (shell renders) so the e2e stage is non-empty.
-- [ ] `.github/workflows/ci.yml` (incl. `npm audit`) and `dependabot.yml` per SPEC §8.4 (SPEC-DEPLOY-03, SPEC-SEC-10).
+- [x] `scripts/check-size.mjs` with SPEC-PERF-04 and SPEC-DEMO-06 budgets.
+- [x] Build test: `dist/` has no `__CUI_FAKE__`, `FakeAiEngine`, `FIREBASE_APPCHECK_DEBUG_TOKEN` (SPEC-TEST-02, SPEC-FB-04).
+- [x] One Playwright smoke spec (shell renders) so the e2e stage is non-empty.
+- [x] `.github/workflows/ci.yml` (incl. `npm audit`) and `dependabot.yml` per SPEC §8.4 (SPEC-DEPLOY-03, SPEC-SEC-10).
 
 **Accept:** CI green on a PR; a deliberate boundary break turns it red.
 

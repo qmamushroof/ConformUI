@@ -21,11 +21,13 @@
     "depcruise": "depcruise src --config .dependency-cruiser.cjs",
     "test": "vitest run",
     "build:e2e": "vite build --mode e2e --outDir dist-e2e",
+    "check:size": "node scripts/check-size.mjs",
+    "check:dist": "node scripts/check-dist.mjs",
     "test:e2e": "playwright test",
     "icons": "pwa-assets-generator",
     "sample:capture": "node scripts/capture-sample.mjs",
     "check:fast": "npm run lint && npm run typecheck && npm run depcruise && npm test",
-    "check": "npm run check:fast && npm run build && node scripts/check-size.mjs && npm run test:e2e"
+    "check": "npm run check:fast && npm run build && npm run check:size && npm run check:dist && npm run test:e2e"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "5.3.0",
