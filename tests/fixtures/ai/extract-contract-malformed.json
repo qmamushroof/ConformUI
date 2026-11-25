@@ -1,0 +1,12 @@
+{
+  "requirements": [
+    {
+      "category": "size",
+      "statement": "Primary CTA is 220 px wide",
+      "condition": "CTA width within 8% of 220 px",
+      "checkKind": "vibes",
+      "box": [120, 640, 300],
+      "matchHint": { "tag": "button" }
+    }
+  ]
+}

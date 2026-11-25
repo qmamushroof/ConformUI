@@ -47,8 +47,8 @@
 **Accept:** full `resolveMode` table test incl. "no `PREFER_*` without consent" (PRD-M-06, S1); `isTrusted:false` → `CONSENT_REQUIRED`; one test per error code; `suggestViewport` table per SPEC-MEAS-04.
 
 ### 3.6 AI test seam, helpers, fixtures · 0 · 0.35 h · needs 3.5
-- [ ] `src/app/testing/fake-ai-engine.ts` per SPEC-TEST-01 and SPEC-AI-12 (status scenarios of SPEC §7.2, canned JSON per task, `calls[]`, engine selection, SPEC-AI-02 guards).
-- [ ] `tests/helpers/`: in-memory `ProjectStore`, `BlobStore`, `SettingsStore`; fixed `Clock`, `Ids`. `tests/fixtures/ai/<task>-*.json`: valid, malformed and invented-number outputs per task (SPEC §7.3).
+- [x] `src/app/testing/fake-ai-engine.ts` per SPEC-TEST-01 and SPEC-AI-12 (status scenarios of SPEC §7.2, canned JSON per task, `calls[]`, engine selection, SPEC-AI-02 guards).
+- [x] `tests/helpers/`: in-memory `ProjectStore`, `BlobStore`, `SettingsStore`; fixed `Clock`, `Ids`. `tests/fixtures/ai/<task>-*.json`: valid, malformed and invented-number outputs per task (SPEC §7.3).
 
 **Accept:** one test per status scenario; cloud mode without a token rejected with `CONSENT_REQUIRED`.
 

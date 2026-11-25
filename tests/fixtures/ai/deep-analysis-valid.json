@@ -1,0 +1,19 @@
+{
+  "items": [
+    {
+      "findingId": "run-1:R-01:desktop",
+      "status": "fail",
+      "confidence": "high",
+      "explanation": "The CTA is narrower than the design on both viewports because of one shared button style.",
+      "suggestedFix": "Fix the shared button width token.",
+      "crossViewportCause": "Shared button style"
+    },
+    {
+      "findingId": "run-1:R-07:desktop",
+      "status": "needs-review",
+      "confidence": "low",
+      "explanation": "The decorative image may differ, but the evidence is unclear.",
+      "suggestedFix": "Compare the image by eye."
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "items": [
+    {
+      "fromRequirementId": "R-01",
+      "checkKind": "visible",
+      "statement": "Primary CTA stays visible on mobile",
+      "condition": "CTA is inside the 390 px viewport"
+    },
+    {
+      "fromRequirementId": "R-02",
+      "checkKind": "dominant-text",
+      "statement": "Hero heading remains the dominant text",
+      "condition": "Heading is the largest text on the page"
+    }
+  ]
+}

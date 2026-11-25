@@ -1,0 +1,31 @@
+{
+  "requirements": [
+    {
+      "category": "size",
+      "statement": "Primary CTA is 220 px wide",
+      "condition": "CTA width within 8% of 220 px",
+      "checkKind": "size",
+      "box": [120, 640, 300, 700],
+      "matchHint": { "tag": "button", "text": "Start free" },
+      "primary": true
+    },
+    {
+      "category": "content",
+      "statement": "Hero heading reads Build faster",
+      "condition": "Heading text equals Build faster",
+      "checkKind": "text",
+      "box": [100, 200, 700, 320],
+      "matchHint": { "tag": "h1" },
+      "expectedText": "Build faster"
+    },
+    {
+      "category": "presence",
+      "statement": "Navigation shows 3 links",
+      "condition": "Three links inside the header navigation",
+      "checkKind": "count",
+      "box": [600, 20, 960, 70],
+      "matchHint": { "role": "navigation" },
+      "expectedCount": 3
+    }
+  ]
+}

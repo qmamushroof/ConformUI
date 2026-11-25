@@ -1,0 +1,6 @@
+{
+  "verdict": "fail",
+  "confidence": "medium",
+  "explanation": "The hero image is cropped on the right compared with the design.",
+  "suggestedFix": "Let the hero image scale to its container width."
+}

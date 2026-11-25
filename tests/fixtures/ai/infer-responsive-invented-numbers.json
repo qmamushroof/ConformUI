@@ -1,0 +1,10 @@
+{
+  "items": [
+    {
+      "fromRequirementId": "R-01",
+      "checkKind": "visible",
+      "statement": "Primary CTA stays visible below 777 px",
+      "condition": "CTA is inside a 777 px viewport"
+    }
+  ]
+}
