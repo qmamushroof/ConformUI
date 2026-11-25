@@ -42,7 +42,7 @@
 **Accept:** valid and invalid sample per schema; one clamp test per numeric key; SPEC-KERNEL-01..03.
 
 ### 3.5 Kernel functions and errors · 0 · 0.35 h · needs 3.4
-- [ ] `mintConsent`, `resolveMode` (SPEC-KERNEL-04..06), limits (SPEC-KERNEL-07), `guardNumbers` (SPEC-KERNEL-08), `CuiError` with every code and `retryable` (SPEC-KERNEL-09), `iou` (SPEC-KERNEL-10), `lockContract`, `nextContractVersion` (SPEC-KERNEL-11), `suggestViewport` (SPEC-KERNEL-12).
+- [x] `mintConsent`, `resolveMode` (SPEC-KERNEL-04..06), limits (SPEC-KERNEL-07), `guardNumbers` (SPEC-KERNEL-08), `CuiError` with every code and `retryable` (SPEC-KERNEL-09), `iou` (SPEC-KERNEL-10), `lockContract`, `nextContractVersion` (SPEC-KERNEL-11), `suggestViewport` (SPEC-KERNEL-12).
 
 **Accept:** full `resolveMode` table test incl. "no `PREFER_*` without consent" (PRD-M-06, S1); `isTrusted:false` → `CONSENT_REQUIRED`; one test per error code; `suggestViewport` table per SPEC-MEAS-04.
 

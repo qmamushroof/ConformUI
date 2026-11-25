@@ -1,27 +1,30 @@
 // SPEC-KERNEL-09: no raw SDK error reaches the UI. Codes map to copy in SPEC §5.4.
 
-export type ErrorCode =
-  | 'IMAGE_UNSUPPORTED'
-  | 'IMAGE_TOO_LARGE'
-  | 'IMAGE_DECODE_FAILED'
-  | 'SNAPSHOT_INVALID'
-  | 'SNAPSHOT_TOO_LARGE'
-  | 'DEVICE_UNAVAILABLE'
-  | 'DEVICE_DOWNLOADING'
-  | 'DEVICE_NO_IMAGE'
-  | 'OFFLINE'
-  | 'CLOUD_DISABLED'
-  | 'QUOTA_EXCEEDED'
-  | 'DAILY_CAP'
-  | 'APPCHECK_FAILED'
-  | 'AI_NOT_ENABLED'
-  | 'AI_BAD_OUTPUT'
-  | 'AI_BLOCKED'
-  | 'AI_FAILED'
-  | 'CONSENT_REQUIRED'
-  | 'CONTRACT_LOCKED'
-  | 'STORAGE_FAILED'
-  | 'STORAGE_UNAVAILABLE';
+export const ERROR_CODES = [
+  'IMAGE_UNSUPPORTED',
+  'IMAGE_TOO_LARGE',
+  'IMAGE_DECODE_FAILED',
+  'SNAPSHOT_INVALID',
+  'SNAPSHOT_TOO_LARGE',
+  'DEVICE_UNAVAILABLE',
+  'DEVICE_DOWNLOADING',
+  'DEVICE_NO_IMAGE',
+  'OFFLINE',
+  'CLOUD_DISABLED',
+  'QUOTA_EXCEEDED',
+  'DAILY_CAP',
+  'APPCHECK_FAILED',
+  'AI_NOT_ENABLED',
+  'AI_BAD_OUTPUT',
+  'AI_BLOCKED',
+  'AI_FAILED',
+  'CONSENT_REQUIRED',
+  'CONTRACT_LOCKED',
+  'STORAGE_FAILED',
+  'STORAGE_UNAVAILABLE',
+] as const;
+
+export type ErrorCode = (typeof ERROR_CODES)[number];
 
 export const RETRYABLE: Record<ErrorCode, boolean> = {
   IMAGE_UNSUPPORTED: false,
@@ -50,8 +53,8 @@ export const RETRYABLE: Record<ErrorCode, boolean> = {
 export class CuiError extends Error {
   readonly code: ErrorCode;
   readonly retryable: boolean;
-  constructor(code: ErrorCode, message?: string) {
-    super(message ?? code);
+  constructor(code: ErrorCode, message?: string, options?: { cause?: unknown }) {
+    super(message ?? code, options);
     this.name = 'CuiError';
     this.code = code;
     this.retryable = RETRYABLE[code];
