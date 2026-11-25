@@ -34,10 +34,10 @@
 **Accept:** SPEC-ARCH-01..06 and SPEC-ARCH-10 tests green; a scratch forbidden import in `src/` turns them red.
 
 ### 3.4 Kernel types, ports, schemas · 0 · 0.6 h · needs 3.2
-- [ ] SPEC §4.1.1–4.1.3 types and ports exactly as written, incl. `ImageCodec.probe` (SPEC-MEAS-04).
-- [ ] `SendList` (moved to kernel, S29) and `RunSummary`.
-- [ ] `kernel/schemas.ts`: zod for every type, `DomSnapshotV1` (SPEC-SNIP-01), `ContractExportV1`, `ReportExportV1` (SPEC-EXP-02, SPEC-EXP-03), the four AI task outputs (SPEC §4.3.4) (SPEC-KERNEL-03).
-- [ ] `kernel/runtime-values.ts`: `RuntimeValuesSchema` with clamps, `Thresholds`, `DEFAULT_RUNTIME_VALUES` (SPEC §4.1.6, S26).
+- [x] SPEC §4.1.1–4.1.3 types and ports exactly as written, incl. `ImageCodec.probe` (SPEC-MEAS-04).
+- [x] `SendList` (moved to kernel, S29) and `RunSummary`.
+- [x] `kernel/schemas.ts`: zod for every type, `DomSnapshotV1` (SPEC-SNIP-01), `ContractExportV1`, `ReportExportV1` (SPEC-EXP-02, SPEC-EXP-03), the four AI task outputs (SPEC §4.3.4) (SPEC-KERNEL-03).
+- [x] `kernel/runtime-values.ts`: `RuntimeValuesSchema` with clamps, `Thresholds`, `DEFAULT_RUNTIME_VALUES` (SPEC §4.1.6, S26).
 
 **Accept:** valid and invalid sample per schema; one clamp test per numeric key; SPEC-KERNEL-01..03.
 

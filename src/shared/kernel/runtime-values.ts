@@ -24,19 +24,33 @@ export const RuntimeValuesSchema = z.object({
 export type RuntimeValues = z.infer<typeof RuntimeValuesSchema>;
 
 /** Threshold keys only; snapshotted into each Run (PRD-P-10, S14). */
-export type Thresholds = Pick<
-  RuntimeValues,
-  | 'size_tolerance_pct'
-  | 'major_deviation_pct'
-  | 'spacing_tolerance_pct'
-  | 'pixel_threshold'
-  | 'visual_diff_ratio'
-  | 'presence_ink_ratio'
-  | 'colour_delta_e'
-  | 'snap_min_iou'
-  | 'search_window_px'
-  | 'width_mismatch_pct'
->;
+export const THRESHOLD_KEYS = [
+  'size_tolerance_pct',
+  'major_deviation_pct',
+  'spacing_tolerance_pct',
+  'pixel_threshold',
+  'visual_diff_ratio',
+  'presence_ink_ratio',
+  'colour_delta_e',
+  'snap_min_iou',
+  'search_window_px',
+  'width_mismatch_pct',
+] as const;
+
+export const ThresholdsSchema = RuntimeValuesSchema.pick({
+  size_tolerance_pct: true,
+  major_deviation_pct: true,
+  spacing_tolerance_pct: true,
+  pixel_threshold: true,
+  visual_diff_ratio: true,
+  presence_ink_ratio: true,
+  colour_delta_e: true,
+  snap_min_iou: true,
+  search_window_px: true,
+  width_mismatch_pct: true,
+});
+
+export type Thresholds = z.infer<typeof ThresholdsSchema>;
 
 export const DEFAULT_RUNTIME_VALUES: RuntimeValues = {
   cloud_first_pass_model: 'gemini-3.5-flash-lite',

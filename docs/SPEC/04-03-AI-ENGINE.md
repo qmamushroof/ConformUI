@@ -50,7 +50,7 @@ Content = `[ { type:'text', text: user }, ...images.map(i => ({ type:'inlineData
 
 | Task | Output (zod, kernel) |
 |---|---|
-| `extract-contract` | `{ requirements: { category, statement, condition, checkKind, box: [x0,y0,x1,y1] /*0..1000 of the given image*/, matchHint: { tag?, role?, text? }, expectedText?, expectedCount?, primary? }[] /*≤8*/ }` |
+| `extract-contract` | `{ requirements: { category, statement, condition, checkKind /*CheckSpec kind except `visible`*/, box: [x0,y0,x1,y1] /*0..1000 of the given image*/, matchHint: { tag?, role?, text? }, expectedText?, expectedCount?, primary? }[] /*≤8*/ }` |
 | `infer-responsive` | `{ items: { fromRequirementId, checkKind: 'visible'\|'presence'\|'dominant-text', statement, condition }[] /*≤6*/ }` |
 | `judge` | `{ verdict: 'pass'\|'fail'\|'uncertain', confidence: 'high'\|'medium'\|'low', explanation /*≤300*/, suggestedFix /*≤200*/ }` |
 | `deep-analysis` | `{ items: { findingId, status: 'fail'\|'pass'\|'needs-review', confidence, explanation, suggestedFix, crossViewportCause? }[] }` |

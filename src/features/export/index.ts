@@ -1,11 +1,9 @@
-import type { Contract, Finding, Project, Run, ViewportId } from '@kernel';
+import type { Contract, ContractExportV1, Finding, Project, ReportExportV1, Run, ViewportId } from '@kernel';
 
 // Public API of features/export (SPEC §4.10.1). Pure functions, no UI, no I/O. Bodies: lane C (task 12.x).
 
-// ContractExportV1 / ReportExportV1 are inferred from the kernel zod schemas (SPEC-EXP-02, SPEC-EXP-03); the kernel
-// schemas land in task 3.4 and these aliases then re-point at them. Until then they are opaque records.
-export type ContractExportV1 = Record<string, unknown>;
-export type ReportExportV1 = Record<string, unknown>;
+// ContractExportV1 / ReportExportV1 are the kernel zod-inferred types (SPEC-EXP-02, SPEC-EXP-03).
+export type { ContractExportV1, ReportExportV1 };
 
 export function fixPrompt(_i: {
   project: Project;
