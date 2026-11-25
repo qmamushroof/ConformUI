@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
+<title>Contract · Sample landing page · ConformUI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/app.css">
+<style>
+  .chead{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:var(--space-4) var(--space-6);padding:var(--space-6) var(--space-6) var(--space-5)}
+  .chead .stack-sm{gap:var(--space-2);flex:1 1 320px;min-width:0}
+  @media (min-width:901px){.chead{flex-wrap:nowrap}.chead>.btn-row{flex:none}}
+  .cband{padding:0 var(--space-6) var(--space-6);display:grid;gap:var(--space-6);max-width:1440px}
+  .dim-label{font-family:var(--font-mono);font-weight:var(--weight-semibold)}
+  .canvas .rg{fill:none;stroke:var(--accent);stroke-width:1;stroke-opacity:.35;vector-effect:non-scaling-stroke;cursor:pointer}
+  .canvas .rg.hl{stroke-opacity:.8}
+  .canvas .rg.sel{stroke-width:3;stroke-opacity:1}
+  .canvas .rg.unres{stroke:var(--text);stroke-dasharray:6 4}
+  .canvas .bandline{stroke:var(--text);stroke-width:3;stroke-dasharray:14 10}
+  .nodesign{display:grid;place-items:center;aspect-ratio:1440/1000;border:1px dashed var(--border-strong);border-radius:var(--radius-md);padding:var(--space-6);text-align:center;color:var(--text-muted);font-size:var(--font-size-sm)}
+  .xstages{list-style:none;margin:0;padding:0;display:grid;gap:var(--space-4);font-size:var(--font-size-sm)}
+  .xstages li{display:grid;grid-template-columns:20px minmax(0,1fr) auto;gap:var(--space-2) var(--space-2);align-items:center}
+  .xstages .bar{grid-column:2 / -1}
+  .xstages .w{color:var(--text-muted)}
+  .extract-grid{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:var(--space-8);align-items:start}
+  .redit{display:grid;gap:var(--space-4)}
+  @media (max-width:900px){.extract-grid{grid-template-columns:1fr}}
+  @media (max-width:720px){.chead{padding:var(--space-4)}.cband{padding:0 var(--space-4) var(--space-5)}}
+</style>
+</head>
+<body data-nav="projects" data-title="Contract · Sample landing page" data-states="default,no-design,extracting,review,locked,consent,bad-output">
+<script src="assets/sprite.js"></script>
+<header data-shell></header>
+<div data-phead data-step="contract" data-done="2" data-next="captures" data-crumb="Contract"></div>
+
+<main id="main" tabindex="-1">
+  <div class="chead">
+    <div class="stack-sm">
+      <h1 id="c-title">Contract v1</h1>
+      <div class="meta" id="c-meta"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" id="extract-btn" type="button"><svg class="i i-sm" aria-hidden="true"><use href="#i-chip"/></svg>Extract contract</button>
+      <button class="btn btn-ghost" id="add-btn" type="button" data-open="sheet-add" data-state-show="default review consent"><svg class="i i-sm" aria-hidden="true"><use href="#i-plus"/></svg>Add requirement</button>
+      <div class="menu-wrap">
+        <button class="iconbtn" data-menu aria-haspopup="true" aria-expanded="false" aria-label="More contract actions"><svg class="i" aria-hidden="true"><use href="#i-more"/></svg></button>
+        <div class="menu" hidden>
+          <button type="button" data-toast="Downloaded sample-landing-page-contract-v1.md"><svg class="i i-sm" aria-hidden="true"><use href="#i-download"/></svg>Export contract as Markdown</button>
+          <button type="button" data-toast="Downloaded sample-landing-page-contract-v1.json"><svg class="i i-sm" aria-hidden="true"><use href="#i-download"/></svg>Export contract as JSON</button>
+          <button type="button" data-copy="ctr_3b81e0f4a29d" data-copy-toast="Contract ID copied"><svg class="i i-sm" aria-hidden="true"><use href="#i-copy"/></svg>Copy contract ID</button>
+        </div>
+      </div>
+      <a class="btn btn-primary" href="project.html#captures" data-state-show="default locked consent">Continue to captures<svg class="i i-sm" aria-hidden="true"><use href="#i-chev"/></svg></a>
+    </div>
+  </div>
+  <p class="small muted" id="extract-reason" style="padding:0 var(--space-6) var(--space-4);margin-top:calc(-1 * var(--space-3))" data-state-show="no-design">Extract contract needs a design. Add a design image (PNG, JPEG or WebP, up to 20 MB). From a design tool, export the frame as PNG.</p>
+
+  <!-- Locked -->
+  <div class="cband" data-state-show="locked">
+    <div class="notice" role="status">
+      <svg class="i" aria-hidden="true"><use href="#i-lock"/></svg>
+      <p class="title">Locked by Run 1. Editing creates Contract v2.</p>
+      <p class="small muted">Run 1 keeps pointing at v1, so its findings stay comparable. Contract v2 starts with the same 19 requirements.</p>
+      <div class="btn-row"><button class="btn btn-ghost" type="button" id="edit-v2"><svg class="i i-sm" aria-hidden="true"><use href="#i-edit"/></svg>Edit as v2</button></div>
+    </div>
+  </div>
+
+  <!-- Review: notice + comparison -->
+  <div class="cband" data-state-show="review">
+    <div class="notice notice-info" role="status">
+      <svg class="i" aria-hidden="true"><use href="#i-info"/></svg>
+      <p class="title" id="rv-title">AI extracted 17 requirements, On-device. Review them, then accept.</p>
+      <p class="small muted" id="rv-sub">Nothing was sent off this device. AI regions are suggestions, snapped to element bounds on the design image. The verified contract stays active until you choose below.</p>
+      <div class="btn-row"><button class="btn btn-ghost" type="button" id="accept-all"><svg class="i i-sm" aria-hidden="true"><use href="#i-check"/></svg>Accept all</button></div>
+    </div>
+    <section class="sec" aria-labelledby="cmp-h">
+      <div class="sec-head">
+        <div class="stack-sm" style="gap:var(--space-1)">
+          <h2 id="cmp-h" class="h3">AI proposed 17 requirements; 16 match the verified contract</h2>
+          <p class="small muted">A match has the same category and a region overlap (IoU) of 0.5 or more.</p>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-ghost" type="button" id="use-ai">Use AI contract</button>
+          <button class="btn btn-primary" type="button" id="keep-verified">Keep verified contract</button>
+        </div>
+      </div>
+      <div class="table-wrap"><table class="data">
+        <caption class="sr-only">AI contract compared with the verified sample contract</caption>
+        <thead><tr><th>Result</th><th class="r">Count</th><th>Requirements</th></tr></thead>
+        <tbody>
+          <tr><td>Matched</td><td class="r">16</td><td>Desktop: <span class="mono xs">R-D-01</span> to <span class="mono xs">R-D-08</span> and <span class="mono xs">R-D-10</span> to <span class="mono xs">R-D-16</span> (15). Mobile: <span class="mono xs">I-M-03</span>.</td></tr>
+          <tr><td>Missed by AI</td><td class="r">1</td><td><span class="mono xs">R-D-09</span> Spacing: “How it works” starts 64 px below the hero. Keep it by adding it by hand, or keep the verified contract.</td></tr>
+          <tr><td>Extra from AI</td><td class="r">1</td><td><span class="mono xs">R-D-17</span> Alignment: hero subtitle sits directly below the heading. Region not found.</td></tr>
+        </tbody>
+      </table></div>
+      <p class="small muted"><span class="mono xs">I-M-01</span> and <span class="mono xs">I-M-02</span> come from rules, not AI, so they are the same in both contracts.</p>
+    </section>
+  </div>
+
+  <!-- Bad output -->
+  <div class="cband" data-state-show="bad-output">
+    <div class="notice notice-danger" role="alert">
+      <svg class="i" aria-hidden="true"><use href="#i-alert"/></svg>
+      <p class="title">Band 2 could not be read. Add requirements for that area by hand.</p>
+      <p class="small muted">The model answered twice in a format ConformUI can’t read (<span class="mono">AI_BAD_OUTPUT</span>). The 15 requirements from band 1 are kept, along with the Mobile items.</p>
+      <div class="btn-row"><button class="btn btn-ghost" type="button" data-open="sheet-add"><svg class="i i-sm" aria-hidden="true"><use href="#i-plus"/></svg>Add requirement</button><button class="btn btn-ghost" type="button" data-toast="Extracting band 2 again, On-device"><svg class="i i-sm" aria-hidden="true"><use href="#i-refresh"/></svg>Extract band 2 again</button></div>
+    </div>
+  </div>
+
+  <!-- No design -->
+  <section class="cband" data-state-show="no-design" aria-labelledby="nd-h">
+    <div class="empty" style="padding-top:var(--space-8)">
+      <h2 id="nd-h">No design image yet</h2>
+      <p class="muted">A contract is built from the design. Add one to the project, then extract requirements here. You can also write requirements by hand.</p>
+      <div class="btn-row"><a class="btn btn-primary" href="project.html"><svg class="i i-sm" aria-hidden="true"><use href="#i-upload"/></svg>Add a design image</a><button class="btn btn-ghost" type="button" data-open="sheet-add"><svg class="i i-sm" aria-hidden="true"><use href="#i-plus"/></svg>Add requirement</button></div>
+    </div>
+  </section>
+
+  <!-- Extracting -->
+  <section class="cband" data-state-show="extracting" aria-labelledby="x-h">
+    <div class="extract-grid">
+      <div class="stack">
+        <h2 id="x-h" class="h3">Extracting requirements from the Desktop design</h2>
+        <ol class="xstages" id="xstages"></ol>
+        <p class="row small muted"><span class="eng"><svg class="i" aria-hidden="true"><use href="#i-chip"/></svg>On-device</span><span>Nothing is sent off this device.</span></p>
+        <div><button class="btn btn-ghost" type="button" id="stop-x">Stop extracting</button></div>
+      </div>
+      <figure class="fig">
+        <figcaption><b><span class="legend" aria-hidden="true"></span>Design, Desktop</b><span>1440 × 1000, 2 bands</span></figcaption>
+        <svg class="shot canvas" viewBox="0 0 1440 1000" role="img" aria-label="Design split into band 1 (0 to 864 px) and band 2 (864 to 1000 px)" id="x-canvas"></svg>
+      </figure>
+    </div>
+  </section>
+
+  <!-- Split: requirements + design -->
+  <div class="split" data-state-show="default review locked consent bad-output">
+    <section class="split-list" aria-labelledby="rlh">
+      <div class="split-list-head" style="min-height:var(--layout-target)">
+        <h2 id="rlh" class="small" style="font-weight:var(--weight-medium)">Requirements <span class="muted" id="r-count"></span></h2>
+        <span class="small muted" id="r-acc"></span>
+      </div>
+      <ul class="rows" id="list" role="listbox" aria-label="Requirements, grouped by viewport" tabindex="0"></ul>
+    </section>
+    <section class="split-detail" id="detail" aria-labelledby="d-title"></section>
+  </div>
+  <div class="sr-only" aria-live="polite" id="announce"></div>
+</main>
+
+<!-- Add requirement -->
+<dialog class="sheet" id="sheet-add" aria-labelledby="add-h">
+  <form method="dialog" class="sheet-in" id="add-form" novalidate>
+    <div class="sheet-head"><div class="stack-sm"><h2 id="add-h">Add requirement</h2><p class="muted small">Write one checkable fact about the design. It is added as accepted and labelled “Added by you”.</p></div><button class="iconbtn" value="cancel" formnovalidate aria-label="Close"><svg class="i" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <div class="field"><label for="add-st">Statement</label>
+      <textarea class="textarea" id="add-st" rows="2" style="min-height:0" aria-describedby="add-st-help add-st-err" placeholder="Pricing link is in the header navigation"></textarea>
+      <p class="help" id="add-st-help">Plain words. Numbers belong in the condition.</p>
+      <p class="error" id="add-st-err" hidden><svg class="i i-sm" aria-hidden="true"><use href="#i-alert"/></svg>Write what must be true, in one sentence.</p>
+    </div>
+    <div class="two" style="gap:var(--space-4)">
+      <div class="field"><label for="add-vp">Viewport</label><select class="select" id="add-vp"><option>Desktop 1440</option><option>Mobile 390</option></select></div>
+      <div class="field"><label for="add-cat">Category</label><select class="select" id="add-cat"><option>Presence</option><option>Size</option><option>Spacing</option><option>Typography</option><option>Colour</option><option>Alignment</option><option>Text</option><option>Layout</option><option>Responsive</option></select></div>
+    </div>
+    <fieldset><legend class="label">Check type</legend>
+      <label class="choice"><input type="radio" name="ctype" value="Measured" checked><span>Measured</span><span class="help">Numbers from the DOM snapshot or the image, on this device.</span></label>
+      <label class="choice"><input type="radio" name="ctype" value="Visual"><span>Visual</span><span class="help">Compares the design and capture images in the region.</span></label>
+      <label class="choice"><input type="radio" name="ctype" value="Judged"><span>Judged</span><span class="help">An AI model decides. The finding names its engine.</span></label>
+    </fieldset>
+    <div class="field"><label for="add-cond">Passes when</label>
+      <input class="input" id="add-cond" aria-describedby="add-cond-err" placeholder="The header nav contains a link with the text “Pricing”">
+      <p class="error" id="add-cond-err" hidden><svg class="i i-sm" aria-hidden="true"><use href="#i-alert"/></svg>Say when it passes, for example “Width is 202–238 px”.</p>
+    </div>
+    <p class="small muted">No region yet. Visual checks on this requirement compare the whole viewport.</p>
+    <div class="sheet-foot"><button class="btn" value="cancel" formnovalidate>Cancel</button><button class="btn btn-primary" value="add" id="add-go"><svg class="i i-sm" aria-hidden="true"><use href="#i-plus"/></svg>Add requirement</button></div>
+  </form>
+</dialog>
+
+<!-- Consent -->
+<dialog class="sheet" id="sheet-consent" aria-labelledby="cs-h">
+  <form method="dialog" class="sheet-in">
+    <div class="sheet-head"><div class="stack-sm"><h2 id="cs-h">Allow cloud for this project?</h2><p class="muted small">On-device AI isn’t available on this device, so extracting the contract needs the cloud. ConformUI sends exactly this to Google Gemini through Firebase:</p></div><button class="iconbtn" value="decline" aria-label="Close"><svg class="i" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <ul class="sendlist">
+      <li><span>Design, Desktop, band 1 (downscaled to 1024 × 614 px)</span><span class="num">96 KB</span></li>
+      <li><span>Design, Desktop, band 2 (downscaled to 1024 × 97 px)</span><span class="num">22 KB</span></li>
+      <li><span>Instructions for the model (extract-contract v1)</span><span class="num">3 KB</span></li>
+      <li class="total"><span>Total</span><span class="num">121 KB</span></li>
+    </ul>
+    <p class="small muted">Applies to Sample landing page only. Revoke any time in <a href="settings.html#consent">Settings</a>. If you decline, nothing is sent: you can add requirements by hand, and this sample shows its pre-computed extraction.</p>
+    <div class="sheet-foot"><button class="btn" value="decline" autofocus>Decline</button><button class="btn btn-primary" value="allow"><svg class="i i-sm" aria-hidden="true"><use href="#i-cloud"/></svg>Allow for this project</button></div>
+  </form>
+</dialog>
+
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  var I = window.cuiIcon;
+  var ORIG = { sample: ['file', 'Sample (verified)'], rule: ['ruler', 'Rule'], device: ['chip', 'On-device'], cloud: ['cloud', 'Cloud'], pre: ['file', 'Pre-computed'], user: ['edit', 'Added by you'] };
+  var LABEL_BG = 'style="fill:var(--neutral-0)"';
+
+  /* Dimension labels sit outside the region on a knockout rect, never over design text.
+     lbl(x, top, text, colour, anchor 'middle'|'start'|'end', font size in design px) */
+  function lbl(x, top, text, color, anchor, fs) {
+    fs = fs || 24;
+    var h = fs + 6, w = Math.round(text.length * fs * 0.6) + 12, x0 = anchor === 'start' ? x : anchor === 'end' ? x - w : x - w / 2;
+    return '<rect x="' + x0 + '" y="' + top + '" width="' + w + '" height="' + h + '" ' + LABEL_BG + '/><text class="dim-label" x="' + (x0 + w / 2) + '" y="' + (top + h / 2 + fs * 0.35) + '" font-size="' + fs + '" text-anchor="middle" style="fill:' + color + '">' + text + '</text>';
+  }
+  /* Horizontal: label above the line, or at its right end (place 'end') where the space above holds text. */
+  function dimH(x1, x2, y, label, place) {
+    var c = 'var(--accent)', h = 30;
+    return '<g style="stroke:' + c + '" stroke-width="3"><path d="M' + x1 + ' ' + y + ' H' + x2 + ' M' + x1 + ' ' + (y - 6) + ' V' + (y + 6) + ' M' + x2 + ' ' + (y - 6) + ' V' + (y + 6) + '"/></g>' +
+      (place === 'end' ? lbl(x2 + 12, y - h / 2, label, c, 'start') : lbl((x1 + x2) / 2, y - 8 - h, label, c, 'middle'));
+  }
+  /* Vertical: side 'right' (default), 'left' or 'below'. */
+  function dimV(x, y1, y2, label, side) {
+    var c = 'var(--accent)', h = 30, my = (y1 + y2) / 2 - h / 2;
+    var l = side === 'left' ? lbl(x - 16, my, label, c, 'end') : side === 'below' ? lbl(x - 16, y2 + 8, label, c, 'start') : lbl(x + 16, my, label, c, 'start');
+    return '<g style="stroke:' + c + '" stroke-width="3"><path d="M' + x + ' ' + y1 + ' V' + y2 + ' M' + (x - 8) + ' ' + y1 + ' H' + (x + 8) + ' M' + (x - 8) + ' ' + y2 + ' H' + (x + 8) + '"/></g>' + l;
+  }
+
+  /* Verified sample contract (SPEC-DEMO, committed). r = [x, y, w, h] in design CSS px. */
+  var D = [
+    { id: 'R-D-01', cat: 'Presence', type: 'Measured', st: 'Logo sits at the top left of the header', cond: 'A logo mark is within 24 px of the header’s left content edge.', r: [64, 28, 136, 24] },
+    { id: 'R-D-02', cat: 'Presence', type: 'Measured', st: 'Navigation contains logo, four links and a primary CTA', ai: 'Navigation contains the logo, four links and a primary button', cond: 'The header has a logo, exactly 4 links (Product, Pricing, Docs, Company) and one primary button.', r: [56, 14, 1328, 52] },
+    { id: 'R-D-03', cat: 'Typography', type: 'Measured', st: 'Hero heading is the largest text on the page', cond: 'The hero heading has the largest font size on the page and is at least 2× the subtitle.', r: [56, 184, 488, 146], dims: function () { return dimV(568, 196, 252, '60 px'); } },
+    { id: 'R-D-04', cat: 'Size', type: 'Measured', st: 'Primary CTA width is 220 px ±8%', ai: 'Primary CTA width matches the design', cond: 'Width is 202–238 px at Desktop 1440, measured from the DOM snapshot.', r: [64, 440, 220, 56], dims: function () { return dimH(64, 284, 426, '220 px', 'end'); } },
+    { id: 'R-D-05', cat: 'Colour', type: 'Judged', st: 'Primary CTA uses the brand colour', cond: 'CTA background is within ΔE 3 of #0F4C5C, sampled from the design image.', r: [64, 440, 220, 56] },
+    { id: 'R-D-06', cat: 'Presence', type: 'Visual', st: 'Hero illustration sits right of the heading', cond: 'An image or SVG covers at least 80% of the region at Desktop 1440.', r: [800, 140, 576, 400], dims: function () { return dimH(800, 1376, 118, '576 px') + dimV(780, 140, 540, '400 px', 'left'); } },
+    { id: 'R-D-07', cat: 'Alignment', type: 'Measured', st: 'Hero heading and primary CTA share a left edge', cond: 'Left edges differ by 4 px or less.', r: [64, 186, 220, 310] },
+    { id: 'R-D-08', cat: 'Presence', type: 'Measured', st: 'Header CTA “Start free trial” is present', cond: 'A button or link reading “Start free trial” is in the header.', r: [1176, 20, 200, 40] },
+    { id: 'R-D-09', cat: 'Spacing', type: 'Measured', st: '“How it works” starts 64 px below the hero', cond: 'The gap between the hero and the section is 58–70 px.', r: [64, 540, 880, 64], dims: function () { return dimV(980, 540, 604, '64 px'); } },
+    { id: 'R-D-10', cat: 'Presence', type: 'Measured', st: '“How it works” has three steps', cond: 'The section contains exactly 3 steps, each with an icon and a title.', r: [64, 684, 1312, 140] },
+    { id: 'R-D-11', cat: 'Presence', type: 'Visual', st: 'Footer has three link groups', cond: 'Three groups of links sit in the footer.', r: [64, 900, 1312, 72] },
+    { id: 'R-D-12', cat: 'Size', type: 'Measured', st: 'Header is 80 px tall', cond: 'Header height is 76–84 px.', r: [0, 0, 1440, 80], dims: function () { return dimV(40, 0, 80, '80 px', 'below'); } },
+    { id: 'R-D-13', cat: 'Text', type: 'Measured', st: 'Hero heading reads “Plan field visits in minutes.”', cond: 'The heading text matches, ignoring case and line breaks.', r: [56, 184, 488, 146] },
+    { id: 'R-D-14', cat: 'Presence', type: 'Measured', st: 'Secondary link “See how it works” follows the CTA', cond: 'A link reading “See how it works” sits right of the primary CTA, on the same line.', r: [316, 458, 172, 24] },
+    { id: 'R-D-15', cat: 'Layout', type: 'Measured', st: 'Content width is 1312 px', cond: 'Main content spans 1296–1328 px at Desktop 1440.', r: [64, 140, 1312, 400], dims: function () { return dimH(64, 1376, 590, '1312 px'); } },
+    { id: 'R-D-16', cat: 'Typography', type: 'Measured', st: 'Step titles are 19 px', cond: 'All three step titles are 18–20 px.', r: [64, 748, 1100, 22], dims: function () { return dimV(1190, 748, 768, '19 px'); } }
+  ];
+  var M = [
+    { id: 'I-M-01', cat: 'Responsive', type: 'Measured', st: 'Layout fits at 390 px', long: 'Expected on Mobile (inferred): the layout fits at 390 px, with no horizontal scroll, no overlapping elements and no clipped text.', cond: 'Document width is 390 px or less, no elements overlap and no text is clipped.', origin: 'rule' },
+    { id: 'I-M-02', cat: 'Responsive', type: 'Measured', st: 'Primary action visible at 390 px', long: 'Expected on Mobile (inferred): the primary action “Book a demo” stays visible.', cond: '“Book a demo” is fully visible in the first 844 px at 390 px wide.', origin: 'rule', from: 'R-D-04' },
+    { id: 'I-M-03', cat: 'Responsive', type: 'Measured', st: 'Header CTA reachable at 390 px', long: 'Expected on Mobile (inferred): “Start free trial” is reachable from the header, directly or through its menu.', cond: 'The header CTA, or a menu button that reveals it, is visible at 390 px.', origin: 'ai', from: 'R-D-08' }
+  ];
+  var EXTRA = { id: 'R-D-17', cat: 'Alignment', type: 'Measured', st: 'Hero subtitle sits directly below the heading', cond: 'Subtitle top is 24–40 px below the heading bottom.', r: null, sug: [64, 330, 520, 80] };
+
+  var src = 'device', items = [], sel = 'R-D-04', editing = null, version = 1, nextNum = 17;
+
+  function build(s) {
+    var aiMode = s === 'review' || s === 'bad-output';
+    if (!aiMode) {
+      items = D.map(function (d) { return Object.assign({ vp: 'D', origin: 'sample', acc: true }, d); })
+        .concat(M.map(function (m) { return Object.assign({ vp: 'M', acc: true }, m, { origin: m.origin === 'ai' ? 'device' : m.origin }); }));
+      nextNum = 17;
+    } else {
+      var desk = D.filter(function (d) { return d.id !== 'R-D-09' && !(s === 'bad-output' && d.id === 'R-D-11'); })
+        .map(function (d) { return Object.assign({ vp: 'D', acc: false }, d, { st: d.ai || d.st, origin: src }); });
+      desk.push(Object.assign({ vp: 'D', acc: false, origin: src }, EXTRA));
+      if (s === 'bad-output') desk.push({ id: 'BAND-2', vp: 'D', bad: true, cat: 'Band 2 of 2', st: 'Needs review: the model’s answer could not be read.', origin: src, r: null });
+      items = desk.concat(M.map(function (m) { return Object.assign({ vp: 'M', acc: false }, m, { origin: m.origin === 'ai' ? src : m.origin }); }));
+      nextNum = 18;
+    }
+    if (!find(sel)) sel = 'R-D-04';
+    editing = null;
+  }
+  function find(id) { for (var k = 0; k < items.length; k++) if (items[k].id === id) return items[k]; return null; }
+  function st() { return window.cuiState(); }
+
+  /* Header */
+  function renderHead() {
+    var s = st(), meta = document.getElementById('c-meta'), acc = items.filter(function (r) { return r.acc; }).length;
+    var reqs = items.filter(function (r) { return !r.bad; }).length;
+    document.getElementById('c-title').textContent = s === 'review' || s === 'bad-output' ? 'AI contract (draft)' : s === 'no-design' ? 'Contract' : 'Contract v' + version;
+    var parts;
+    if (s === 'no-design') parts = ['No requirements yet', 'Desktop 1440 and Mobile 390'];
+    else if (s === 'review' || s === 'bad-output') parts = [reqs + ' requirements, ' + acc + ' accepted', 'Not active: runs use the verified contract v1'];
+    else parts = [reqs + ' requirements', s === 'locked' ? 'Locked by Run 1' : 'Active', 'Desktop 1440 and Mobile 390', '<span class="mono xs">ctr_3b81…a29d</span>'];
+    meta.innerHTML = parts.map(function (p) { return '<span>' + p + '</span>'; }).join('');
+    var b = document.getElementById('extract-btn');
+    b.removeAttribute('aria-busy'); b.removeAttribute('aria-disabled'); b.removeAttribute('aria-describedby');
+    if (s === 'no-design') { b.setAttribute('aria-disabled', 'true'); b.setAttribute('aria-describedby', 'extract-reason'); }
+    if (s === 'extracting') { b.setAttribute('aria-busy', 'true'); b.setAttribute('aria-disabled', 'true'); }
+  }
+
+  /* List */
+  /* Provenance is stated once in the list head; rows name their engine only when it differs. */
+  function listDefault() { var s = st(); return s === 'review' || s === 'bad-output' ? src : 'sample'; }
+  function provenance() {
+    var o = listDefault();
+    return o === 'sample' ? 'From the verified sample contract' : o === 'pre' ? 'Pre-computed extraction' : 'Extracted ' + ORIG[o][1];
+  }
+  function rowHtml(r) {
+    var o = ORIG[r.origin], icon = r.bad ? I('review') : r.acc ? I('check') : '<svg class="i subtle" aria-hidden="true"><use href="#i-dash"/></svg>';
+    var metaParts = r.bad ? ['<span>864–1000 px</span>', '<span class="mono">AI_BAD_OUTPUT</span>']
+      : ['<span class="mono">' + r.id + '</span>', '<span>' + r.cat + '</span>', '<span>' + r.type + '</span>'];
+    if (r.vp === 'M') metaParts.push('<span><span class="tag tag-dashed">Inferred</span></span>');
+    if (!r.bad && r.origin !== listDefault()) metaParts.push('<span class="eng" aria-label="Produced by ' + o[1] + '">' + I(o[0]) + o[1] + '</span>');
+    if (!r.bad && !r.r && r.sug) metaParts.push('<span>Needs review: region not found</span>');
+    else if (!r.bad && !r.acc) metaParts.push('<span>Not reviewed</span>');
+    return '<li id="o-' + r.id + '" class="rowi' + (r.bad ? ' is-review' : '') + '" role="option" aria-selected="' + (r.id === sel) + '" data-id="' + r.id + '">' +
+      '<span class="ic" aria-hidden="true">' + icon + '</span><span class="t">' + (r.bad ? 'Band 2: ' + r.st : r.st) + '</span><span class="d"></span><span class="meta">' + metaParts.join('') + '</span></li>';
+  }
+  function renderList() {
+    var list = document.getElementById('list');
+    var d = items.filter(function (r) { return r.vp === 'D'; }), m = items.filter(function (r) { return r.vp === 'M'; });
+    list.innerHTML = '<li role="presentation" class="group-label">Desktop 1440 · ' + d.filter(function (r) { return !r.bad; }).length + '</li>' + d.map(rowHtml).join('') +
+      '<li role="presentation" class="group-label">Mobile 390 · ' + m.length + ', inferred from Desktop (no Mobile design)</li>' + m.map(rowHtml).join('');
+    if (sel && find(sel)) list.setAttribute('aria-activedescendant', 'o-' + sel); else list.removeAttribute('aria-activedescendant');
+    var reqs = items.filter(function (r) { return !r.bad; });
+    document.getElementById('r-count').textContent = reqs.length;
+    document.getElementById('r-acc').textContent = provenance();
+  }
+
+  /* Design canvas with regions */
+  function canvas(r) {
+    var focusRect = r.vp === 'M' && r.from ? find(r.from) || D.filter(function (x) { return x.id === r.from; })[0] : null;
+    /* Others faint (1 px), the selected one strong (3 px) and drawn last; outset 4 so lines don't sit on glyph edges. */
+    var regs = items.filter(function (x) { return x.vp === 'D' && x.r && !x.bad; });
+    /* Container regions (holding another requirement's region) are drawn only when selected, so faint lines never cross text. */
+    var holds = function (a, b) { return a !== b && String(a.r) !== String(b.r) && a.r[0] <= b.r[0] && a.r[1] <= b.r[1] && a.r[0] + a.r[2] >= b.r[0] + b.r[2] && a.r[1] + a.r[3] >= b.r[1] + b.r[3]; };
+    var isContainer = function (x) { return regs.some(function (y) { return holds(x, y); }); };
+    var isOn = function (x) { return x.id === r.id || (focusRect && x.id === focusRect.id); };
+    var box = function (x, cls) { return '<rect class="rg' + cls + '" data-id="' + x.id + '" x="' + (x.r[0] - 4) + '" y="' + (x.r[1] - 4) + '" width="' + (x.r[2] + 8) + '" height="' + (x.r[3] + 8) + '" rx="4"/>'; };
+    var out = regs.filter(function (x) { return !isOn(x) && !isContainer(x); }).map(function (x) { return box(x, ''); }).join('') +
+      regs.filter(isOn).map(function (x) { return box(x, ' sel'); }).join('');
+    if (!r.r && r.sug) out += '<rect class="rg unres sel" x="' + r.sug[0] + '" y="' + r.sug[1] + '" width="' + r.sug[2] + '" height="' + r.sug[3] + '" rx="4"/>';
+    if (r.bad) out += '<path class="bandline" d="M0 864 H1440"/><rect class="rg unres sel" x="8" y="868" width="1424" height="126" rx="4"/>' + lbl(1300, 826, 'Band 2', 'var(--text)');
+    var dims = r.dims ? r.dims() : '';
+    if (!dims && focusRect && focusRect.dims) dims = focusRect.dims();
+    var lab = r.vp === 'M' ? 'Desktop design, ' + (focusRect ? focusRect.id + ' highlighted' : '') : 'Design, Desktop 1440 × 1000, ' + (r.r ? r.id + ' highlighted' : 'region not found');
+    return '<svg class="shot canvas" id="canvas" viewBox="0 0 1440 1000" role="img" aria-label="' + lab + '"><use href="#sample-design" width="1440" height="1000"/>' + out + dims + '</svg>';
+  }
+
+  function renderDetail() {
+    var el = document.getElementById('detail'), r = find(sel), s = st(), locked = s === 'locked';
+    if (!r) { el.innerHTML = '<div class="empty"><h2 id="d-title">No requirement selected</h2><p class="muted">Pick a requirement from the list to see its region on the design.</p></div>'; return; }
+    var o = ORIG[r.origin];
+    if (r.bad) {
+      el.innerHTML = '<div class="stack-sm"><div class="row"><span class="st st-review">' + I('review') + 'Needs review</span></div>' +
+        '<h2 id="d-title" class="prose">' + r.st + '</h2><div class="meta"><span>Band 2 of 2, 864–1000 px of the Desktop design</span><span class="eng">' + I(o[0]) + o[1] + '</span><span class="mono xs">AI_BAD_OUTPUT</span></div></div>' +
+        '<figure class="fig"><figcaption><b><span class="legend dashed" aria-hidden="true"></span>Band 2, not read</b><span>1440 × 136</span></figcaption>' + canvas(r) + '</figure>' +
+        '<p class="prose muted">Nothing from this band is in the contract. Requirements from band 1 are kept. Add any requirement this area needs by hand, or extract this band again.</p>' +
+        '<div class="btn-row"><button class="btn btn-ghost" type="button" data-open="sheet-add">' + I('plus', 'i-sm') + 'Add requirement</button><button class="btn btn-ghost" type="button" data-del="' + r.id + '">' + I('trash', 'i-sm') + 'Remove this row</button></div>';
+      return;
+    }
+    var status = locked ? '<span class="st">' + I('lock') + 'Locked by Run 1</span>' : r.acc ? '<span class="st">' + I('check') + 'Accepted</span>' : '<span class="st st-nc">' + I('dash') + 'Not accepted: not verified until accepted</span>';
+    var isEdit = editing === r.id && !locked;
+    var stmt = r.vp === 'M' ? r.long : r.st;
+    var head = isEdit
+      ? '<div class="redit"><div class="field"><label for="ed-st">Statement</label><textarea class="textarea" id="ed-st" rows="2" style="min-height:0" aria-describedby="ed-st-err">' + stmt + '</textarea><p class="error" id="ed-st-err" hidden>' + I('alert', 'i-sm') + 'The statement can’t be empty.</p></div>' +
+        '<div class="field"><label for="ed-cond">Passes when</label><input class="input" id="ed-cond" value="' + r.cond.replace(/"/g, '&quot;') + '"></div>' +
+        '<div class="btn-row"><button class="btn" type="button" id="ed-save">Save</button><button class="btn btn-ghost" type="button" id="ed-cancel">Cancel</button></div></div>'
+      : '<h2 id="d-title" class="prose">' + stmt + '</h2>';
+    var regionTxt = r.r ? 'Snapped to element bounds, design image' : r.vp === 'M' ? 'No Mobile design. ' + (r.from ? 'Derived from ' + r.from + ' on the Desktop design.' : 'Applies to the whole Mobile capture.') : 'Region not found: image checks need review';
+    var rect = r.r ? r.r[2] + ' × ' + r.r[3] + ' px at ' + r.r[0] + ', ' + r.r[1] : r.sug ? 'Suggested by AI: ' + r.sug[2] + ' × ' + r.sug[3] + ' px at ' + r.sug[0] + ', ' + r.sug[1] + ' (not snapped)' : 'None';
+    var fig = r.vp === 'M' && !r.from
+      ? '<div class="nodesign"><div class="stack-sm"><strong>No Mobile design</strong><span>Inferred from the Desktop design. This check runs on the Mobile capture and its DOM snapshot.</span></div></div>'
+      : canvas(r);
+    var actions = locked ? '' : '<div class="btn-row">' +
+      (r.acc ? '' : '<button class="btn btn-ghost" type="button" data-accept="' + r.id + '">' + I('check', 'i-sm') + 'Accept</button>') +
+      (isEdit ? '' : '<button class="btn btn-ghost" type="button" data-edit="' + r.id + '">' + I('edit', 'i-sm') + 'Edit</button>') +
+      '<button class="btn btn-ghost" type="button" data-del="' + r.id + '">' + I('trash', 'i-sm') + 'Delete</button></div>';
+    el.innerHTML =
+      '<figure class="fig"><figcaption><b><span class="legend" aria-hidden="true"></span>' + (r.vp === 'M' ? 'Desktop design (no Mobile design)' : 'Design, Desktop') + '</b><span>1440 × 1000</span></figcaption>' + fig + '</figure>' +
+      '<div class="stack">' +
+        '<div class="row" style="gap:var(--space-4)">' + status + '</div>' + (isEdit ? '<h2 id="d-title" class="sr-only">Edit ' + r.id + '</h2>' : '') + head +
+        '<div class="meta"><span class="mono xs">' + r.id + '</span><span>' + (r.vp === 'D' ? 'Desktop 1440' : 'Mobile 390') + '</span><span>' + r.cat + '</span><span>' + (r.vp === 'M' ? '<span class="tag tag-dashed">Inferred (advisory)</span>' : 'Explicit') + '</span><span>' + r.type + '</span><span class="eng" aria-label="Produced by ' + o[1] + '">' + I(o[0]) + o[1] + '</span></div>' +
+      '</div>' +
+      (isEdit ? '' : '<section class="sec" aria-labelledby="pw-h"><h3 id="pw-h">Passes when</h3><p class="prose">' + r.cond + '</p></section>') +
+      '<dl class="kv"><dt>Region</dt><dd>' + regionTxt + '</dd><dt>Bounds</dt><dd>' + rect + '</dd><dt>Checked by</dt><dd>' + (r.type === 'Judged' ? 'A model at run time (On-device, or Cloud with consent)' : r.type === 'Visual' ? 'Image comparison on this device' : 'Measured on this device from the DOM snapshot') + '</dd>' +
+      (r.vp === 'M' ? '<dt>Severity</dt><dd>Capped at Minor (advisory)</dd>' : '') + '</dl>' + actions;
+    if (isEdit) document.getElementById('ed-st').focus();
+  }
+
+  function renderExtract(p2) {
+    var p = p2 == null ? 40 : p2;
+    var stages = [
+      ['done', 'Band 1 of 2, header, hero and “How it works” (0–864 px)', '6.4 s, 15 found', 100],
+      [p >= 100 ? 'done' : 'run', 'Band 2 of 2, steps (864–1000 px)', p >= 100 ? '1.9 s, 1 found' : p + '%', p],
+      [p >= 100 ? 'run' : 'wait', 'Snap regions to element bounds', p >= 100 ? 'Running' : 'Waiting', p >= 100 ? 50 : 0],
+      ['wait', 'Inferred requirements for Mobile', 'Waiting', 0]
+    ];
+    document.getElementById('xstages').innerHTML = stages.map(function (s, k) {
+      var ic = s[0] === 'done' ? '<svg class="i i-sm" aria-hidden="true" style="color:var(--success)"><use href="#i-check"/></svg>' : s[0] === 'run' ? '<span class="spinner" aria-hidden="true"></span>' : '<svg class="i i-sm subtle" aria-hidden="true"><use href="#i-dash"/></svg>';
+      return '<li>' + ic + '<span' + (s[0] === 'wait' ? ' class="muted"' : '') + '>' + s[1] + '</span><span class="w">' + s[2] + '</span>' +
+        '<div class="bar" role="progressbar" aria-label="' + s[1] + '" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + s[3] + '"><span style="--p:' + s[3] + '%"></span></div></li>';
+    }).join('');
+    var got = D.filter(function (d) { return d.r[1] < 864 && d.id !== 'R-D-09'; });
+    var inner = function (a, b) { return a !== b && String(a.r) !== String(b.r) && a.r[0] <= b.r[0] && a.r[1] <= b.r[1] && a.r[0] + a.r[2] >= b.r[0] + b.r[2] && a.r[1] + a.r[3] >= b.r[1] + b.r[3]; };
+    var found = got.filter(function (d) { return !got.some(function (e) { return inner(d, e); }); })
+      .map(function (d) { return '<rect class="rg" x="' + (d.r[0] - 4) + '" y="' + (d.r[1] - 4) + '" width="' + (d.r[2] + 8) + '" height="' + (d.r[3] + 8) + '" rx="4"/>'; }).join('');
+    document.getElementById('x-canvas').innerHTML = '<use href="#sample-design" width="1440" height="1000"/>' + found + '<path class="bandline" d="M0 864 H1440"/>' + lbl(140, 826, 'Band 1', 'var(--text)') + lbl(140, 872, 'Band 2', 'var(--text)');
+  }
+
+  function all() {
+    var s = st();
+    if (s === 'consent') src = 'device';
+    build(s); renderHead();
+    if (s === 'extracting') renderExtract();
+    if (['default', 'review', 'locked', 'consent', 'bad-output'].indexOf(s) > -1) { renderList(); renderDetail(); }
+    var rt = document.getElementById('rv-title'), rs = document.getElementById('rv-sub');
+    if (src === 'pre') { rt.textContent = 'Sample results (pre-computed): 17 requirements. Review them, then accept.'; rs.textContent = 'You declined the cloud, so nothing was sent. These are the sample’s stored extraction results, labelled Pre-computed. The verified contract stays active until you choose below.'; }
+    else if (src === 'cloud') { rt.textContent = 'AI extracted 17 requirements, Cloud. Review them, then accept.'; rs.textContent = '121 KB was sent to Google Gemini through Firebase for this project. The verified contract stays active until you choose below.'; }
+    else { rt.textContent = 'AI extracted 17 requirements, On-device. Review them, then accept.'; rs.textContent = 'Nothing was sent off this device. AI regions are suggestions, snapped to element bounds on the design image. The verified contract stays active until you choose below.'; }
+    // no-design: a non-sample project
+    var ph = document.querySelector('.phead');
+    if (ph) {
+      var crumbs = ph.querySelectorAll('.crumbs a'), tag = ph.querySelector('.crumbs .tag'), first = ph.querySelector('.steps li');
+      if (s === 'no-design') { crumbs[1].textContent = 'Pricing page'; if (tag) tag.hidden = true; first.classList.remove('done'); first.classList.add('next'); first.querySelector('.n').textContent = '1'; first.querySelector('.lbl').textContent = 'Design, next'; var dn = first.querySelector('.sr-only'); if (dn) dn.remove(); ph.querySelector('.steps li:nth-child(3)').classList.remove('next'); }
+    }
+    if (s === 'consent') setTimeout(function () { if (!document.getElementById('sheet-consent').open) window.cuiOpen('sheet-consent', document.getElementById('extract-btn')); }, 60);
+  }
+
+  /* Events */
+  var timer = null;
+  function go(s) { var u = new URL(location); u.searchParams.set('state', s); history.replaceState(null, '', u); var sel2 = document.querySelector('.devbar select'); if (sel2) sel2.value = s; window.cuiApplyState(s); }
+  function startExtract() {
+    var p = 40; go('extracting'); renderExtract(p);
+    document.getElementById('announce').textContent = 'Extracting requirements on this device';
+    timer = setInterval(function () {
+      p += 20; renderExtract(Math.min(p, 100));
+      if (p >= 140) { clearInterval(timer); timer = null; go('review'); document.getElementById('announce').textContent = 'Extraction done: 17 requirements to review'; }
+    }, 450);
+  }
+  document.getElementById('extract-btn').addEventListener('click', function () {
+    var s = st();
+    if (s === 'no-design' || s === 'extracting') return;
+    if (s === 'consent' || window.cuiFlags.engine === 'unavailable') { window.cuiOpen('sheet-consent', this); return; }
+    src = 'device'; startExtract();
+  });
+  document.getElementById('stop-x').addEventListener('click', function () { if (timer) clearInterval(timer); timer = null; window.cuiToast('Extraction stopped. The verified contract is unchanged.'); go('default'); });
+  document.getElementById('sheet-consent').addEventListener('close', function () {
+    if (this.returnValue === 'allow') { src = 'cloud'; window.cuiStore.set('sent', '1'); go('review'); window.cuiToast('Cloud allowed for Sample landing page'); }
+    else { src = 'pre'; go('review'); window.cuiToast('Declined. Nothing was sent. Showing the pre-computed extraction.'); }
+  });
+  document.getElementById('use-ai').addEventListener('click', function () { version = 2; window.cuiToast('AI contract is now active as Contract v2'); go('default'); });
+  document.getElementById('keep-verified').addEventListener('click', function () { window.cuiToast('Kept the verified contract'); go('default'); });
+  document.getElementById('edit-v2').addEventListener('click', function () { version = 2; window.cuiToast('Contract v2 created. Run 1 still references v1.'); go('default'); });
+  document.getElementById('accept-all').addEventListener('click', function () {
+    var n = 0; items.forEach(function (r) { if (!r.acc && !r.bad) { r.acc = true; n++; } });
+    window.cuiToast('Accepted ' + n + ' requirements'); renderHead(); renderList(); renderDetail();
+  });
+  document.getElementById('list').addEventListener('cui:select', function (e) {
+    sel = e.detail.option.dataset.id; editing = null; renderDetail();
+    var u = new URL(location); u.searchParams.set('r', sel); history.replaceState(null, '', u);
+    var t = document.getElementById('d-title');
+    document.getElementById('announce').textContent = t ? t.textContent : '';
+    if (e.detail.activate && window.innerWidth < 1100) {
+      document.getElementById('detail').scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth' });
+      focusTitle();
+    }
+  });
+  function reduceMotion() { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+  function focusTitle() { var t = document.getElementById('d-title'); if (t) { t.tabIndex = -1; t.focus({ preventScroll: true }); } }
+  var list = document.getElementById('list');
+  function hl(id, on) { var c = document.getElementById('canvas'); if (!c) return; Array.prototype.forEach.call(c.querySelectorAll('.rg[data-id="' + id + '"]'), function (x) { x.classList.toggle('hl', on); }); }
+  list.addEventListener('mouseover', function (e) { var o = e.target.closest('[role=option]'); if (o) hl(o.dataset.id, true); });
+  list.addEventListener('mouseout', function (e) { var o = e.target.closest('[role=option]'); if (o) hl(o.dataset.id, false); });
+  document.getElementById('detail').addEventListener('click', function (e) {
+    var t;
+    if ((t = e.target.closest('.rg[data-id]'))) { var o = document.getElementById('o-' + t.dataset.id); if (o) o.click(); return; }
+    if ((t = e.target.closest('[data-accept]'))) { find(t.dataset.accept).acc = true; window.cuiToast('Accepted ' + t.dataset.accept); renderHead(); renderList(); renderDetail(); focusTitle(); return; }
+    if ((t = e.target.closest('[data-edit]'))) { editing = t.dataset.edit; renderDetail(); document.getElementById('ed-st').focus(); return; }
+    if ((t = e.target.closest('[data-del]'))) {
+      var id = t.dataset.del, k = items.indexOf(find(id)); items.splice(k, 1);
+      var nx = items[k] || items[k - 1]; sel = nx ? nx.id : null;
+      window.cuiToast(id === 'BAND-2' ? 'Removed the unread band row' : 'Deleted ' + id); renderHead(); renderList(); renderDetail(); document.getElementById('list').focus(); return;
+    }
+    if (e.target.closest('#ed-cancel')) { editing = null; renderDetail(); focusTitle(); return; }
+    if (e.target.closest('#ed-save')) {
+      var ta = document.getElementById('ed-st'), err = document.getElementById('ed-st-err'), v = ta.value.trim();
+      if (!v) { ta.setAttribute('aria-invalid', 'true'); err.hidden = false; ta.focus(); return; }
+      var r = find(editing); if (r.vp === 'M') r.long = v; else r.st = v; r.cond = document.getElementById('ed-cond').value.trim() || r.cond;
+      editing = null; window.cuiToast('Saved ' + r.id); renderList(); renderDetail(); focusTitle();
+    }
+  });
+
+  /* Add requirement */
+  var form = document.getElementById('add-form');
+  form.addEventListener('submit', function (e) {
+    if (e.submitter && e.submitter.value !== 'add') return;
+    var stx = document.getElementById('add-st'), cond = document.getElementById('add-cond'), ok = true;
+    [[stx, 'add-st-err'], [cond, 'add-cond-err']].forEach(function (p) {
+      var bad = !p[0].value.trim(); p[0].setAttribute('aria-invalid', bad); document.getElementById(p[1]).hidden = !bad; if (bad && ok) { p[0].focus(); ok = false; }
+    });
+    if (!ok) { e.preventDefault(); return; }
+    var mob = document.getElementById('add-vp').value.indexOf('Mobile') === 0;
+    var id = mob ? 'R-M-01' : 'R-D-' + (nextNum++);
+    var it = { id: id, vp: mob ? 'M' : 'D', cat: document.getElementById('add-cat').value, type: form.querySelector('[name=ctype]:checked').value, st: stx.value.trim(), long: stx.value.trim(), cond: cond.value.trim(), origin: 'user', acc: true, r: null };
+    var at = mob ? items.length : items.filter(function (r) { return r.vp === 'D'; }).length;
+    items.splice(at, 0, it); sel = id;
+    setTimeout(function () { renderHead(); renderList(); renderDetail(); window.cuiToast('Added ' + id); form.reset(); }, 0);
+  });
+  document.getElementById('sheet-add').addEventListener('close', function () {
+    ['add-st', 'add-cond'].forEach(function (i) { document.getElementById(i).removeAttribute('aria-invalid'); document.getElementById(i + '-err').hidden = true; });
+  });
+
+  document.addEventListener('cui:state', all);
+  var q = new URLSearchParams(location.search).get('r'); if (q) sel = q;
+  all();
+})();
+</script>
+</body>
+</html>

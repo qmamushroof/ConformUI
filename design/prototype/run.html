@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
+<title>Run 1 · Sample landing page · ConformUI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/app.css">
+<style>
+  .runhead{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:var(--space-4) var(--space-6);padding:var(--space-6) var(--space-6) var(--space-5)}
+  .runhead .stack-sm{gap:var(--space-2)}
+  .dim-label{font:600 17px var(--font-mono)}
+  .runlevel{padding:0 var(--space-6) var(--space-16);max-width:1440px}
+  .nodesign{display:grid;place-items:center;aspect-ratio:476/420;border:1px dashed var(--border-strong);border-radius:var(--radius-md);padding:var(--space-6);text-align:center;color:var(--text-muted);font-size:var(--font-size-sm)}
+  .refined{display:inline-flex;align-items:center;gap:var(--space-1);font-size:var(--font-size-sm);color:var(--text)}
+  .running{padding:0 var(--space-6);max-width:640px}
+  .vpfilter button[aria-pressed]{display:inline-flex;align-items:center;gap:var(--space-2);min-height:var(--layout-target);padding:0;border:0;border-bottom:2px solid transparent;margin-bottom:-1px;background:none;color:var(--text-muted);font:inherit;font-size:var(--font-size-sm);font-weight:var(--weight-medium);cursor:pointer;white-space:nowrap}
+  .vpfilter button[aria-pressed]:hover{color:var(--text)}
+  .vpfilter button[aria-pressed="true"]{color:var(--text);border-bottom-color:var(--text)}
+  @media (max-width:720px){.runhead{padding:var(--space-4)}.runlevel{padding:0 var(--space-4) var(--space-12)}.running{padding:0 var(--space-4)}}
+</style>
+</head>
+<body data-nav="projects" data-title="Run 1 · Sample landing page" data-states="default,running,reverify,deep-refined,offline,precomputed,error" data-trace="#trace">
+<script src="assets/sprite.js"></script>
+<header data-shell></header>
+<div data-phead data-step="run" data-done="4" data-next="fix" data-crumb="Run 1"></div>
+
+<main id="main" tabindex="-1">
+  <div class="runhead">
+    <div class="stack-sm">
+      <h1 id="run-title">Run 1</h1>
+      <div class="meta"><span>25 Nov 2026, 14:32</span><span>Contract v1, locked</span><span>Desktop 1440 and Mobile 390</span><span class="mono xs">run_7f3a…c21e</span></div>
+      <div class="summary" id="summary" style="margin-top:var(--space-2)"></div>
+    </div>
+    <div class="btn-row">
+      <span id="deep-wrap"><button class="btn btn-ghost" id="deep-btn" data-open="sheet-deep"><svg class="i i-sm" aria-hidden="true"><use href="#i-cloud"/></svg>Deep Analysis</button></span>
+      <button class="btn btn-ghost" data-open="sheet-reverify"><svg class="i i-sm" aria-hidden="true"><use href="#i-refresh"/></svg>Re-verify</button>
+      <div class="menu-wrap">
+        <button class="iconbtn" data-menu aria-haspopup="true" aria-expanded="false" aria-label="More run actions"><svg class="i" aria-hidden="true"><use href="#i-more"/></svg></button>
+        <div class="menu" hidden>
+          <button data-open="sheet-prompt"><svg class="i i-sm" aria-hidden="true"><use href="#i-eye"/></svg>Preview fix prompt</button>
+          <button data-open="sheet-export"><svg class="i i-sm" aria-hidden="true"><use href="#i-download"/></svg>Export report</button>
+          <a href="compare.html"><svg class="i i-sm" aria-hidden="true"><use href="#i-compare"/></svg>Compare with another run</a>
+          <button data-copy="run_7f3a91d2c21e" data-copy-toast="Run ID copied"><svg class="i i-sm" aria-hidden="true"><use href="#i-copy"/></svg>Copy run ID</button>
+        </div>
+      </div>
+      <button class="btn btn-primary" id="fix-btn" data-copy="(fix prompt)" data-copy-toast="Fix prompt copied: 6 fixes, 1 to verify first"><svg class="i i-sm" aria-hidden="true"><use href="#i-copy"/></svg>Copy fix prompt</button>
+    </div>
+  </div>
+  <p class="small muted" id="deep-reason" style="padding:0 var(--space-6) var(--space-3);margin-top:calc(-1 * var(--space-3))" hidden></p>
+
+  <div data-state-show="error" style="padding:0 var(--space-6) var(--space-5)">
+    <div class="notice notice-danger" role="alert">
+      <svg class="i" aria-hidden="true"><use href="#i-alert"/></svg>
+      <p class="title">The Mobile DOM snapshot could not be read. The run used images only for Mobile.</p>
+      <ul class="small" style="margin:0;padding-left:var(--space-4)">
+        <li><span class="mono">elements[12].box.w</span>: expected a number, got "auto"</li>
+        <li><span class="mono">viewport.width</span>: missing</li>
+        <li><span class="mono">schema</span>: expected "conformui.dom-snapshot", got "dom"</li>
+      </ul>
+      <div class="btn-row"><a class="btn" href="project.html#captures">Paste a new snapshot</a><a class="btn btn-ghost" href="snippet.html">Get the snippet</a></div>
+    </div>
+  </div>
+  <div data-state-show="precomputed" style="padding:0 var(--space-6) var(--space-5)">
+    <div class="notice notice-info">
+      <svg class="i" aria-hidden="true"><use href="#i-info"/></svg>
+      <p class="title">No AI engine could judge R-D-05 live, so it shows the sample's pre-computed result.</p>
+      <p class="small muted">Measured and visual checks ran live on this device.</p>
+      <div class="btn-row"><button class="btn" data-open="sheet-consent">Allow cloud to judge live</button></div>
+    </div>
+  </div>
+
+  <!-- Running -->
+  <section data-state-show="running" class="running" aria-labelledby="run-prog">
+    <div class="stack">
+      <h2 id="run-prog" class="h3">Checking 19 requirements</h2>
+      <div class="bar" role="progressbar" aria-label="Run progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="62"><span style="--p:62%"></span></div>
+      <ol class="stages">
+        <li><svg class="i i-sm" aria-hidden="true" style="color:var(--success)"><use href="#i-check"/></svg><span>Align captures to design</span><span class="w small">120 ms</span></li>
+        <li><svg class="i i-sm" aria-hidden="true" style="color:var(--success)"><use href="#i-check"/></svg><span>Measured checks (14)</span><span class="w small">310 ms</span></li>
+        <li><span class="spinner" aria-hidden="true"></span><span>Visual checks (2)</span><span class="w small">Running</span></li>
+        <li><svg class="i i-sm subtle" aria-hidden="true"><use href="#i-dash"/></svg><span class="muted">Judged checks (1), on-device</span><span class="w small">Waiting</span></li>
+      </ol>
+      <p class="small muted">Measured and visual checks run on this device. Nothing is sent.</p>
+    </div>
+  </section>
+
+  <div class="split" data-state-show="default reverify deep-refined offline precomputed error">
+    <section class="split-list" aria-labelledby="flh">
+      <div class="split-list-head">
+        <h2 id="flh" class="sr-only">Findings</h2>
+        <div class="tabs vpfilter" role="group" aria-label="Viewport filter" id="vp-tabs">
+          <button type="button" aria-pressed="true" data-vp="all">All <span class="muted" id="c-all"></span></button>
+          <button type="button" aria-pressed="false" data-vp="Desktop">Desktop <span class="muted" id="c-d"></span></button>
+          <button type="button" aria-pressed="false" data-vp="Mobile">Mobile <span class="muted" id="c-m"></span></button>
+        </div>
+      </div>
+      <ul class="rows" id="list" role="listbox" aria-label="Findings, sorted by severity" tabindex="0"></ul>
+      <details class="disc" style="padding:0 var(--space-4)">
+        <summary><svg class="i i-sm chev" aria-hidden="true"><use href="#i-chev"/></svg>Passing <span class="count" id="pass-count">11</span></summary>
+        <ul class="small stack-sm disc-body" style="list-style:none;margin:0;padding-left:var(--space-6)" id="pass-list"></ul>
+      </details>
+      <details class="disc" style="padding:0 var(--space-4)">
+        <summary><svg class="i i-sm chev" aria-hidden="true"><use href="#i-chev"/></svg>Not checked <span class="count">1</span></summary>
+        <ul class="small stack-sm disc-body" style="list-style:none;margin:0;padding-left:var(--space-6)">
+          <li><span class="mono xs">R-D-11</span> Footer has three link groups<br><span class="muted">Not checked: the Desktop capture ends at 1000 px, above the footer.</span></li>
+        </ul>
+      </details>
+    </section>
+    <section class="split-detail" id="detail" aria-labelledby="d-title"></section>
+  </div>
+
+  <section class="runlevel" id="trace" data-state-show="default reverify deep-refined offline precomputed error" aria-labelledby="trace-h">
+    <details class="disc" open>
+      <summary><svg class="i i-sm chev" aria-hidden="true"><use href="#i-chev"/></svg><span id="trace-h">Engine trace</span><span class="aside" id="trace-sum">0 B sent off this device</span></summary>
+      <div class="table-wrap disc-body"><table class="data" id="trace-table">
+        <thead><tr><th>Step</th><th>Engine</th><th class="r">Duration</th><th class="r">Sent off this device</th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+    </details>
+  </section>
+  <div class="sr-only" aria-live="polite" id="announce"></div>
+</main>
+
+<!-- Sheets -->
+<dialog class="sheet" id="sheet-deep" aria-labelledby="deep-h">
+  <form method="dialog" class="sheet-in">
+    <div class="sheet-head"><div class="stack-sm"><h2 id="deep-h">Send this run for Deep Analysis?</h2><p class="muted small">Cloud refines the 1 finding that needs review. Exactly this is sent to Google Gemini through Firebase:</p></div><button class="iconbtn" value="cancel" aria-label="Close"><svg class="i" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <ul class="sendlist">
+      <li><span>Design, Desktop (1440 × 1000, downscaled to 1024 px)</span><span class="num">118 KB</span></li>
+      <li><span>Capture, Desktop (1024 px)</span><span class="num">104 KB</span></li>
+      <li><span>Capture, Mobile (390 px)</span><span class="num">61 KB</span></li>
+      <li><span>Design and capture pair for R-D-05</span><span class="num">92 KB</span></li>
+      <li><span>Contract: 19 requirements</span><span class="num">21 KB</span></li>
+      <li><span>Measurements for 1 finding</span><span class="num">16 KB</span></li>
+      <li class="total"><span>Total</span><span class="num">412 KB</span></li>
+    </ul>
+    <dl class="kv"><dt>Model</dt><dd class="mono">gemini-2.5-pro</dd><dt>Deep Analysis today</dt><dd>1 of 5 used</dd></dl>
+    <div class="sheet-foot"><button class="btn" value="cancel" autofocus>Cancel</button><button class="btn btn-primary" value="send" id="deep-send"><svg class="i i-sm" aria-hidden="true"><use href="#i-cloud"/></svg>Send to cloud</button></div>
+  </form>
+</dialog>
+
+<dialog class="sheet wide" id="sheet-reverify" aria-labelledby="rv-h">
+  <form method="dialog" class="sheet-in">
+    <div class="sheet-head"><div class="stack-sm"><h2 id="rv-h">Re-verify against Contract v1</h2><p class="muted small">Add the new captures your agent produced. The same 19 requirements are checked again.</p></div><button class="iconbtn" value="cancel" aria-label="Close"><svg class="i" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <div class="two" style="gap:var(--space-4)">
+      <div class="stack-sm"><span class="label"><svg class="i i-sm" aria-hidden="true"><use href="#i-desktop"/></svg> Desktop 1440</span>
+        <div class="thumb"><svg class="shot" viewBox="0 0 1440 1000" role="img" aria-label="New Desktop capture"><use href="#sample-fixed" width="1440" height="1000"/></svg><div class="small"><div>fixed-desktop.png</div><div class="muted">1440 × 1000 · DOM snapshot added</div></div><button type="button" class="iconbtn" aria-label="Remove Desktop capture"><svg class="i i-sm" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+      </div>
+      <div class="stack-sm"><span class="label"><svg class="i i-sm" aria-hidden="true"><use href="#i-phone"/></svg> Mobile 390</span>
+        <div class="thumb"><svg class="shot" viewBox="0 0 476 844" role="img" aria-label="New Mobile capture"><use href="#sample-mobile-fixed" width="476" height="844"/></svg><div class="small"><div>fixed-mobile.png</div><div class="muted">390 × 844 · DOM snapshot added</div></div><button type="button" class="iconbtn" aria-label="Remove Mobile capture"><svg class="i i-sm" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+      </div>
+    </div>
+    <p class="small muted">Use the sample's fixed captures, or drop your own: PNG, JPEG or WebP up to 20 MB.</p>
+    <div class="sheet-foot"><button class="btn" value="cancel">Cancel</button><button class="btn btn-primary" value="go" id="rv-go"><svg class="i i-sm" aria-hidden="true"><use href="#i-refresh"/></svg>Run Re-verify</button></div>
+  </form>
+</dialog>
+
+<dialog class="sheet" id="sheet-export" aria-labelledby="ex-h">
+  <form method="dialog" class="sheet-in">
+    <div class="sheet-head"><h2 id="ex-h">Export report</h2><button class="iconbtn" value="cancel" aria-label="Close"><svg class="i" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <fieldset class="stack-sm"><legend>Format</legend>
+      <label class="choice"><input type="radio" name="fmt" checked><span>Markdown</span><span class="help">For people: a hand-over report with every finding, its measurements and engine.</span></label>
+      <label class="choice"><input type="radio" name="fmt"><span>JSON</span><span class="help">For tools: <span class="mono">conformui.report</span> version 1. Crops are referenced as rectangles, not embedded.</span></label>
+    </fieldset>
+    <p class="small muted">Includes the engine and source of every item. No images or snapshot text.</p>
+    <div class="sheet-foot"><button class="btn" value="copy" data-toast="Report copied as Markdown">Copy</button><button class="btn btn-primary" value="dl" data-toast="Downloaded sample-landing-page-run-1.md"><svg class="i i-sm" aria-hidden="true"><use href="#i-download"/></svg>Download</button></div>
+  </form>
+</dialog>
+
+<dialog class="sheet wide" id="sheet-prompt" aria-labelledby="fp-h">
+  <form method="dialog" class="sheet-in">
+    <div class="sheet-head"><div class="stack-sm"><h2 id="fp-h">Fix prompt</h2><p class="muted small">6 fixes and 1 to verify first. Paste it into your coding agent.</p></div><button class="iconbtn" value="cancel" aria-label="Close"><svg class="i" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <div class="field"><label for="fp-text">Prompt text</label>
+<textarea class="textarea code" id="fp-text" rows="14" readonly>Page: Sample landing page. Contract v1, Run 1 (25 Nov 2026).
+Fix the failing requirements below. Leave every passing requirement unchanged.
+
+1. [Critical] R-D-06 Hero illustration is missing (Desktop 1440)
+   Expected: an illustration 576 × 400 px right of the heading. Observed: region empty (96% differs).
+   Fix: add the hero illustration to the right column, top-aligned with the heading.
+   Done when: an image or SVG covers at least 80% of the region.
+
+2. [Major] R-D-04 Primary CTA width (Desktop 1440) · main .hero a.btn-primary
+   Expected 220 px, observed 132 px (−40%), from DOM snapshot.
+   Fix: width: 220px; keep the 18 px label.
+   Done when: width is 202–238 px.
+...
+7. [Verify first] R-D-05 Primary CTA colour may be off-brand (low confidence).</textarea></div>
+    <div class="sheet-foot"><button class="btn" value="cancel">Close</button><button class="btn btn-primary" value="copy" data-toast="Fix prompt copied: 6 fixes, 1 to verify first"><svg class="i i-sm" aria-hidden="true"><use href="#i-copy"/></svg>Copy fix prompt</button></div>
+  </form>
+</dialog>
+
+<dialog class="sheet" id="sheet-dismiss" aria-labelledby="dm-h">
+  <form method="dialog" class="sheet-in">
+    <div class="sheet-head"><div class="stack-sm"><h2 id="dm-h">Accept this deviation?</h2><p class="muted small" id="dm-what">R-D-09 is left out of the fix prompt and stays in the report as accepted.</p></div><button class="iconbtn" value="cancel" aria-label="Close"><svg class="i" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <div class="field"><label for="dm-note">Note <span class="muted">(optional)</span></label><textarea class="textarea" id="dm-note" rows="3" placeholder="Client approved the tighter spacing on 24 Nov."></textarea></div>
+    <div class="sheet-foot"><button class="btn" value="cancel">Cancel</button><button class="btn btn-primary" value="ok" data-toast="Marked as accepted deviation">Accept deviation</button></div>
+  </form>
+</dialog>
+
+<dialog class="sheet" id="sheet-consent" aria-labelledby="cs-h">
+  <form method="dialog" class="sheet-in">
+    <div class="sheet-head"><div class="stack-sm"><h2 id="cs-h">Allow cloud for this project?</h2><p class="muted small">On-device AI isn't available here. To judge R-D-05 live, ConformUI sends this to Google Gemini through Firebase:</p></div><button class="iconbtn" value="cancel" aria-label="Close"><svg class="i" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <ul class="sendlist"><li><span>Design and capture pair for R-D-05</span><span class="num">92 KB</span></li><li><span>Requirement text and measurements</span><span class="num">4 KB</span></li><li class="total"><span>Total</span><span class="num">96 KB</span></li></ul>
+    <p class="small muted">Applies to Sample landing page only. Revoke any time in Settings.</p>
+    <div class="sheet-foot"><button class="btn" value="decline" autofocus>Decline</button><button class="btn btn-primary" value="allow" data-toast="Cloud allowed for this project">Allow for this project</button></div>
+  </form>
+</dialog>
+
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  var I = window.cuiIcon;
+  var SEV = { critical: ['critical', 'Critical'], major: ['major', 'Major'], minor: ['minor', 'Minor'] };
+  var ENG = { measured: ['ruler', 'Measured'], device: ['chip', 'On-device'], cloud: ['cloud', 'Cloud'], pre: ['file', 'Pre-computed'] };
+  function crop(sym, vb, w, h, extra) { return '<svg class="shot" viewBox="' + vb + '" role="img" aria-label="' + extra.label + '"><use href="#' + sym + '" width="' + w + '" height="' + h + '"/>' + (extra.svg || '') + '</svg>'; }
+  function dimH(x1, x2, y, label, color, dashed) {
+    var c = color || 'var(--accent)';
+    return '<g style="stroke:' + c + '" stroke-width="2"' + (dashed ? ' stroke-dasharray="6 5"' : '') + '><path d="M' + x1 + ' ' + y + ' H' + x2 + '"/></g><g style="stroke:' + c + '" stroke-width="2"><path d="M' + x1 + ' ' + (y - 8) + ' V' + (y + 8) + ' M' + x2 + ' ' + (y - 8) + ' V' + (y + 8) + '"/></g>' +
+      (label ? '<rect x="' + ((x1 + x2) / 2 - 40) + '" y="' + (y - 24) + '" width="80" height="20" fill="#FFFFFF"/><text class="dim-label" x="' + ((x1 + x2) / 2) + '" y="' + (y - 9) + '" text-anchor="middle" style="fill:' + c + '">' + label + '</text>' : '');
+  }
+  function dimV(x, y1, y2, label, color) {
+    var c = color || 'var(--accent)';
+    return '<g style="stroke:' + c + '" stroke-width="2"><path d="M' + x + ' ' + y1 + ' V' + y2 + ' M' + (x - 8) + ' ' + y1 + ' H' + (x + 8) + ' M' + (x - 8) + ' ' + y2 + ' H' + (x + 8) + '"/></g>' +
+      '<text class="dim-label" x="' + (x + 14) + '" y="' + ((y1 + y2) / 2 + 6) + '" style="fill:' + c + '">' + label + '</text>';
+  }
+  function outline(x, y, w, h, design) {
+    return '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="6" fill="none" ' + (design ? 'style="stroke:var(--accent)"' : 'stroke="#111827" stroke-dasharray="8 6"') + ' stroke-width="3"/>';
+  }
+  var INK = '#111827', RED = '#B42318';
+
+  var F = [
+    { id: 'R-D-06', sev: 'critical', vp: 'Desktop', cat: 'Presence', label: 'Explicit', eng: 'measured', conf: 'High', title: 'Hero illustration is missing', d: '96%',
+      statement: 'The hero illustration is missing. The design has a 576 × 400 px illustration right of the heading; that region is empty in the implementation.',
+      design: crop('sample-design', '760 92 660 478', 1440, 1000, { label: 'Design: hero illustration', svg: outline(792, 132, 592, 416, true) + dimH(800, 1376, 124, '576 px') }),
+      impl: crop('sample-capture', '760 92 660 478', 1440, 1000, { label: 'Implementation: illustration region is empty', svg: '<rect class="diffmask" x="800" y="140" width="576" height="400" fill="#FF00FF"/>' + outline(792, 132, 592, 416) }),
+      diff: '96% of the region differs.', meas: [['Region difference', '0%', '96%', '+96 pts', 'image comparison', 1], ['Image or SVG in region', '1', '0', '−1', 'DOM snapshot', 1]],
+      sel: 'main .hero', fix: 'Add the hero illustration (576 × 400 px) to the right column of the hero, top-aligned with the heading.', cond: 'An image or SVG covers at least 80% of the region at Desktop 1440.', after: 'resolved' },
+    { id: 'R-D-04', sev: 'major', vp: 'Desktop', cat: 'Size', label: 'Explicit', eng: 'measured', conf: 'High', title: 'Primary CTA is 132 px wide vs 220 px', d: '−40%',
+      statement: 'Primary CTA is 132 px wide vs 220 px in the design (−40%), measured from DOM snapshot.',
+      design: crop('sample-design', '24 396 600 128', 1440, 1000, { label: 'Design: primary CTA, 220 pixels wide', svg: outline(58, 434, 232, 68, true) + dimH(64, 284, 418, '220 px') }),
+      impl: crop('sample-capture', '24 396 600 128', 1440, 1000, { label: 'Implementation: primary CTA, 132 pixels wide', svg: '<rect class="diffmask" x="196" y="440" width="88" height="56" fill="#FF00FF"/>' + outline(58, 434, 144, 68) + dimH(64, 196, 418, '132 px', INK) + '<g stroke="' + RED + '" stroke-width="2"><path d="M196 418 H284" stroke-dasharray="4 4"/><path d="M284 410 V426"/></g><text class="dim-label" x="292" y="424" fill="' + RED + '">−88</text>' }),
+      diff: '40% of the region differs.', meas: [['Width', '220 px', '132 px', '−88 px', 'DOM snapshot', 1], ['Height', '56 px', '56 px', '0', 'DOM snapshot'], ['Left edge', '64 px', '64 px', '0', 'design image'], ['Label size', '18 px', '16 px', '−2 px', 'DOM snapshot', 1]],
+      sel: 'main .hero a.btn-primary', fix: 'Set the primary CTA to width: 220px (or min-width: 220px with padding-inline: 32px) and keep the 18 px label.', cond: 'Width is within ±8% of 220 px (202–238 px) at Desktop 1440.', after: 'resolved' },
+    { id: 'R-D-03', sev: 'major', vp: 'Desktop', cat: 'Typography', label: 'Explicit', eng: 'measured', conf: 'High', title: 'Subtitle (40 px) is larger than the heading (34 px)', d: 'inverted',
+      statement: 'The hero heading is 34 px and the subtitle 40 px. The design sets 60 px over 22 px, so the heading must be the largest text.',
+      design: crop('sample-design', '24 170 880 250', 1440, 1000, { label: 'Design: heading 60 px, subtitle 22 px', svg: dimV(640, 196, 252, '60 px') + dimV(440, 350, 372, '22 px') }),
+      impl: crop('sample-capture', '24 170 880 250', 1440, 1000, { label: 'Implementation: heading 34 px, subtitle 40 px', svg: dimV(640, 210, 240, '34 px', INK) + dimV(760, 290, 330, '40 px', RED) }),
+      diff: '31% of the region differs.', meas: [['Heading size', '60 px', '34 px', '−26 px', 'DOM snapshot', 1], ['Subtitle size', '22 px', '40 px', '+18 px', 'DOM snapshot', 1], ['Heading to subtitle', '2.7×', '0.85×', 'inverted', 'DOM snapshot', 1]],
+      sel: 'main .hero h1, main .hero p.lead', fix: 'Set the hero h1 to 60px/1.2, weight 700, and the subtitle to 22px/1.4.', cond: 'The hero heading is the largest text on the page and at least 2× the subtitle.', after: 'resolved' },
+    { id: 'R-D-02', sev: 'major', vp: 'Desktop', cat: 'Presence', label: 'Explicit', eng: 'measured', conf: 'High', title: 'Navigation has 3 links; the contract expects 4', d: '−1',
+      statement: 'The navigation has 3 links (Product, Pricing, Company). The contract expects 4; “Docs” is missing.',
+      design: crop('sample-design', '720 8 700 64', 1440, 1000, { label: 'Design: four navigation links', svg: outline(750, 24, 340, 32, true) }),
+      impl: crop('sample-capture', '720 8 700 64', 1440, 1000, { label: 'Implementation: three navigation links', svg: '<rect class="diffmask" x="756" y="28" width="84" height="26" fill="#FF00FF"/>' + outline(846, 24, 244, 32) }),
+      diff: '22% of the region differs.', meas: [['Links in nav', '4', '3', '−1', 'contract + DOM snapshot', 1], ['Missing text', 'Docs', 'none', '', 'contract']],
+      sel: 'header nav ul', fix: 'Add a “Docs” link between Pricing and Company.', cond: 'The header navigation contains exactly 4 links: Product, Pricing, Docs, Company.', after: 'resolved' },
+    { id: 'I-M-01', sev: 'minor', vp: 'Mobile', cat: 'Responsive', label: 'Inferred', eng: 'measured', conf: 'High', title: 'Page scrolls 86 px sideways; nav overlaps the hero', d: '+86 px',
+      statement: 'At 390 px the page is 476 px wide, so it scrolls 86 px sideways, and the header overlaps the hero heading by 44 px.',
+      design: '<div class="nodesign"><div class="stack-sm"><strong>No Mobile design</strong><span>Inferred from Desktop: the layout fits at 390 px with no horizontal overflow, overlap or clipped text.</span></div></div>',
+      impl: crop('sample-mobile', '0 0 476 420', 476, 844, { label: 'Implementation at 390 pixels: content extends 86 pixels past the viewport', svg: '<rect class="diffmask" x="390" y="0" width="86" height="420" fill="#FF00FF"/><path d="M390 0 V420" stroke="' + INK + '" stroke-width="2" stroke-dasharray="6 5"/>' + dimH(390, 476, 400, '+86', RED) + outline(4, 84, 468, 92) }),
+      diff: 'Overflow region shown past the 390 px edge.', meas: [['Document width', '390 px', '476 px', '+86 px', 'DOM snapshot', 1], ['Header over heading', '0 px', '44 px', '+44 px', 'DOM snapshot', 1]],
+      sel: 'main .hero h1', fix: 'Let the hero heading wrap (remove white-space: nowrap), give the header a solid background, and offset the hero by the header height (64 px).', cond: 'At 390 px: no horizontal overflow, no overlapping elements, no clipped text.', after: 'resolved' },
+    { id: 'R-D-09', sev: 'minor', vp: 'Desktop', cat: 'Spacing', label: 'Explicit', eng: 'measured', conf: 'High', title: '“How it works” sits 32 px below the hero vs 64 px', d: '−50%',
+      statement: 'The “How it works” section starts 32 px below the hero; the design has 64 px.',
+      design: crop('sample-design', '24 500 900 190', 1440, 1000, { label: 'Design: 64 pixel gap', svg: dimV(500, 540, 604, '64 px') }),
+      impl: crop('sample-capture', '24 500 900 190', 1440, 1000, { label: 'Implementation: 32 pixel gap', svg: dimV(500, 540, 572, '32 px', RED) }),
+      diff: '18% of the region differs.', meas: [['Gap above section', '64 px', '32 px', '−32 px', 'DOM snapshot', 1]],
+      sel: 'main section.how', fix: 'Set margin-top: 64px on the “How it works” section.', cond: 'Gap between the hero and the section is 58–70 px at Desktop 1440.', after: 'remaining' },
+    { id: 'R-D-05', sev: 'minor', review: true, vp: 'Desktop', cat: 'Colour', label: 'Explicit', eng: 'device', conf: 'Low', title: 'Primary CTA colour may be off-brand', d: 'review',
+      statement: 'The primary CTA looks lighter than the brand colour. The on-device model is unsure whether this is intended.',
+      design: crop('sample-design', '24 396 600 128', 1440, 1000, { label: 'Design: primary CTA colour', svg: outline(58, 434, 232, 68, true) }),
+      impl: crop('sample-capture', '24 396 600 128', 1440, 1000, { label: 'Implementation: primary CTA colour', svg: outline(58, 434, 144, 68) }),
+      diff: 'Sampled colours: #0F4C5C (design), #1597B0 (implementation).', meas: [['Background colour', '#0F4C5C', '#1597B0', 'ΔE 14.2', 'design image + capture image', 1]],
+      sel: 'main .hero a.btn-primary', fix: 'Use the brand colour #0F4C5C for the primary CTA background.', cond: 'CTA background is within ΔE 3 of #0F4C5C.', after: 'resolved' }
+  ];
+  var PASS = ['R-D-01 Logo top left in header', 'R-D-07 Hero heading left-aligned with CTA', 'R-D-08 Header CTA “Start free trial” present', 'R-D-10 Three steps in “How it works”', 'R-D-12 Header height 80 px', 'R-D-13 Hero heading text matches', 'R-D-14 Secondary link present', 'R-D-15 Content width 1312 px', 'R-D-16 Step titles 19 px', 'I-M-02 Primary action visible at 390 px', 'I-M-03 Header CTA reachable at 390 px'];
+
+  var state = window.cuiState(), vp = 'all', sel = 0;
+  function mode() { return window.cuiState(); }
+
+  function rowsFor() {
+    var m = mode();
+    var arr = F.map(function (f, k) { return Object.assign({ k: k }, f); });
+    if (m === 'reverify') arr.sort(function (a, b) { return (a.after === 'remaining' ? 0 : 1) - (b.after === 'remaining' ? 0 : 1); });
+    return arr.filter(function (f) { return vp === 'all' || f.vp === vp; });
+  }
+  function rowStatus(f) {
+    var m = mode();
+    if (m === 'reverify') return f.after === 'remaining' ? '<span class="st st-fail">' + I('x') + 'Remaining</span>' : '<span class="st st-pass">' + I('up') + 'Resolved</span>';
+    if (f.review && m === 'deep-refined') return '<span class="st st-fail">' + I('x') + 'Fail</span>';
+    if (f.review && m === 'offline') return '<span class="st st-nc">' + I('dash') + 'Not checked</span>';
+    if (f.review) return '<span class="st st-review">' + I('review') + 'Needs review</span>';
+    return '<span class="st st-fail">' + I('x') + 'Fail</span>';
+  }
+  function engOf(f) { var m = mode(); if (f.review && m === 'deep-refined') return 'cloud'; if (f.review && m === 'precomputed') return 'pre'; return f.eng; }
+
+  function renderSummary() {
+    var m = mode(), s = document.getElementById('summary');
+    if (m === 'running') {
+      s.innerHTML = '';
+      document.getElementById('announce').textContent = 'Checking 19 requirements';
+      return;
+    }
+    if (m === 'reverify') {
+      s.innerHTML = '<span class="st st-pass">' + I('up') + '<b>6</b>&nbsp;resolved</span><span class="st st-fail">' + I('x') + '<b>1</b>&nbsp;remaining</span><span class="st st-nc">' + I('plus') + '<b>0</b>&nbsp;new</span><span class="st st-nc">' + I('down') + '<b>0</b>&nbsp;regressed</span><span class="st st-nc">' + I('check') + '<b>11</b>&nbsp;still passing</span>';
+      document.getElementById('run-title').textContent = 'Run 2';
+      document.getElementById('fix-btn').dataset.copyToast = 'Fix prompt copied: 1 fix';
+      document.getElementById('announce').textContent = 'Re-verify complete: 6 resolved, 1 remaining';
+      return;
+    }
+    var fail = m === 'deep-refined' ? 7 : 6, rev = m === 'deep-refined' || m === 'offline' ? 0 : 1, nc = m === 'offline' ? 2 : 1;
+    s.innerHTML = '<span class="st st-fail">' + I('x') + '<b>' + fail + '</b>&nbsp;fail</span>' + (rev ? '<span class="st st-review">' + I('review') + '<b>1</b>&nbsp;needs review</span>' : '') +
+      '<span class="st st-pass">' + I('check') + '<b>11</b>&nbsp;pass</span><span class="st st-nc">' + I('dash') + '<b>' + nc + '</b>&nbsp;not checked</span>';
+    document.getElementById('announce').textContent = 'Run complete: ' + fail + ' fail' + (rev ? ', 1 needs review' : '');
+  }
+
+  function renderList() {
+    var list = document.getElementById('list'), rows = rowsFor(), m = mode();
+    if (!rows.some(function (r) { return r.k === sel; })) sel = rows.length ? rows[0].k : -1;
+    list.innerHTML = rows.map(function (f) {
+      var e = ENG[engOf(f)];
+      var right = m === 'reverify' ? (f.after === 'remaining' ? '<span class="d st-fail">' + f.d + '</span>' : '') : (f.review && m !== 'deep-refined' ? '' : '<span class="d' + (f.review ? '' : ' st-fail') + '">' + (f.review ? '' : f.d) + '</span>');
+      var icon = f.review && m !== 'deep-refined' ? I('review') : I(SEV[f.sev][0]);
+      return '<li id="o-' + f.k + '" class="rowi' + (f.review ? ' is-review' : '') + '" role="option" aria-selected="' + (f.k === sel) + '" data-k="' + f.k + '">' +
+        '<span class="ic" aria-hidden="true">' + icon + '</span><span class="t">' + f.title + '</span>' + right +
+        '<span class="meta">' + (m === 'reverify' ? '<span>' + (f.after === 'remaining' ? 'Remaining' : 'Resolved') + '</span>' : '<span>' + (f.review && m !== 'deep-refined' ? (m === 'offline' ? 'Not checked' : 'Needs review') : SEV[f.sev][1]) + '</span>') +
+        '<span>' + f.vp + '</span>' + (f.label === 'Inferred' ? '<span><span class="tag tag-dashed">Inferred</span></span>' : '') + '<span class="eng">' + I(e[0]) + e[1] + '</span></span></li>';
+    }).join('');
+    if (rows.length) list.setAttribute('aria-activedescendant', 'o-' + sel); else list.removeAttribute('aria-activedescendant');
+    var all = F.length, d = F.filter(function (f) { return f.vp === 'Desktop'; }).length;
+    document.getElementById('c-all').textContent = all; document.getElementById('c-d').textContent = d; document.getElementById('c-m').textContent = all - d;
+    document.getElementById('pass-list').innerHTML = PASS.map(function (p) { var i = p.indexOf(' '); return '<li><span class="mono xs">' + p.slice(0, i) + '</span> ' + p.slice(i + 1) + '</li>'; }).join('');
+  }
+
+  function renderDetail() {
+    var f = F[sel], el = document.getElementById('detail'), m = mode();
+    if (!f) { el.innerHTML = '<div class="empty"><h2 id="d-title">No findings for this viewport</h2><p class="muted">Every requirement checked at this viewport passes.</p></div>'; return; }
+    var e = ENG[engOf(f)], rv = m === 'reverify', resolved = rv && f.after === 'resolved';
+    var status = rowStatus(f);
+    var sevTxt = f.review && m !== 'deep-refined' ? '' : '<span class="sev">' + I(SEV[f.sev][0]) + SEV[f.sev][1] + '</span>';
+    var conf = f.review && m === 'deep-refined' ? 'High' : f.conf;
+    var statement = f.review && m === 'deep-refined' ? 'The primary CTA uses #1597B0 instead of the brand colour #0F4C5C (ΔE 14.2). The swapped arrow icon is also off the design.' : f.statement;
+    if (f.review && m === 'offline') statement = 'Not checked: this judged check needs a model and you are offline. Measured and visual checks still ran.';
+    var implSym = resolved ? (f.vp === 'Mobile' ? 'sample-mobile-fixed' : 'sample-fixed') : null;
+    var impl = f.impl;
+    if (implSym) impl = impl.replace(/#sample-(capture|mobile)"/, '#' + implSym + '"').replace(/<rect class="diffmask"[^>]*\/>/, '')
+      .replace(/aria-label="[^"]*"/, 'aria-label="Implementation, Run 2: region now matches the design"');
+    var diffTxt = resolved ? 'The region now matches the design.' : f.diff;
+    var measRows = f.meas.map(function (r) {
+      var after = resolved ? r[1] : r[2], delta = resolved ? '0' : r[3];
+      return '<tr><td>' + r[0] + '</td><td class="r">' + r[1] + '</td><td class="r">' + after + '</td><td class="r' + (r[5] && !resolved ? ' val-fail' : '') + '">' + delta + '</td><td class="muted">' + r[4] + '</td></tr>';
+    }).join('');
+    el.innerHTML =
+      '<div class="stack-sm">' +
+        '<div class="row" style="gap:var(--space-4)">' + status + sevTxt + (f.review && m === 'deep-refined' ? '<span class="refined">' + I('cloud', 'i-sm') + 'Refined by Cloud</span>' : '') + '</div>' +
+        '<h2 id="d-title" class="prose">' + (resolved ? 'Resolved: ' + f.title : statement) + '</h2>' +
+        '<div class="meta"><span class="mono xs">' + f.id + '</span><span>' + f.cat + '</span><span>' + (f.label === 'Inferred' ? '<span class="tag tag-dashed">Inferred (advisory)</span>' : 'Explicit') + '</span><span class="eng" aria-label="Produced by ' + e[1] + '">' + I(e[0]) + e[1] + '</span><span>' + conf + ' confidence</span><span>' + f.vp + (f.vp === 'Desktop' ? ' 1440' : ' 390') + '</span></div>' +
+      '</div>' +
+      '<section class="sec" aria-labelledby="ev-h"><div class="sec-head"><h3 id="ev-h">Evidence</h3><div class="btn-row">' +
+        '<button class="btn btn-ghost toggle" data-press data-press-target="#ev" data-press-class="show-diff" data-press-note="#ev-note" aria-pressed="false">' + I('layers', 'i-sm') + 'Diff overlay</button>' +
+        '<button class="btn btn-ghost toggle" data-press aria-pressed="false" data-toast="Full page: both images scrolled to the region">' + I('expand', 'i-sm') + 'Full page</button></div></div>' +
+        '<div class="evidence" id="ev"><figure class="fig"><figcaption><b><span class="legend" aria-hidden="true"></span>Design</b><span>' + (f.vp === 'Mobile' ? 'none' : '1440 × 1000') + '</span></figcaption>' + f.design + '</figure>' +
+        '<figure class="fig"><figcaption><b><span class="legend dashed" aria-hidden="true"></span>Implementation' + (rv ? ', Run 2' : '') + '</b><span>' + (f.vp === 'Mobile' ? '390 × 844' : '1440 × 1000') + '</span></figcaption>' + impl + '</figure></div>' +
+        '<p class="small muted" id="ev-note" data-off="Diff overlay off. ' + diffTxt + '" data-on="Diff overlay on' + (resolved ? '. ' : ', shown in magenta. ') + diffTxt + '">Diff overlay off. ' + diffTxt + '</p></section>' +
+      '<section class="sec" aria-labelledby="m-h"><h3 id="m-h">Measurements</h3><div class="table-wrap"><table class="data"><thead><tr><th>Property</th><th class="r">Design</th><th class="r">Implementation</th><th class="r">Difference</th><th>Source</th></tr></thead><tbody>' + measRows + '</tbody></table></div>' +
+        '<div class="inline-code small"><span class="muted">Selector</span><code>' + f.sel + '</code><button class="iconbtn" data-copy="' + f.sel + '" data-copy-toast="Selector copied" aria-label="Copy selector">' + I('copy', 'i-sm') + '</button></div></section>' +
+      (resolved ? '' : '<div class="two" id="fix"><section class="sec"><h3>Suggested fix</h3><p class="prose">' + f.fix + '</p></section><section class="sec"><h3>Passes when</h3><p class="prose">' + f.cond + '</p></section></div>' +
+        '<div class="btn-row"><button class="btn btn-ghost" data-open="sheet-dismiss">' + I('check', 'i-sm') + 'Accept as deviation</button></div>');
+  }
+
+  function renderTrace() {
+    var m = mode(), tb = document.querySelector('#trace-table tbody');
+    var rows = [['Align captures to design', 'measured', '120 ms', '0 B'], ['Measured checks (14)', 'measured', '310 ms', '0 B'], ['Visual checks (2)', 'measured', '840 ms', '0 B']];
+    if (m === 'offline') rows.push(['Judged checks (1)', 'measured', 'skipped: offline', '0 B']);
+    else if (m === 'precomputed') rows.push(['Judged checks (1)', 'pre', 'sample result', '0 B']);
+    else rows.push(['Judged checks (1)', 'device', '4.2 s', '0 B']);
+    if (m === 'deep-refined') rows.push(['Deep Analysis', 'cloud', '3.1 s', '412 KB']);
+    tb.innerHTML = rows.map(function (r) { var e = ENG[r[1]]; return '<tr><td>' + r[0] + '</td><td><span class="eng">' + I(e[0]) + e[1] + '</span></td><td class="r">' + r[2] + '</td><td class="r">' + r[3] + '</td></tr>'; }).join('');
+    document.getElementById('trace-sum').textContent = m === 'deep-refined' ? '412 KB sent, 1 cloud request' : '0 B sent off this device';
+  }
+
+  function renderDeep() {
+    var m = mode(), b = document.getElementById('deep-btn'), r = document.getElementById('deep-reason');
+    var reason = m === 'offline' ? 'Deep Analysis needs a connection; your results are kept.' : m === 'deep-refined' || m === 'reverify' ? 'Nothing needs a deeper look.' : '';
+    if (reason) { b.setAttribute('aria-disabled', 'true'); b.removeAttribute('data-open'); b.setAttribute('aria-describedby', 'deep-reason'); r.hidden = false; r.textContent = reason; }
+    else { b.removeAttribute('aria-disabled'); b.removeAttribute('aria-describedby'); b.dataset.open = 'sheet-deep'; r.hidden = true; }
+  }
+
+  function all() { renderSummary(); renderList(); renderDetail(); renderTrace(); renderDeep(); }
+  document.addEventListener('cui:state', all);
+  document.getElementById('list').addEventListener('cui:select', function (e) {
+    sel = +e.detail.option.dataset.k; renderDetail();
+    var u = new URL(location); u.searchParams.set('f', F[sel].id); history.replaceState(null, '', u);
+    var t = document.getElementById('d-title');
+    document.getElementById('announce').textContent = t ? t.textContent : '';
+    if (e.detail.activate && window.innerWidth < 1100) {
+      document.getElementById('detail').scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth' });
+      if (t) { t.tabIndex = -1; t.focus({ preventScroll: true }); }
+    }
+  });
+  function reduceMotion() { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+  document.getElementById('vp-tabs').addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-vp]'); if (!b) return;
+    Array.prototype.forEach.call(this.querySelectorAll('button[data-vp]'), function (x) { x.setAttribute('aria-pressed', x === b); });
+    vp = b.dataset.vp; renderList(); renderDetail();
+  });
+  var q = new URLSearchParams(location.search).get('f'); F.forEach(function (f, k) { if (f.id === q) sel = k; });
+  document.getElementById('sheet-deep').addEventListener('close', function () { if (this.returnValue === 'send') { window.cuiStore.set('sent', '1'); location.search = '?state=deep-refined&f=R-D-05'; } });
+  document.getElementById('sheet-reverify').addEventListener('close', function () { if (this.returnValue === 'go') { location.search = '?state=reverify&f=R-D-09'; } });
+  if (new URLSearchParams(location.search).get('reverify')) window.cuiOpen('sheet-reverify');
+  document.getElementById('list').addEventListener('click', function (e) { if (e.target.closest('[role=option]')) {} });
+  all();
+})();
+</script>
+</body>
+</html>

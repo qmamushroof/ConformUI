@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
+<title>Not found · ConformUI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/app.css">
+<style>
+  .state-wrap{max-width:560px;padding-top:var(--space-12)}
+  .state-wrap .notice h1{font-size:var(--font-size-xl);line-height:var(--leading-snug)}
+</style>
+</head>
+<body data-nav="" data-title="Not found" data-states="default,crash">
+<script src="assets/sprite.js"></script>
+<header data-shell></header>
+
+<main id="main" tabindex="-1" class="page">
+  <div class="state-wrap">
+    <!-- Not found -->
+    <div class="notice" data-state-show="default">
+      <svg class="i" aria-hidden="true"><use href="#i-info"/></svg>
+      <h1 class="title">This page doesn't exist.</h1>
+      <p class="small muted">Nothing is stored at <span class="mono" id="path">/p/field-ops/run/run_0000</span>. The link may point to a run or project that was deleted on this device.</p>
+      <div class="btn-row"><a class="btn" href="projects.html">Back to Projects</a></div>
+    </div>
+
+    <!-- Error boundary -->
+    <div class="notice notice-danger" role="alert" data-state-show="crash">
+      <svg class="i" aria-hidden="true"><use href="#i-alert"/></svg>
+      <h1 class="title">Something went wrong on this screen. Your projects are safe on this device.</h1>
+      <p class="small muted">Reload to open the screen again. If it keeps happening, copy the code and include it when you report the problem.</p>
+      <p class="small">Code <span class="inline-code"><code>ROUTE_ERROR</code><button class="iconbtn" type="button" data-copy="ROUTE_ERROR" data-copy-toast="Error code copied" aria-label="Copy error code"><svg class="i i-sm" aria-hidden="true"><use href="#i-copy"/></svg></button></span></p>
+      <div class="btn-row"><button class="btn" type="button" id="reload"><svg class="i i-sm" aria-hidden="true"><use href="#i-refresh"/></svg>Reload</button><a class="btn btn-ghost" href="projects.html">Back to Projects</a></div>
+    </div>
+  </div>
+</main>
+
+<script src="assets/app.js"></script>
+<script>
+  document.getElementById('reload').addEventListener('click', function () { location.reload(); });
+  document.addEventListener('cui:state', function (e) { document.title = (e.detail === 'crash' ? 'Something went wrong' : 'Not found') + ' · ConformUI'; });
+  if (document.body.dataset.state === 'crash') document.title = 'Something went wrong · ConformUI';
+</script>
+</body>
+</html>

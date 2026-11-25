@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
+<title>Welcome · ConformUI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/app.css">
+<style>
+  .ob{max-width:960px}
+  .ob-sec{display:grid;gap:var(--space-4);padding-top:var(--space-8);border-top:1px solid var(--border)}
+  /* PROPOSED: loop (numbered horizontal sequence: number, title, one line; stacks under 900 px) */
+  .loop{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--space-6)}
+  .loop li{display:grid;gap:var(--space-1);align-content:start}
+  .loop .hd{display:flex;align-items:baseline;gap:var(--space-2);font-weight:var(--weight-semibold)}
+  .loop .n{color:var(--text-muted);font-weight:var(--weight-regular)}
+  .loop p{font-size:var(--font-size-sm);color:var(--text-muted)}
+  .engines{margin:0;display:grid;grid-template-columns:max-content minmax(0,1fr);gap:var(--space-3) var(--space-8);font-size:var(--font-size-sm)}
+  .engines dt .eng{color:var(--text);font-weight:var(--weight-medium)}
+  .engines dd{margin:0}
+  #dl-btn{white-space:normal;text-align:left;line-height:var(--leading-snug);padding-top:var(--space-2);padding-bottom:var(--space-2)}
+  .privacy th[scope="row"]{color:var(--text);font-weight:var(--weight-medium);white-space:nowrap;vertical-align:top;padding:var(--space-3) var(--space-6) var(--space-3) 0;border-bottom:1px solid var(--border)}
+  .privacy tbody tr:last-child th{border-bottom:0}
+  @media (max-width:900px){.loop{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media (max-width:640px){
+    .loop{grid-template-columns:1fr;gap:var(--space-4)}
+    .engines{grid-template-columns:1fr;gap:var(--space-1)}
+    .engines dd{margin-bottom:var(--space-3)}
+    .privacy th[scope="row"]{white-space:normal}
+  }
+</style>
+</head>
+<body data-nav="" data-title="Welcome" data-states="default,can-download">
+<script src="assets/sprite.js"></script>
+<header data-shell></header>
+
+<main id="main" tabindex="-1" class="page">
+  <div class="ob stack-lg">
+    <div class="stack">
+      <p class="small muted">First run</p>
+      <h1>Check a page against its design</h1>
+      <p class="lead prose">ConformUI turns your design into a contract of checkable requirements, measures your page against it, and writes the failures as a prompt for your coding agent.</p>
+      <div class="btn-row" style="margin-top:var(--space-2)">
+        <a class="btn btn-primary" href="project.html"><svg class="i i-sm" aria-hidden="true"><use href="#i-play"/></svg>Try the sample</a>
+        <a class="btn btn-ghost" href="projects.html">Start a project</a>
+      </div>
+      <p class="small muted">The sample is a landing page with Desktop and Mobile captures and a 19-requirement contract, ready to run.</p>
+    </div>
+
+    <div data-state-show="can-download" class="prose">
+      <div class="notice notice-info" id="dl-notice">
+        <svg class="i" aria-hidden="true"><use href="#i-chip"/></svg>
+        <p class="title" id="dl-title">This browser can run Gemini Nano, but the model isn't downloaded yet.</p>
+        <p class="small muted" id="dl-text">With it, contract extraction stays on this device. Without it, ConformUI asks before using the cloud, or you write requirements yourself.</p>
+        <div class="bar" id="dl-bar" role="progressbar" aria-label="On-device model download" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden><span style="--p:0%"></span></div>
+        <div class="btn-row"><button class="btn" type="button" id="dl-btn"><svg class="i i-sm" aria-hidden="true"><use href="#i-download"/></svg>Download on-device model (about 2 GB, once)</button></div>
+      </div>
+    </div>
+
+    <section class="ob-sec" aria-labelledby="loop-h">
+      <h2 id="loop-h">The loop</h2>
+      <ol class="loop">
+        <li>
+          <div class="hd"><span class="n" aria-hidden="true">1.</span>Contract</div>
+          <p>Requirements read from your design. You review them, add your own, and lock the list.</p>
+        </li>
+        <li>
+          <div class="hd"><span class="n" aria-hidden="true">2.</span>Run</div>
+          <p>Screenshots and a DOM snapshot of your page, checked against every requirement with measured numbers.</p>
+        </li>
+        <li>
+          <div class="hd"><span class="n" aria-hidden="true">3.</span>Fix prompt</div>
+          <p>The failures as one paste-ready prompt: selector, design value, actual value and what to change.</p>
+        </li>
+        <li>
+          <div class="hd"><span class="n" aria-hidden="true">4.</span>Re-verify</div>
+          <p>New captures after the fix show what is resolved, what remains and what regressed.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section class="ob-sec" aria-labelledby="eng-h">
+      <h2 id="eng-h">Three engines, always named</h2>
+      <p class="small muted prose">Every requirement, finding and trace row says which engine produced it.</p>
+      <dl class="engines">
+        <dt><span class="eng" aria-label="Produced by on-device model"><svg class="i" aria-hidden="true"><use href="#i-chip"/></svg>On-device</span></dt>
+        <dd>Gemini Nano in Chrome. First pass stays on this device.</dd>
+        <dt><span class="eng" aria-label="Produced by cloud model"><svg class="i" aria-hidden="true"><use href="#i-cloud"/></svg>Cloud</span></dt>
+        <dd>Gemini through Firebase. Only when you allow it, per project, or for Deep Analysis.</dd>
+        <dt><span class="eng" aria-label="Produced by measurement"><svg class="i" aria-hidden="true"><use href="#i-ruler"/></svg>Measured</span></dt>
+        <dd>Deterministic engine. Every number comes from here, never from a model.</dd>
+      </dl>
+    </section>
+
+    <section class="ob-sec" aria-labelledby="priv-h">
+      <h2 id="priv-h">What stays and what is sent</h2>
+      <div class="table-wrap">
+        <table class="data privacy">
+          <caption class="sr-only">Privacy statement</caption>
+          <thead><tr><th scope="col">Topic</th><th scope="col">What happens</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Stored</th><td>Projects, images, contracts and runs, on this device only. Delete one project or everything.</td></tr>
+            <tr><th scope="row">Sent</th><td>Nothing, unless you run Deep Analysis or allow cloud for a project. Then the listed images, contract and measurements go to Google's Gemini through Firebase. You see the list and its size before anything leaves.</td></tr>
+            <tr><th scope="row">DOM snippet</th><td>Runs only on a page you open. It reads that page and copies JSON to your clipboard. It sends nothing anywhere.</td></tr>
+            <tr><th scope="row">App Check</th><td>Cloud requests carry an attestation token to prevent abuse. It contains no project content.</td></tr>
+            <tr><th scope="row">Analytics</th><td>None.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small muted">Change any of this later in <a href="settings.html">Settings</a>. Get the DOM snippet from <a href="snippet.html">Snippet</a>.</p>
+    </section>
+  </div>
+</main>
+
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  /* In can-download, the header engine status reflects the not-downloaded model (prototype only). */
+  function syncHeader(st) {
+    var l = document.querySelector('.hdr .status-link'); if (!l || st !== 'can-download') return;
+    l.querySelector('.lbl').textContent = 'Model not downloaded';
+    l.setAttribute('aria-label', 'Engine: Model not downloaded. Open engine settings');
+  }
+  document.addEventListener('cui:state', function (e) { syncHeader(e.detail); });
+  syncHeader(document.body.dataset.state);
+  var btn = document.getElementById('dl-btn'), bar = document.getElementById('dl-bar'), timer = null;
+  btn.addEventListener('click', function () {
+    if (btn.getAttribute('aria-busy') === 'true' || btn.dataset.done) return;
+    btn.setAttribute('aria-busy', 'true'); btn.lastChild.textContent = 'Downloading';
+    bar.hidden = false; window.cuiToast('Downloading on-device model: 0%');
+    var p = 0;
+    timer = setInterval(function () {
+      p = Math.min(100, p + 7);
+      bar.setAttribute('aria-valuenow', p); bar.firstElementChild.style.setProperty('--p', p + '%');
+      btn.lastChild.textContent = 'Downloading ' + p + '%';
+      if (p === 49) window.cuiToast('Downloading on-device model: 49%');
+      if (p === 100) {
+        clearInterval(timer); btn.removeAttribute('aria-busy'); btn.dataset.done = '1';
+        btn.setAttribute('aria-disabled', 'true'); btn.lastChild.textContent = 'Downloaded';
+        document.getElementById('dl-title').textContent = 'On-device model ready. The first pass stays on this device.';
+        document.getElementById('dl-text').textContent = 'Contract extraction and judged checks now run here first.';
+        window.cuiToast('On-device model ready');
+      }
+    }, 300);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+[
+  {
+    "file": "..\\shots\\proto\\contract-375.png",
+    "url": "file:///c:/Users/Mushroof/source/repos/qmamushroof/ConformUI/design/prototype/contract.html",
+    "width": 375,
+    "scheme": "light",
+    "issues": []
+  },
+  {
+    "file": "..\\shots\\proto\\contract.default-375.png",
+    "url": "file:///c:/Users/Mushroof/source/repos/qmamushroof/ConformUI/design/prototype/contract.html?state=default",
+    "width": 375,
+    "scheme": "light",
+    "issues": []
+  },
+  {
+    "file": "..\\shots\\proto\\contract.bad-output-375.png",
+    "url": "file:///c:/Users/Mushroof/source/repos/qmamushroof/ConformUI/design/prototype/contract.html?state=bad-output",
+    "width": 375,
+    "scheme": "light",
+    "issues": []
+  },
+  {
+    "file": "..\\shots\\proto\\contract.consent-375.png",
+    "url": "file:///c:/Users/Mushroof/source/repos/qmamushroof/ConformUI/design/prototype/contract.html?state=consent",
+    "width": 375,
+    "scheme": "light",
+    "issues": []
+  },
+  {
+    "file": "..\\shots\\proto\\contract-1440.png",
+    "url": "file:///c:/Users/Mushroof/source/repos/qmamushroof/ConformUI/design/prototype/contract.html",
+    "width": 1440,
+    "scheme": "light",
+    "issues": []
+  },
+  {
+    "file": "..\\shots\\proto\\contract.default-1440.png",
+    "url": "file:///c:/Users/Mushroof/source/repos/qmamushroof/ConformUI/design/prototype/contract.html?state=default",
+    "width": 1440,
+    "scheme": "light",
+    "issues": []
+  },
+  {
+    "file": "..\\shots\\proto\\contract.bad-output-1440.png",
+    "url": "file:///c:/Users/Mushroof/source/repos/qmamushroof/ConformUI/design/prototype/contract.html?state=bad-output",
+    "width": 1440,
+    "scheme": "light",
+    "issues": []
+  },
+  {
+    "file": "..\\shots\\proto\\contract.consent-1440.png",
+    "url": "file:///c:/Users/Mushroof/source/repos/qmamushroof/ConformUI/design/prototype/contract.html?state=consent",
+    "width": 1440,
+    "scheme": "light",
+    "issues": []
+  }
+]

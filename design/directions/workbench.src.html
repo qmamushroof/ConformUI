@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Run 1 · Sample landing page · ConformUI</title>
+<link rel="stylesheet" href="caliper.css">
+<style>
+  /* Workbench — IDE-like, mono-led, compact. Dark chrome frame, light work surface. */
+  body{font-size:14px;height:100vh;display:grid;grid-template-rows:auto auto 1fr;overflow:hidden}
+  .wb-top{display:flex;align-items:center;gap:16px;height:48px;padding:0 12px;background:#111827;color:#F3F4F6}
+  .wb-top .brand{color:#F3F4F6;font-family:var(--font-mono);font-size:14px}
+  .wb-top .brand svg g{stroke:#60A5FA}
+  .wb-top .path{font:13px var(--font-mono);color:#A7B0BE}
+  .wb-top .path b{color:#F3F4F6;font-weight:600}
+  .wb-top .r{margin-left:auto;display:flex;gap:6px}
+  .wb-top .pill{background:transparent;border-color:#374151;color:#F3F4F6;min-height:32px;font:12px var(--font-mono)}
+  .tool{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding:8px 12px;border-bottom:1px solid var(--border);background:var(--surface)}
+  .tool .stat{font:600 13px var(--font-mono);display:flex;gap:6px;align-items:center}
+  .tool .stat b{font-size:15px}
+  .tool .sp{flex:1}
+  .wb{display:grid;grid-template-columns:56px minmax(0,1fr) minmax(420px,44%);min-height:0}
+  .rail{border-right:1px solid var(--border);background:var(--surface);display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:2px;position:relative}
+  .rail::before{content:"";position:absolute;right:0;top:8px;bottom:8px;width:6px;background:repeating-linear-gradient(180deg,var(--border-strong) 0 1px,transparent 1px 12px);opacity:.5}
+  .rail a{width:44px;height:52px;display:grid;place-items:center;align-content:center;gap:2px;border-radius:var(--r-md);text-decoration:none;color:var(--text-muted);font:600 10px var(--font-mono)}
+  .rail a .n{width:22px;height:22px;display:grid;place-items:center;border:1px solid var(--border-strong);border-radius:var(--r-sm);font-size:11px}
+  .rail a.done .n{background:var(--text);color:var(--bg);border-color:var(--text)}
+  .rail a.cur{color:var(--text)} .rail a.cur .n{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
+  .grid{overflow:auto;min-width:0}
+  table.fx{width:100%;border-collapse:collapse;font-size:13px}
+  table.fx th{position:sticky;top:0;background:var(--bg);text-align:left;font:600 11px var(--font-mono);text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);padding:8px 10px;border-bottom:1px solid var(--border-strong);white-space:nowrap}
+  table.fx td{padding:8px 10px;border-bottom:1px solid var(--border);white-space:nowrap}
+  table.fx td.req{white-space:normal;min-width:240px}
+  table.fx td.num{text-align:right;font-family:var(--font-mono)}
+  table.fx tr{cursor:pointer}
+  table.fx tbody tr:hover{background:var(--surface)}
+  table.fx tr[aria-selected="true"]{background:var(--brand-bg);box-shadow:inset 3px 0 0 var(--brand)}
+  .insp{border-left:1px solid var(--border);overflow:auto;display:grid;align-content:start}
+  .insp-h{padding:12px 16px;display:grid;gap:8px;border-bottom:1px solid var(--border)}
+  .insp-h .s{font-size:15px;font-weight:600;line-height:1.4}
+  .tabs{display:flex;border-bottom:1px solid var(--border);padding:0 8px}
+  .tabs button{min-height:44px;padding:0 12px;border:0;background:none;font:600 12px var(--font-mono);color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;cursor:pointer;border-bottom:2px solid transparent}
+  .tabs button[aria-selected="true"]{color:var(--text);border-bottom-color:var(--brand)}
+  .canvas{padding:16px;display:grid;gap:10px}
+  .onion{position:relative;border:1px solid var(--border);background:#fff}
+  .onion svg{display:block;width:100%;height:auto}
+  .onion .top{position:absolute;inset:0;opacity:.5}
+  .slider{display:flex;align-items:center;gap:10px;font:12px var(--font-mono);color:var(--text-muted)}
+  .slider input{flex:1;accent-color:var(--brand);min-height:44px}
+  .kv{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:13px;padding:0 16px 16px}
+  .kv dt{color:var(--text-muted);font-family:var(--font-mono);font-size:12px}
+  .kv dd{margin:0}
+  @media (max-width: 1100px){ body{height:auto;overflow:auto} .wb{grid-template-columns:1fr} .rail{flex-direction:row;justify-content:center} .rail::before{display:none} .insp{border-left:0;border-top:1px solid var(--border)} .wb-top .path{display:none} }
+</style>
+</head>
+<body>
+<!--DEFS-->
+<header class="wb-top">
+  <a class="brand" href="#"><svg viewBox="0 0 64 64" aria-hidden="true" style="width:24px;height:24px"><g fill="none" stroke-width="3" stroke-linecap="square"><path d="M52 22 V12 H12 V52 H52 V42"/><path d="M23 26 V38 H35 V26"/><path d="M41 26 V38"/></g></svg>conformui</a>
+  <span class="path">projects / <b>sample-landing-page</b> / runs / <b>run-1</b></span>
+  <div class="r">
+    <button class="pill"><svg class="i sm"><use href="#i-chip"/></svg>on-device:ready</button>
+    <button class="pill"><svg class="i sm" style="color:#6FE39A"><use href="#i-shield"/></svg>sent:0 B</button>
+  </div>
+</header>
+<div class="tool">
+  <span class="stat" style="color:var(--critical)"><svg class="i sm"><use href="#i-x"/></svg>FAIL <b>6</b></span>
+  <span class="stat" style="color:var(--review)"><svg class="i sm"><use href="#i-qdash"/></svg>REVIEW <b>1</b></span>
+  <span class="stat" style="color:var(--pass)"><svg class="i sm"><use href="#i-check"/></svg>PASS <b>11</b></span>
+  <span class="stat muted"><svg class="i sm"><use href="#i-dash"/></svg>N/C <b>1</b></span>
+  <span class="sp"></span>
+  <div class="seg" role="tablist" aria-label="Viewport"><button role="tab" aria-selected="true" class="sm">All</button><button role="tab" aria-selected="false">Desktop</button><button role="tab" aria-selected="false">Mobile</button></div>
+  <button class="btn sm"><svg class="i sm"><use href="#i-cloud"/></svg>Deep</button>
+  <button class="btn sm"><svg class="i sm"><use href="#i-refresh"/></svg>Re-verify</button>
+  <button class="btn sm"><svg class="i sm"><use href="#i-download"/></svg>Export</button>
+  <button class="btn sm primary"><svg class="i sm"><use href="#i-copy"/></svg>Copy fix prompt</button>
+</div>
+<div class="wb">
+  <nav class="rail" aria-label="Project progress">
+    <a class="done" href="#" aria-label="Design, done"><span class="n">1</span>DSN</a>
+    <a class="done" href="#" aria-label="Contract, done"><span class="n">2</span>CON</a>
+    <a class="done" href="#" aria-label="Captures, done"><span class="n">3</span>CAP</a>
+    <a class="done" href="#" aria-label="Run, done" aria-current="step"><span class="n">4</span>RUN</a>
+    <a class="cur" href="#" aria-label="Fix, next"><span class="n">5</span>FIX</a>
+    <a href="#" aria-label="Re-verify"><span class="n">6</span>RVF</a>
+  </nav>
+  <div class="grid">
+    <table class="fx" aria-label="Findings">
+      <thead><tr><th>Sev</th><th>ID</th><th>Requirement</th><th class="num">Expected</th><th class="num">Actual</th><th class="num">Δ</th><th>Engine</th><th>VP</th></tr></thead>
+      <tbody>
+        <tr><td><span class="chip critical"><svg class="i"><use href="#i-oct"/></svg>Crit</span></td><td class="mono">R-D-06</td><td class="req">Hero illustration is missing</td><td class="num">present</td><td class="num">absent</td><td class="num">—</td><td><span class="chip engine"><svg class="i"><use href="#i-ruler"/></svg>Measured</span></td><td>D</td></tr>
+        <tr aria-selected="true"><td><span class="chip major"><svg class="i"><use href="#i-tri"/></svg>Major</span></td><td class="mono">R-D-04</td><td class="req">Primary CTA width</td><td class="num">220 px</td><td class="num">132 px</td><td class="num" style="color:var(--critical)">−40%</td><td><span class="chip engine"><svg class="i"><use href="#i-ruler"/></svg>Measured</span></td><td>D</td></tr>
+        <tr><td><span class="chip major"><svg class="i"><use href="#i-tri"/></svg>Major</span></td><td class="mono">R-D-03</td><td class="req">Hero heading is the largest text</td><td class="num">60 &gt; 22</td><td class="num">34 &lt; 40</td><td class="num" style="color:var(--critical)">inverted</td><td><span class="chip engine"><svg class="i"><use href="#i-ruler"/></svg>Measured</span></td><td>D</td></tr>
+        <tr><td><span class="chip major"><svg class="i"><use href="#i-tri"/></svg>Major</span></td><td class="mono">R-D-02</td><td class="req">Navigation has 4 links</td><td class="num">4</td><td class="num">3</td><td class="num" style="color:var(--critical)">−1</td><td><span class="chip engine"><svg class="i"><use href="#i-ruler"/></svg>Measured</span></td><td>D</td></tr>
+        <tr><td><span class="chip minor"><svg class="i"><use href="#i-circ"/></svg>Minor</span></td><td class="mono">I-M-01</td><td class="req">Layout fits at 390 px <span class="chip label inferred">Inferred</span></td><td class="num">0 px</td><td class="num">86 px</td><td class="num" style="color:var(--critical)">+86 px</td><td><span class="chip engine"><svg class="i"><use href="#i-ruler"/></svg>Measured</span></td><td>M</td></tr>
+        <tr><td><span class="chip minor"><svg class="i"><use href="#i-circ"/></svg>Minor</span></td><td class="mono">R-D-09</td><td class="req">Section gap below hero</td><td class="num">64 px</td><td class="num">32 px</td><td class="num" style="color:var(--critical)">−50%</td><td><span class="chip engine"><svg class="i"><use href="#i-ruler"/></svg>Measured</span></td><td>D</td></tr>
+        <tr><td><span class="chip review"><svg class="i"><use href="#i-qdash"/></svg>Review</span></td><td class="mono">R-D-05</td><td class="req">Primary CTA uses brand colour</td><td class="num">#0F4C5C</td><td class="num">#1597B0</td><td class="num">low conf.</td><td><span class="chip engine"><svg class="i"><use href="#i-chip"/></svg>On-device</span></td><td>D</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <aside class="insp" aria-label="Finding detail">
+    <div class="insp-h">
+      <div class="chips"><span class="chip major"><svg class="i"><use href="#i-tri"/></svg>Major</span><span class="chip fail"><svg class="i"><use href="#i-x"/></svg>Fail</span><span class="chip engine"><svg class="i"><use href="#i-ruler"/></svg>Measured</span><span class="chip label">Explicit</span></div>
+      <p class="s" style="margin:0">Primary CTA is 132 px wide vs 220 px in the design (−40%), measured from DOM snapshot.</p>
+    </div>
+    <div class="tabs" role="tablist"><button role="tab" aria-selected="true">Evidence</button><button role="tab" aria-selected="false">Measure</button><button role="tab" aria-selected="false">Fix</button><button role="tab" aria-selected="false">Trace</button></div>
+    <div class="canvas">
+      <div class="seg" role="group" aria-label="Lens"><button aria-pressed="false">Side by side</button><button aria-pressed="true">Onion skin</button><button aria-pressed="false">Diff</button></div>
+      <div class="onion">
+        <svg viewBox="24 396 600 128" role="img" aria-label="Design under implementation"><use href="#sample-design" width="1440" height="1000"/></svg>
+        <svg class="top" viewBox="24 396 600 128" aria-hidden="true"><use href="#sample-capture" width="1440" height="1000"/><rect x="58" y="434" width="144" height="68" rx="10" fill="none" stroke="#111827" stroke-width="3" stroke-dasharray="8 6"/></svg>
+      </div>
+      <label class="slider">design<input type="range" value="50" aria-label="Blend design and implementation">impl.</label>
+    </div>
+    <dl class="kv">
+      <dt>selector</dt><dd class="mono">main .hero a.btn-primary</dd>
+      <dt>tolerance</dt><dd class="mono">±8% (202–238 px)</dd>
+      <dt>source</dt><dd class="mono">DOM snapshot · design image</dd>
+      <dt>fix</dt><dd>Set <span class="mono">width: 220px</span>; keep 18 px label.</dd>
+    </dl>
+  </aside>
+</div>
+</body>
+</html>

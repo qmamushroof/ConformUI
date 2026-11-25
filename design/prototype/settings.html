@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
+<title>Settings · ConformUI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/app.css">
+<style>
+  .set-grid{display:grid;grid-template-columns:180px minmax(0,1fr);gap:var(--space-12);align-items:start}
+  .set-nav{position:sticky;top:calc(var(--layout-header) + var(--space-6))}
+  .set-nav ul{list-style:none;margin:0;padding:0;display:grid}
+  .set-nav a{display:flex;align-items:center;min-height:36px;padding:0 var(--space-3);border-left:2px solid var(--border);color:var(--text-muted);text-decoration:none;font-size:var(--font-size-sm)}
+  .set-nav a:hover{color:var(--text);border-left-color:var(--border-strong)}
+  .set-nav a[aria-current="true"]{color:var(--text);border-left-color:var(--text);font-weight:var(--weight-medium)}
+  .set-sec{display:grid;gap:var(--space-4);padding:var(--space-8) 0;border-top:1px solid var(--border);scroll-margin-top:calc(var(--layout-header) + var(--space-4));max-width:var(--layout-prose)}
+  .set-sec:first-child{border-top:0;padding-top:0}
+  .headline{display:flex;align-items:flex-start;gap:var(--space-3);font-size:var(--font-size-lg);font-weight:var(--weight-medium);line-height:var(--leading-snug)}
+  .headline .i{margin-top:2px}
+  .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--success);flex:none}
+  .dot.off{background:var(--border-strong)}
+  .steps-en{list-style:none;margin:0;padding:0;display:grid;gap:var(--space-3);counter-reset:s}
+  .steps-en li{display:grid;grid-template-columns:24px minmax(0,1fr);gap:var(--space-2);align-items:start;counter-increment:s}
+  .steps-en li::before{content:counter(s);display:inline-grid;place-items:center;width:20px;height:20px;margin-top:2px;border-radius:50%;border:1px solid var(--border-strong);font-size:var(--font-size-xs);font-weight:var(--weight-medium)}
+  .steps-en .btn-link{min-height:24px}
+  .consent-list{list-style:none;margin:0;padding:0}
+  .consent-list li{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--space-2);padding:var(--space-3) 0;border-bottom:1px solid var(--border)}
+  .consent-list li:first-child{border-top:1px solid var(--border)}
+  @media (max-width:1100px){.set-grid{grid-template-columns:1fr}.set-nav{display:none}}
+  @media (max-width:640px){.inline-code{flex-wrap:wrap}.inline-code code{white-space:normal;word-break:break-all}}
+</style>
+</head>
+<body data-nav="settings" data-title="Settings" data-states="default,downloadable,downloading,flag,not-chrome,offline,sent">
+<script src="assets/sprite.js"></script>
+<header data-shell></header>
+
+<main id="main" tabindex="-1" class="page">
+  <div class="page-head"><div class="stack-sm"><h1>Settings</h1><p class="muted">Engine, cloud use and data on this device.</p></div></div>
+
+  <div class="set-grid">
+    <nav class="set-nav" aria-label="Settings sections">
+      <ul>
+        <li><a href="#engine" aria-current="true">Engine</a></li>
+        <li><a href="#mode">Mode</a></li>
+        <li><a href="#consent">Cloud consent</a></li>
+        <li><a href="#privacy">Privacy</a></li>
+        <li><a href="#data">Data</a></li>
+        <li><a href="#about">About</a></li>
+      </ul>
+    </nav>
+
+    <div>
+      <!-- Engine -->
+      <section class="set-sec" id="engine" aria-labelledby="engine-h">
+        <h2 id="engine-h">Engine</h2>
+        <div class="stack-sm">
+          <p class="headline" id="eng-head"></p>
+          <p class="muted" id="eng-detail"></p>
+        </div>
+
+        <div class="stack-sm" data-state-show="downloadable">
+          <div><button class="btn btn-primary" type="button" id="dl-btn"><svg class="i i-sm" aria-hidden="true"><use href="#i-download"/></svg>Download model</button></div>
+          <p class="small muted">About 2.4 GB, downloaded once by Chrome. Nothing starts until you press the button.</p>
+        </div>
+
+        <div class="stack-sm" data-state-show="downloading">
+          <div class="row-between small"><span>Gemini Nano</span><span class="muted" id="dl-pct">42%</span></div>
+          <div class="bar" role="progressbar" aria-label="Model download" aria-valuemin="0" aria-valuemax="100" aria-valuenow="42" id="dl-bar"><span style="--p:42%"></span></div>
+          <p class="small muted">You can use the cloud meanwhile, with your consent. Measured and Visual checks work now.</p>
+        </div>
+
+        <div class="stack" data-state-show="flag">
+          <h3>Turn on image input in Chrome</h3>
+          <ol class="steps-en">
+            <li><div class="stack-sm"><span>Open this address in a new tab. Pages can’t open <span class="mono">chrome://</span> links, so copy it.</span>
+              <span class="inline-code small"><code>chrome://flags/#prompt-api-for-gemini-nano-multimodal-input</code><button class="iconbtn" type="button" data-copy="chrome://flags/#prompt-api-for-gemini-nano-multimodal-input" data-copy-toast="Flag address copied" aria-label="Copy flag address">
+                <svg class="i i-sm" aria-hidden="true"><use href="#i-copy"/></svg></button></span></div></li>
+            <li><div class="row"><span>Set it to <b>Enabled</b>.</span><button class="btn btn-link small" type="button" data-copy="Enabled" data-copy-toast="Copied “Enabled”">Copy</button></div></li>
+            <li><span>Relaunch Chrome.</span></li>
+            <li><span>Come back here and press <b>Download model</b>.</span></li>
+          </ol>
+        </div>
+
+        <dl class="kv">
+          <dt>Cloud</dt><dd id="eng-cloud"></dd>
+          <dt>Image input</dt><dd id="eng-image"></dd>
+          <dt>Mode</dt><dd id="eng-mode">Auto</dd>
+        </dl>
+      </section>
+
+      <!-- Mode -->
+      <section class="set-sec" id="mode" aria-labelledby="mode-h">
+        <h2 id="mode-h">Mode</h2>
+        <fieldset>
+          <legend class="sr-only">AI mode</legend>
+          <label class="choice"><input type="radio" name="mode" value="Auto" checked><span>Auto</span><span class="help">On-device first. Cloud only for projects you allow.</span></label>
+          <label class="choice"><input type="radio" name="mode" value="Cloud only"><span>Cloud only</span><span class="help">Every AI step goes to the cloud, still only for projects you allow. Measured checks stay on this device.</span></label>
+          <label class="choice"><input type="radio" name="mode" value="On-device only" id="mode-device" aria-describedby="mode-device-help"><span>On-device only</span><span class="help" id="mode-device-help">Never use the cloud. AI steps wait until the on-device model is ready.</span></label>
+        </fieldset>
+        <p class="small muted">A change applies to the next request.</p>
+      </section>
+
+      <!-- Consent -->
+      <section class="set-sec" id="consent" aria-labelledby="consent-h">
+        <h2 id="consent-h">Cloud consent</h2>
+        <p class="muted">Projects allowed to send data to Google Gemini through Firebase. Revoking takes effect now; the next cloud request asks again.</p>
+        <ul class="consent-list" id="consent-list">
+          <li><div><div>Sample landing page</div><div class="small muted">Allowed 25 Nov 2026 · 1 request so far</div></div><button class="btn btn-ghost" type="button" data-revoke>Revoke</button></li>
+          <li><div><div>Harbourline pricing page, 2026 redesign for the spring launch (long name)</div><div class="small muted">Allowed 19 Nov 2026 · no requests yet</div></div><button class="btn btn-ghost" type="button" data-revoke>Revoke</button></li>
+        </ul>
+        <p class="muted" id="consent-empty" hidden>No project can use the cloud. Each project asks before its first cloud request.</p>
+      </section>
+
+      <!-- Privacy -->
+      <section class="set-sec" id="privacy" aria-labelledby="privacy-h">
+        <h2 id="privacy-h">Privacy</h2>
+        <p class="headline"><span class="dot" id="priv-dot" style="margin-top:var(--space-2)" aria-hidden="true"></span><span id="priv-text">Nothing has left this device</span></p>
+        <p class="muted" id="priv-detail">Designs, captures, snapshots, contracts and runs are stored only in this browser. Measured checks never leave it.</p>
+        <p class="small"><a href="run.html#trace">Open the engine trace for Run 1</a></p>
+      </section>
+
+      <!-- Data -->
+      <section class="set-sec" id="data" aria-labelledby="data-h">
+        <h2 id="data-h">Data</h2>
+        <p class="muted">2 projects, 6 images, 1 contract and 2 runs use 14.2 MB on this device.</p>
+        <div><button class="btn btn-danger-outline" type="button" data-open="sheet-clear"><svg class="i i-sm" aria-hidden="true"><use href="#i-trash"/></svg>Clear all data</button></div>
+      </section>
+
+      <!-- About -->
+      <section class="set-sec" id="about" aria-labelledby="about-h">
+        <h2 id="about-h">About</h2>
+        <dl class="kv">
+          <dt>Version</dt><dd>0.1.0, built 25 Nov 2026</dd>
+          <dt>Licence</dt><dd>Apache-2.0</dd>
+          <dt>Source</dt><dd class="muted">Repository link added at release</dd>
+        </dl>
+        <div class="field" style="max-width:280px"><label for="theme">Theme</label>
+          <select class="select" id="theme"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<dialog class="sheet" id="sheet-clear" aria-labelledby="clr-h">
+  <form method="dialog" class="sheet-in" id="clr-form">
+    <div class="sheet-head"><div class="stack-sm"><h2 id="clr-h">Clear all data?</h2><p class="muted small">This deletes all projects, images, contracts and runs on this device. It can’t be undone.</p></div><button class="iconbtn" value="cancel" aria-label="Close" style="flex:none"><svg class="i" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <dl class="kv"><dt>Deleted</dt><dd>2 projects, 6 images, 1 contract, 2 runs (14.2 MB). Mode and the welcome screen reset.</dd><dt>Kept</dt><dd>Today’s Deep Analysis count (1 of 5), so the daily limit still applies.</dd></dl>
+    <label class="choice"><input type="checkbox" id="clr-ok"><span>I understand all projects on this device are deleted</span></label>
+    <p id="clr-why" class="help">Tick the box to turn this on.</p>
+    <div class="sheet-foot"><button class="btn" value="cancel" autofocus>Cancel</button><button class="btn btn-danger" value="clear" id="clr-go" aria-disabled="true" aria-describedby="clr-why"><svg class="i i-sm" aria-hidden="true"><use href="#i-trash"/></svg>Clear all data</button></div>
+  </form>
+</dialog>
+
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  var I = window.cuiIcon;
+  var E = {
+    ready: { icon: 'chip', head: 'On-device model ready: first pass stays on this device', detail: 'Gemini Nano in Chrome 139 on this computer. Contract extraction and judged checks run here unless you choose otherwise.', image: 'On', hdr: 'On-device ready' },
+    downloadable: { icon: 'chip', head: 'On-device model not downloaded', detail: 'Chrome can run Gemini Nano on this computer once the model is downloaded.', image: 'On, after download', hdr: 'Model not downloaded', off: 1 },
+    downloading: { icon: 'chip', head: 'Downloading 42%', detail: 'Chrome is downloading Gemini Nano. You can keep working; the download continues in the background.', image: 'On, after download', hdr: 'Downloading 42%', off: 1 },
+    flag: { icon: 'chip', head: 'On-device image input is off', detail: 'Chrome 139 has the model, but image input is turned off, so it can’t read designs yet. Text-only steps still run here.', image: 'Off', hdr: 'On-device off', off: 1 },
+    unavailable: { icon: 'cloud', head: 'On-device AI needs desktop Chrome. ConformUI uses the cloud here, after you allow it per project.', detail: 'This browser has no on-device model. Measured and Visual checks still run on this device.', image: 'Not available', hdr: 'Cloud with consent', off: 1 }
+  };
+  var MAP = { default: 'ready', offline: 'ready', sent: 'ready', downloadable: 'downloadable', downloading: 'downloading', flag: 'flag', 'not-chrome': 'unavailable' };
+
+  function render() {
+    var s = window.cuiState(), e = E[MAP[s] || 'ready'];
+    document.getElementById('eng-head').innerHTML = I(e.icon) + '<span>' + e.head + '</span>';
+    document.getElementById('eng-detail').textContent = e.detail;
+    document.getElementById('eng-image').textContent = e.image;
+    document.getElementById('eng-cloud').innerHTML = s === 'offline' ? '<span class="row" style="gap:var(--space-1)">' + I('offline', 'i-sm') + 'Offline. Cloud steps wait for a connection; your results are kept.</span>' : 'Reachable';
+    var md = document.getElementById('mode-device'), mh = document.getElementById('mode-device-help');
+    md.disabled = s === 'not-chrome';
+    mh.textContent = s === 'not-chrome' ? 'Not available: this browser has no on-device model.' : 'Never use the cloud. AI steps wait until the on-device model is ready.';
+    var sent = s === 'sent' || window.cuiFlags.sent;
+    document.getElementById('priv-text').textContent = sent ? 'Cloud: 1 request · 412 KB for Sample landing page' : 'Nothing has left this device';
+    document.getElementById('priv-dot').classList.toggle('off', sent);
+    document.getElementById('priv-detail').textContent = sent ? 'Deep Analysis on Run 1 sent 412 KB on 25 Nov 2026, 14:41. Every other step ran on this device.' : 'Designs, captures, snapshots, contracts and runs are stored only in this browser. Measured checks never leave it.';
+    // keep header in step with the panel
+    var links = document.querySelectorAll('.hdr .status-link');
+    if (links[0]) { links[0].innerHTML = I(e.icon, 'i-sm') + '<span class="lbl">' + e.hdr + '</span>'; links[0].setAttribute('aria-label', 'Engine: ' + e.hdr + '. Open engine settings'); }
+    if (links[1]) { var t = sent ? 'Cloud: 1 request · 412 KB' : 'Nothing has left this device'; links[1].innerHTML = I('shield', 'i-sm') + '<span class="lbl">' + t + '</span>'; links[1].setAttribute('aria-label', 'Privacy: ' + t); }
+    var hs = document.querySelector('.hdr-status'), off = document.getElementById('st-offline');
+    if (s === 'offline' && !off && !window.cuiFlags.offline && hs) hs.insertAdjacentHTML('afterbegin', '<span class="offline" role="status" id="st-offline">' + I('offline', 'i-sm') + 'Offline</span>');
+    if (s !== 'offline' && off) off.remove();
+  }
+
+  document.getElementById('dl-btn').addEventListener('click', function () {
+    var u = new URL(location); u.searchParams.set('state', 'downloading'); history.replaceState(null, '', u); window.cuiApplyState('downloading');
+    var p = 42, bar = document.getElementById('dl-bar');
+    var t = setInterval(function () {
+      p = Math.min(100, p + 12); bar.setAttribute('aria-valuenow', p); bar.firstElementChild.style.setProperty('--p', p + '%'); document.getElementById('dl-pct').textContent = p + '%';
+      document.getElementById('eng-head').lastChild.textContent = 'Downloading ' + p + '%';
+      if (p === 100) { clearInterval(t); window.cuiApplyState('default'); window.cuiToast('On-device model ready'); }
+    }, 400);
+  });
+
+  document.getElementById('mode').addEventListener('change', function (e) {
+    if (e.target.name === 'mode') { document.getElementById('eng-mode').textContent = e.target.value; window.cuiToast('Mode: ' + e.target.value + '. Applies to the next request.'); }
+  });
+
+  document.getElementById('consent-list').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-revoke]'); if (!b) return;
+    var li = b.closest('li'), name = li.querySelector('div > div').textContent, list = this;
+    li.remove(); window.cuiToast('Revoked cloud for ' + name);
+    if (!list.children.length) { list.hidden = true; document.getElementById('consent-empty').hidden = false; document.getElementById('consent-h').focus && document.getElementById('consent-empty').setAttribute('tabindex', '-1'); document.getElementById('consent-empty').focus(); }
+    else list.querySelector('button').focus();
+  });
+
+  var ok = document.getElementById('clr-ok'), go = document.getElementById('clr-go');
+  var why = document.getElementById('clr-why');
+  function syncClear() {
+    if (ok.checked) { go.removeAttribute('aria-disabled'); go.removeAttribute('aria-describedby'); why.hidden = true; }
+    else { go.setAttribute('aria-disabled', 'true'); go.setAttribute('aria-describedby', 'clr-why'); why.hidden = false; }
+  }
+  ok.addEventListener('change', syncClear);
+  go.addEventListener('click', function (e) { if (go.getAttribute('aria-disabled') === 'true') { e.preventDefault(); ok.focus(); } });
+  document.getElementById('sheet-clear').addEventListener('close', function () {
+    if (this.returnValue === 'clear') window.cuiToast('All data cleared. Deep Analysis count kept.');
+    ok.checked = false; syncClear();
+  });
+
+  var th = document.getElementById('theme');
+  th.value = window.cuiStore.get('theme', 'system');
+  th.addEventListener('change', function () {
+    window.cuiStore.set('theme', th.value);
+    if (th.value === 'system') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme', th.value);
+    var dv = document.querySelectorAll('.devbar select')[1]; if (dv) dv.value = th.value;
+  });
+
+  // section nav: mark current section
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('.set-nav a'));
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (ents) {
+      ents.forEach(function (en) { if (en.isIntersecting) navLinks.forEach(function (a) { a.setAttribute('aria-current', a.getAttribute('href') === '#' + en.target.id ? 'true' : 'false'); }); });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    document.querySelectorAll('.set-sec').forEach(function (s) { io.observe(s); });
+  }
+
+  document.addEventListener('cui:state', render);
+  render();
+})();
+</script>
+</body>
+</html>

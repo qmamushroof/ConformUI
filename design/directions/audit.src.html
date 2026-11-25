@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Run 1 · Sample landing page · ConformUI</title>
+<link rel="stylesheet" href="caliper.css">
+<style>
+  /* Audit Report — editorial document. Serif display (system serif), report numbering, figures with captions. */
+  :root{ --font-serif: "Iowan Old Style","Charter","Bitstream Charter","Sitka Text",Cambria,Georgia,serif; }
+  body{background:var(--surface)}
+  .hdr{background:var(--surface);border-bottom-color:transparent}
+  .doc{display:grid;grid-template-columns:260px minmax(0,880px);gap:48px;justify-content:center;padding:24px 24px 96px}
+  .toc{position:sticky;top:80px;align-self:start;display:grid;gap:16px}
+  .toc ol{list-style:none;margin:0;padding:0;display:grid;gap:2px;counter-reset:f}
+  .toc a{display:grid;grid-template-columns:28px 18px 1fr;gap:8px;align-items:start;padding:8px 8px;border-radius:var(--r-md);text-decoration:none;color:var(--text);font-size:14px;line-height:1.35;min-height:44px}
+  .toc a:hover{background:var(--surface-2)}
+  .toc a[aria-current="true"]{background:var(--bg);box-shadow:inset 2px 0 0 var(--brand)}
+  .toc .no{font:600 12px/1.6 var(--font-mono);color:var(--text-muted)}
+  .toc .sevicon{width:16px;height:16px;margin-top:1px}
+  .progress{font-size:13px;color:var(--text-muted);display:grid;gap:6px}
+  .progress li{display:flex;gap:8px;align-items:center}
+  .progress ol{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+  .progress .now{color:var(--text);font-weight:600}
+  .paper{background:var(--bg);border:1px solid var(--border);border-radius:var(--r-lg);padding:56px 64px;display:grid;gap:40px}
+  .title h1{font-family:var(--font-serif);font-size:40px;line-height:1.1;font-weight:700;letter-spacing:-.01em}
+  .title .meta{margin-top:10px;font-size:14px;color:var(--text-muted)}
+  .verdict{font-family:var(--font-serif);font-size:24px;line-height:1.4;max-width:34ch;margin:0}
+  .verdict b{font-family:var(--font-mono);font-weight:700}
+  .tally{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--text);border-bottom:1px solid var(--border)}
+  .tally div{padding:12px 0;display:grid;gap:2px}
+  .tally b{font:700 32px/1 var(--font-mono)}
+  .tally span{font-size:13px;color:var(--text-muted);display:flex;gap:6px;align-items:center}
+  .actions{margin-left:0}
+  .finding{display:grid;gap:20px;padding-top:32px;border-top:1px solid var(--border)}
+  .finding h2{font-family:var(--font-serif);font-size:26px;line-height:1.25;font-weight:700;display:grid;grid-template-columns:56px 1fr;align-items:baseline}
+  .finding h2 .no{font:600 14px var(--font-mono);color:var(--text-muted)}
+  .finding .body{margin-left:56px;display:grid;gap:20px}
+  figure.fig{margin:0;display:grid;gap:8px}
+  .fig .pair{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--border);border:1px solid var(--border)}
+  .fig .pair svg{display:block;width:100%;height:auto;background:#fff}
+  figcaption.cap{font-size:13px;color:var(--text-muted)}
+  figcaption.cap b{color:var(--text)}
+  dl.meas{display:grid;grid-template-columns:repeat(4,auto);gap:0;margin:0;border-top:1px solid var(--border)}
+  dl.meas div{padding:10px 16px 10px 0;border-bottom:1px solid var(--border)}
+  dl.meas dt{font-size:12px;color:var(--text-muted)}
+  dl.meas dd{margin:0;font:600 18px var(--font-mono)}
+  .fixbox{border-left:3px solid var(--brand);padding:4px 0 4px 16px;display:grid;gap:6px}
+  .fixbox p{margin:0}
+  .rest li{display:grid;grid-template-columns:56px 20px 1fr auto;gap:8px;align-items:baseline;padding:14px 0;border-top:1px solid var(--border)}
+  .rest{list-style:none;margin:0;padding:0}
+  .rest .no{font:600 14px var(--font-mono);color:var(--text-muted)}
+  .rest .t{font-family:var(--font-serif);font-size:19px;line-height:1.35}
+  @media (max-width: 1100px){ .doc{grid-template-columns:1fr} .toc{position:static} .toc ol{display:none} }
+  @media (max-width: 720px){ .paper{padding:24px 20px;gap:28px} .title h1{font-size:30px} .finding .body{margin-left:0} .finding h2{grid-template-columns:40px 1fr;font-size:22px} .fig .pair{grid-template-columns:1fr} .tally{grid-template-columns:1fr 1fr} dl.meas{grid-template-columns:1fr 1fr} .rest li{grid-template-columns:40px 20px 1fr} .rest li .chip{grid-column:3} }
+</style>
+</head>
+<body>
+<!--DEFS-->
+<header class="hdr">
+  <a class="brand" href="#"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="var(--brand)" stroke-width="3" stroke-linecap="square"><path d="M52 22 V12 H12 V52 H52 V42"/><path d="M23 26 V38 H35 V26"/><path d="M41 26 V38"/></g></svg>ConformUI</a>
+  <nav class="nav" aria-label="Main"><a href="#" aria-current="page">Projects</a><a href="#">Snippet</a><a href="#">Settings</a></nav>
+  <div class="hdr-right">
+    <button class="pill"><svg class="i sm"><use href="#i-chip"/></svg><span class="txt">On-device ready</span></button>
+    <button class="pill"><svg class="i sm" style="color:var(--pass)"><use href="#i-shield"/></svg><span class="txt">Nothing has left this device</span></button>
+  </div>
+</header>
+<div class="doc">
+  <aside class="toc" aria-label="Report contents">
+    <div class="progress">
+      <span class="eyebrow">Sample landing page</span>
+      <ol>
+        <li><svg class="i sm"><use href="#i-check"/></svg>Design</li>
+        <li><svg class="i sm"><use href="#i-check"/></svg>Contract v1</li>
+        <li><svg class="i sm"><use href="#i-check"/></svg>Captures</li>
+        <li><svg class="i sm"><use href="#i-check"/></svg>Run 1</li>
+        <li class="now"><svg class="i sm" style="color:var(--brand)"><use href="#i-chev"/></svg>Fix — next</li>
+        <li><svg class="i sm"><use href="#i-dash"/></svg>Re-verify</li>
+      </ol>
+    </div>
+    <ol>
+      <li><a href="#"><span class="no">§1</span><svg class="sevicon critical"><use href="#i-oct"/></svg><span>Hero illustration is missing</span></a></li>
+      <li><a href="#" aria-current="true"><span class="no">§2</span><svg class="sevicon major"><use href="#i-tri"/></svg><span>Primary CTA 132 px vs 220 px</span></a></li>
+      <li><a href="#"><span class="no">§3</span><svg class="sevicon major"><use href="#i-tri"/></svg><span>Subtitle larger than heading</span></a></li>
+      <li><a href="#"><span class="no">§4</span><svg class="sevicon major"><use href="#i-tri"/></svg><span>Nav has 3 of 4 links</span></a></li>
+      <li><a href="#"><span class="no">§5</span><svg class="sevicon minor"><use href="#i-circ"/></svg><span>Mobile overflow + overlap</span></a></li>
+      <li><a href="#"><span class="no">§6</span><svg class="sevicon minor"><use href="#i-circ"/></svg><span>Section spacing 32 vs 64 px</span></a></li>
+      <li><a href="#"><span class="no">§7</span><svg class="sevicon review"><use href="#i-qdash"/></svg><span>CTA colour — needs review</span></a></li>
+    </ol>
+  </aside>
+  <main class="paper">
+    <div class="title">
+      <div class="eyebrow">Acceptance report · <span class="mono">run_7f3a…c21e</span></div>
+      <h1 style="margin-top:8px">Sample landing page, Run 1</h1>
+      <div class="meta">25 Nov 2026, 14:32 · against Contract v1 (locked, 19 requirements) · Desktop 1440, Mobile 390</div>
+    </div>
+    <p class="verdict">The implementation fails <b>6</b> of 19 requirements; <b>1</b> needs review. The largest gap: the hero illustration is missing.</p>
+    <div class="tally">
+      <div><b class="c-fail" style="color:var(--critical)">6</b><span><svg class="i sm"><use href="#i-x"/></svg>Fail</span></div>
+      <div><b style="color:var(--review)">1</b><span><svg class="i sm"><use href="#i-qdash"/></svg>Needs review</span></div>
+      <div><b style="color:var(--pass)">11</b><span><svg class="i sm"><use href="#i-check"/></svg>Pass</span></div>
+      <div><b>1</b><span><svg class="i sm"><use href="#i-dash"/></svg>Not checked</span></div>
+    </div>
+    <div class="actions"><button class="btn primary"><svg class="i sm"><use href="#i-copy"/></svg>Copy fix prompt</button><button class="btn"><svg class="i sm"><use href="#i-cloud"/></svg>Deep Analysis</button><button class="btn"><svg class="i sm"><use href="#i-refresh"/></svg>Re-verify</button><button class="btn ghost"><svg class="i sm"><use href="#i-download"/></svg>Export</button></div>
+
+    <section class="finding" aria-labelledby="s2">
+      <h2 id="s2"><span class="no">§2</span><span>Primary CTA is 132 px wide; the design specifies 220 px.</span></h2>
+      <div class="body">
+        <div class="chips"><span class="chip major"><svg class="i"><use href="#i-tri"/></svg>Major</span><span class="chip fail"><svg class="i"><use href="#i-x"/></svg>Fail</span><span class="chip engine"><svg class="i"><use href="#i-ruler"/></svg>Measured</span><span class="chip label">Explicit</span><span class="chip neutral">Confidence: High</span><span class="chip neutral mono">R-D-04</span></div>
+        <figure class="fig">
+          <div class="pair">
+            <svg viewBox="24 396 600 128" role="img" aria-label="Design: primary CTA"><use href="#sample-design" width="1440" height="1000"/><rect x="58" y="434" width="232" height="68" rx="10" fill="none" style="stroke:var(--brand)" stroke-width="3"/></svg>
+            <svg viewBox="24 396 600 128" role="img" aria-label="Implementation: primary CTA"><use href="#sample-capture" width="1440" height="1000"/><rect x="58" y="434" width="144" height="68" rx="10" fill="none" stroke="#111827" stroke-width="3" stroke-dasharray="8 6"/></svg>
+          </div>
+          <figcaption class="cap"><b>Fig. 2</b> — Design (left, solid outline) and implementation (right, dashed outline) at the same scale, Desktop 1440.</figcaption>
+        </figure>
+        <dl class="meas">
+          <div><dt>Design</dt><dd>220 px</dd></div><div><dt>Implementation</dt><dd>132 px</dd></div><div><dt>Difference</dt><dd style="color:var(--critical)">−88 px · −40%</dd></div><div><dt>Source</dt><dd style="font-size:14px">DOM snapshot</dd></div>
+        </dl>
+        <div class="fixbox"><span class="eyebrow">Fix</span><p>Set the primary CTA to <span class="mono">width: 220px</span> and keep the 18 px label. <span class="muted">Passes when width is 202–238 px at Desktop 1440.</span></p></div>
+      </div>
+    </section>
+
+    <section aria-label="Other findings">
+      <ol class="rest">
+        <li><span class="no">§1</span><svg class="sevicon critical"><use href="#i-oct"/></svg><span class="t">Hero illustration is missing</span><span class="chip engine"><svg class="i"><use href="#i-ruler"/></svg>Measured</span></li>
+        <li><span class="no">§3</span><svg class="sevicon major"><use href="#i-tri"/></svg><span class="t">Subtitle (40 px) is larger than the hero heading (34 px)</span><span class="chip engine"><svg class="i"><use href="#i-ruler"/></svg>Measured</span></li>
+        <li><span class="no">§4</span><svg class="sevicon major"><use href="#i-tri"/></svg><span class="t">Navigation has 3 links; the contract expects 4</span><span class="chip engine"><svg class="i"><use href="#i-ruler"/></svg>Measured</span></li>
+        <li><span class="no">§7</span><svg class="sevicon review"><use href="#i-qdash"/></svg><span class="t">Primary CTA colour may be off-brand</span><span class="chip engine"><svg class="i"><use href="#i-chip"/></svg>On-device</span></li>
+      </ol>
+    </section>
+  </main>
+</div>
+</body>
+</html>

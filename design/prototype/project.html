@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
+<title>Sample landing page · ConformUI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/app.css">
+<style>
+  .facts{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:var(--space-4) 0;margin-bottom:var(--space-10)}
+  .facts dd{display:flex;flex-wrap:wrap;align-items:center;gap:0 var(--space-2)}
+  .facts .btn-link{min-height:0}
+  .vp{display:grid;gap:var(--space-6);align-content:start;min-width:0}
+  .vp-h{display:flex;align-items:center;gap:var(--space-2)}
+  .slot{display:grid;gap:var(--space-2)}
+  .slot>.label{color:var(--text-muted)}
+  .thumb .shot{max-height:120px;object-fit:cover}
+  .thumb .name{overflow-wrap:anywhere}
+  .snapline{display:grid;gap:var(--space-1)}
+  .snapline .btn-row{gap:var(--space-1) var(--space-3)}
+  .tlink{display:inline-flex;align-items:center;min-height:var(--layout-target)}
+  .vp .btn-row>.btn-ghost:first-child,.slot>div>.btn-ghost{margin-left:calc(-1 * var(--space-4))}
+  .snapline p .st{display:inline}
+  .none{font-size:var(--font-size-sm);color:var(--text-muted)}
+  .runs{list-style:none;margin:0;padding:0;border-top:1px solid var(--border)}
+  .runs .rowi{border-bottom:1px solid var(--border);padding-left:var(--space-2)}
+  .problems{margin:0;padding-left:var(--space-4);font-size:var(--font-size-sm)}
+  .problems .mono{overflow-wrap:anywhere}
+  @media (max-width:640px){.page-head .btn-row>.menu-wrap:first-child{margin-inline-start:calc(-1 * var(--space-3))}}
+  @media (max-width:720px){.facts .kv{grid-template-columns:1fr;gap:0}.facts .kv dd{margin-bottom:var(--space-3)}}
+</style>
+</head>
+<body data-nav="projects" data-title="Sample landing page" data-states="default,new,design-only,ready,invalid-snapshot,image-error,share">
+<script src="assets/sprite.js"></script>
+<header data-shell></header>
+<div data-phead data-step="captures" data-done="5" data-next="reverify"></div>
+<script>
+  /* Stepper position depends on the state; app.js reads these attributes once at load. */
+  (function () {
+    var s = new URLSearchParams(location.search).get('state') || 'default';
+    var P = { 'new': ['design', 0, 'design'], 'image-error': ['design', 0, 'design'], 'design-only': ['design', 1, 'contract'],
+      ready: ['captures', 3, 'run'], 'invalid-snapshot': ['captures', 3, 'run'], 'default': ['captures', 5, 'reverify'], share: ['captures', 5, 'reverify'] }[s];
+    if (!P) return;
+    var p = document.querySelector('[data-phead]');
+    p.dataset.step = P[0]; p.dataset.done = P[1]; p.dataset.next = P[2];
+    document.addEventListener('cui:state', function (e) { if (e.detail !== s) setTimeout(function () { location.reload(); }, 0); });
+  })();
+</script>
+
+<main id="main" tabindex="-1" class="page">
+  <div class="page-head">
+    <div class="stack-sm">
+      <h1>Sample landing page</h1>
+      <div class="meta" data-state-show="default share"><span>Desktop 1440 and Mobile 390</span><span>Last run 25 Nov 2026, 15:06</span><span>1 remaining</span></div>
+      <div class="meta" data-state-show="ready invalid-snapshot"><span>Desktop 1440 and Mobile 390</span><span>No runs yet</span></div>
+      <div class="meta" data-state-show="new image-error design-only"><span>Desktop 1440 and Mobile 390</span><span>Created 25 Nov 2026</span></div>
+    </div>
+    <div class="btn-row">
+      <div class="menu-wrap">
+        <button class="iconbtn" data-menu aria-haspopup="true" aria-expanded="false" aria-label="More project actions"><svg class="i" aria-hidden="true"><use href="#i-more"/></svg></button>
+        <div class="menu" hidden>
+          <button aria-disabled="true" aria-describedby="rename-why"><svg class="i i-sm" aria-hidden="true"><use href="#i-edit"/></svg>Rename<span class="muted xs" id="rename-why">&nbsp;(coming later)</span></button>
+          <button data-state-show="default ready invalid-snapshot share" data-toast="Downloaded sample-landing-page-contract-v1.md"><svg class="i i-sm" aria-hidden="true"><use href="#i-download"/></svg>Export contract</button>
+          <button data-open="sheet-delete"><svg class="i i-sm" aria-hidden="true"><use href="#i-trash"/></svg>Delete project</button>
+        </div>
+      </div>
+      <a class="btn btn-primary" href="contract.html" data-state-show="design-only"><svg class="i i-sm" aria-hidden="true"><use href="#i-file"/></svg>Extract contract</a>
+      <a class="btn btn-primary" href="run.html?state=running" data-state-show="ready invalid-snapshot"><svg class="i i-sm" aria-hidden="true"><use href="#i-play"/></svg>Run</a>
+      <a class="btn btn-primary" href="run.html?reverify=1" data-state-show="default share"><svg class="i i-sm" aria-hidden="true"><use href="#i-refresh"/></svg>Re-verify</a>
+    </div>
+  </div>
+
+  <section class="facts" aria-label="Project status">
+    <dl class="kv">
+      <dt>Contract</dt>
+      <dd data-state-show="default ready invalid-snapshot share"><a class="tlink" href="contract.html">Contract v1, locked</a><span class="muted">19 requirements (16 explicit, 3 inferred)</span></dd>
+      <dd data-state-show="design-only">Not extracted yet. Extraction reads the Desktop design on this device.</dd>
+      <dd data-state-show="new image-error" class="muted">No contract yet. Add a Desktop design to extract one.</dd>
+      <dt>Engine</dt>
+      <dd><span class="eng" aria-label="Engine: on-device model ready"><svg class="i" aria-hidden="true"><use href="#i-chip"/></svg>On-device ready</span><span class="muted">First pass stays on this device.</span><a class="tlink" href="settings.html#engine">Engine settings</a></dd>
+      <dt>Cloud</dt>
+      <dd>Nothing from this project has left this device.</dd>
+    </dl>
+  </section>
+
+  <section class="stack-lg" id="captures" aria-labelledby="in-h">
+    <h2 id="in-h">Inputs</h2>
+
+    <div data-state-show="image-error">
+      <div class="notice notice-danger" role="alert" id="img-err">
+        <svg class="i" aria-hidden="true"><use href="#i-alert"/></svg>
+        <p class="title">landing-full.png was not added: it is 1440 × 12 480 px, over the 8192 px limit.</p>
+        <p class="small">Nothing else changed. Use PNG, JPEG or WebP up to 20 MB and 8192 px per side. For a long page, export the first screen or crop it into parts.</p>
+      </div>
+    </div>
+
+    <div data-state-show="invalid-snapshot">
+      <div class="notice notice-danger" role="alert">
+        <svg class="i" aria-hidden="true"><use href="#i-alert"/></svg>
+        <p class="title">The Mobile DOM snapshot was not added: 3 problems.</p>
+        <ul class="problems">
+          <li><span class="mono">schema</span>: expected "conformui.dom-snapshot", got "dom"</li>
+          <li><span class="mono">viewport.width</span>: missing</li>
+          <li><span class="mono">elements[12].box.w</span>: expected a number, got "auto"</li>
+        </ul>
+        <p class="small">The run will use images only. Mobile checks that need the DOM will be Not checked.</p>
+        <div class="btn-row"><button class="btn" data-open="sheet-snapshot" data-vp="mobile">Paste again</button><a class="btn btn-ghost" href="snippet.html">Get the snippet</a></div>
+      </div>
+    </div>
+
+    <div class="two">
+      <!-- Desktop -->
+      <section class="vp" aria-labelledby="vp-d">
+        <h3 class="vp-h" id="vp-d"><svg class="i" aria-hidden="true"><use href="#i-desktop"/></svg>Desktop 1440</h3>
+
+        <div class="slot">
+          <span class="label small">Design</span>
+          <button class="drop" data-pick="design" data-state-show="new"><svg class="i i-lg" aria-hidden="true"><use href="#i-upload"/></svg><span class="t">Drop the Desktop design, or choose a file</span><span class="help">PNG, JPEG or WebP, up to 20 MB and 8192 px per side. From a design tool, export the frame as PNG.</span></button>
+          <button class="drop is-invalid" data-pick="design" data-state-show="image-error" aria-describedby="img-err"><svg class="i i-lg" aria-hidden="true"><use href="#i-upload"/></svg><span class="t">Drop the Desktop design, or choose a file</span><span class="error"><svg class="i i-sm" aria-hidden="true"><use href="#i-alert"/></svg>landing-full.png is 12 480 px tall. Choose a shorter image.</span></button>
+          <div class="thumb" data-state-show="default design-only ready invalid-snapshot share">
+            <svg class="shot" viewBox="0 0 1440 1000" role="img" aria-label="Desktop design: Sample Co. landing page"><use href="#sample-design" width="1440" height="1000"/></svg>
+            <div class="small"><div class="name">sample-design-desktop.png</div><div class="muted">1440 × 1000 · 312 KB</div></div>
+            <button class="iconbtn" data-pick="design" aria-label="Replace Desktop design"><svg class="i i-sm" aria-hidden="true"><use href="#i-refresh"/></svg></button>
+          </div>
+        </div>
+
+        <div class="slot">
+          <span class="label small">Capture</span>
+          <button class="drop" data-open="sheet-capture" data-vp="desktop" data-state-show="new image-error design-only"><svg class="i i-lg" aria-hidden="true"><use href="#i-image"/></svg><span class="t">Add a Desktop capture</span><span class="help">A screenshot of your built page at 1440 px wide. Full-page screenshots work.</span></button>
+          <div class="thumb" data-state-show="default ready invalid-snapshot share">
+            <svg class="shot" viewBox="0 0 1440 1000" role="img" aria-label="Desktop capture of the built page"><use href="#sample-capture" width="1440" height="1000"/></svg>
+            <div class="small"><div class="name">sample-capture-desktop.png</div><div class="muted">1440 × 1000 · 268 KB</div></div>
+            <button class="iconbtn" data-open="sheet-capture" data-vp="desktop" aria-label="Replace Desktop capture"><svg class="i i-sm" aria-hidden="true"><use href="#i-refresh"/></svg></button>
+          </div>
+        </div>
+
+        <div class="snapline">
+          <span class="label small muted">DOM snapshot</span>
+          <div data-state-show="default ready invalid-snapshot share" class="row">
+            <span class="st st-pass"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Snapshot added, 214 elements</span>
+            <span class="small muted">1440 × 1000, matches the capture</span>
+          </div>
+          <div data-state-show="new image-error design-only" class="stack-sm" style="gap:0">
+            <p class="small"><span class="st st-nc"><svg class="i" aria-hidden="true"><use href="#i-dash"/></svg>No snapshot.</span> Measured DOM checks will be Not checked.</p>
+            <div class="btn-row"><button class="btn btn-ghost" data-open="sheet-snapshot" data-vp="desktop"><svg class="i i-sm" aria-hidden="true"><use href="#i-code"/></svg>Paste snapshot</button><a href="snippet.html" class="small tlink">Get the snippet</a></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Mobile -->
+      <section class="vp" aria-labelledby="vp-m">
+        <h3 class="vp-h" id="vp-m"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg>Mobile 390</h3>
+
+        <div class="slot">
+          <span class="label small">Design</span>
+          <p class="none">None. Mobile requirements are inferred from Desktop.</p>
+          <div><button class="btn btn-ghost" data-pick="design-mobile"><svg class="i i-sm" aria-hidden="true"><use href="#i-plus"/></svg>Add a Mobile design</button></div>
+        </div>
+
+        <div class="slot">
+          <span class="label small">Capture</span>
+          <button class="drop" data-open="sheet-capture" data-vp="mobile" data-state-show="new image-error design-only"><svg class="i i-lg" aria-hidden="true"><use href="#i-image"/></svg><span class="t">Add a Mobile capture</span><span class="help">A screenshot at 390 px wide. Phone screenshots at 2× or 3× density are scaled down.</span></button>
+          <div class="thumb" data-state-show="default ready invalid-snapshot share">
+            <svg class="shot" viewBox="0 0 476 844" role="img" aria-label="Mobile capture of the built page"><use href="#sample-mobile" width="476" height="844"/></svg>
+            <div class="small"><div class="name">sample-capture-mobile.png</div><div class="muted">390 × 844 at 2× · 188 KB</div></div>
+            <button class="iconbtn" data-open="sheet-capture" data-vp="mobile" aria-label="Replace Mobile capture"><svg class="i i-sm" aria-hidden="true"><use href="#i-refresh"/></svg></button>
+          </div>
+        </div>
+
+        <div class="snapline">
+          <span class="label small muted">DOM snapshot</span>
+          <div data-state-show="default ready share" class="row">
+            <span class="st st-pass"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Snapshot added, 187 elements</span>
+            <span class="small muted">390 × 844, matches the capture</span>
+          </div>
+          <div data-state-show="invalid-snapshot" class="stack-sm" style="gap:0">
+            <p class="small"><span class="st st-fail"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg>Not added: 3 problems.</span> The run will use images only.</p>
+            <div class="btn-row"><button class="btn btn-ghost" data-open="sheet-snapshot" data-vp="mobile"><svg class="i i-sm" aria-hidden="true"><use href="#i-code"/></svg>Paste snapshot</button><a href="snippet.html" class="small tlink">Get the snippet</a></div>
+          </div>
+          <div data-state-show="new image-error design-only" class="stack-sm" style="gap:0">
+            <p class="small"><span class="st st-nc"><svg class="i" aria-hidden="true"><use href="#i-dash"/></svg>No snapshot.</span> Measured DOM checks will be Not checked.</p>
+            <div class="btn-row"><button class="btn btn-ghost" data-open="sheet-snapshot" data-vp="mobile"><svg class="i i-sm" aria-hidden="true"><use href="#i-code"/></svg>Paste snapshot</button><a href="snippet.html" class="small tlink">Get the snippet</a></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <section class="stack" style="margin-top:var(--space-12)" aria-labelledby="runs-h">
+    <h2 id="runs-h">Runs</h2>
+    <ul class="runs" data-state-show="default share">
+      <li><a class="rowi" href="run.html?state=reverify">
+        <span class="ic" aria-hidden="true"><svg class="i" aria-hidden="true"><use href="#i-refresh"/></svg></span>
+        <span class="t">Run 2, Re-verify</span>
+        <span class="d st st-fail"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg>1 remaining</span>
+        <span class="meta"><span>25 Nov 2026, 15:06</span><span>6 resolved, 1 remaining</span><span>Contract v1</span></span>
+      </a></li>
+      <li><a class="rowi" href="run.html">
+        <span class="ic" aria-hidden="true"><svg class="i" aria-hidden="true"><use href="#i-play"/></svg></span>
+        <span class="t">Run 1</span>
+        <span class="d st st-fail"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg>6 fail</span>
+        <span class="meta"><span>25 Nov 2026, 14:32</span><span>6 fail, 1 needs review, 11 pass</span><span>Contract v1</span></span>
+      </a></li>
+    </ul>
+    <p class="muted small" data-state-show="ready invalid-snapshot">No runs yet. Run checks the 19 requirements against both captures.</p>
+    <p class="muted small" data-state-show="new image-error design-only">No runs yet. Add a design, extract the contract, then add captures.</p>
+  </section>
+</main>
+
+<input type="file" id="picker" accept="image/png,image/jpeg,image/webp" hidden>
+
+<!-- Sheets -->
+<dialog class="sheet" id="sheet-capture" aria-labelledby="cap-h">
+  <form method="dialog" class="sheet-in">
+    <div class="sheet-head"><div class="stack-sm"><h2 id="cap-h">Add capture</h2><p class="muted small" id="cap-sub">A screenshot of your built page. It stays on this device.</p></div><button class="iconbtn" value="cancel" aria-label="Close"><svg class="i" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <div id="cap-shared" class="thumb">
+      <svg class="shot" viewBox="0 0 476 844" role="img" aria-label="Shared image: Mobile screenshot of the built page"><use href="#sample-mobile" width="476" height="844"/></svg>
+      <div class="small"><div class="name">Screenshot_20261125_143010.png</div><div class="muted">Shared from Chrome · 1080 × 2340 · 412 KB</div></div>
+      <span></span>
+    </div>
+    <button type="button" class="drop" id="cap-drop" data-pick="capture"><svg class="i i-lg" aria-hidden="true"><use href="#i-image"/></svg><span class="t">Drop a screenshot, paste it, or choose a file</span><span class="help">PNG, JPEG or WebP, up to 20 MB and 8192 px per side.</span></button>
+    <fieldset class="stack-sm"><legend>Viewport</legend>
+      <label class="choice"><input type="radio" name="cap-vp" value="desktop"><span>Desktop 1440</span></label>
+      <label class="choice"><input type="radio" name="cap-vp" value="mobile" checked><span>Mobile 390</span><span class="help" id="cap-hint">Suggested: the image is 1080 px wide, which is 390 px at 2.77× density.</span></label>
+    </fieldset>
+    <p class="small muted">Replacing a capture keeps the contract. Only that viewport's latest run results are cleared.</p>
+    <div class="sheet-foot"><button class="btn" value="cancel">Cancel</button><button class="btn btn-primary" value="add" id="cap-add"><svg class="i i-sm" aria-hidden="true"><use href="#i-plus"/></svg>Add capture</button></div>
+  </form>
+</dialog>
+
+<dialog class="sheet wide" id="sheet-snapshot" aria-labelledby="sn-h">
+  <form method="dialog" class="sheet-in" id="sn-form" novalidate>
+    <div class="sheet-head"><div class="stack-sm"><h2 id="sn-h">Paste DOM snapshot, <span id="sn-vp">Mobile 390</span></h2><p class="muted small">Run the snippet on your page at <span id="sn-w">390</span> px wide, then paste the JSON it copied. <a href="snippet.html">Get the snippet</a></p></div><button class="iconbtn" value="cancel" aria-label="Close"><svg class="i" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <div class="field">
+      <label for="sn-text">Snapshot JSON</label>
+      <textarea class="textarea code" id="sn-text" rows="9" spellcheck="false" aria-describedby="sn-help sn-errs" placeholder='{"schema":"conformui.dom-snapshot","version":1,...}'></textarea>
+      <p class="help" id="sn-help">Up to 1 MB. Invalid snapshots are not stored.</p>
+      <div id="sn-errs" class="stack-sm" hidden>
+        <p class="error"><svg class="i i-sm" aria-hidden="true"><use href="#i-alert"/></svg><span id="sn-errtitle">This snapshot can't be used.</span></p>
+        <ul class="problems" id="sn-list"></ul>
+        <p class="small muted" id="sn-errfoot">The run will use images only.</p>
+      </div>
+    </div>
+    <div class="sheet-foot"><button class="btn" value="cancel">Cancel</button><button class="btn btn-primary" value="add" id="sn-add">Add snapshot</button></div>
+  </form>
+</dialog>
+
+<dialog class="sheet" id="sheet-delete" aria-labelledby="del-h">
+  <form method="dialog" class="sheet-in">
+    <div class="sheet-head"><div class="stack-sm"><h2 id="del-h">Delete Sample landing page?</h2><p class="muted small">This removes the design, 2 captures, 2 DOM snapshots, Contract v1 and 2 runs from this device. It can't be undone.</p></div><button class="iconbtn" value="cancel" aria-label="Close"><svg class="i" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <p class="small muted">You can add the sample again from Projects at any time.</p>
+    <div class="sheet-foot"><button class="btn" value="cancel" autofocus>Cancel</button><button class="btn btn-danger" value="delete" id="del-go"><svg class="i i-sm" aria-hidden="true"><use href="#i-trash"/></svg>Delete project</button></div>
+  </form>
+</dialog>
+
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  var $ = function (s) { return document.querySelector(s); };
+  var state = window.cuiState();
+  var VP = { desktop: ['Desktop 1440', 1440], mobile: ['Mobile 390', 390] };
+  var snapVp = 'mobile';
+
+  /* File picker (simulated flow): a good design moves the project on; a bad one shows the image error */
+  var picker = $('#picker'), pickFor = null;
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-pick]'); if (!b) return;
+    pickFor = b.dataset.pick; picker.value = ''; picker.click();
+  });
+  picker.addEventListener('change', function () {
+    var f = picker.files[0]; if (!f) return;
+    var ok = /^image\/(png|jpeg|webp)$/.test(f.type) && f.size <= 20 * 1024 * 1024;
+    if (pickFor === 'capture') { window.cuiToast(ok ? f.name + ' ready to add' : 'Use PNG, JPEG or WebP up to 20 MB and 8192 px per side.'); return; }
+    location.search = '?state=' + (ok ? 'design-only' : 'image-error');
+  });
+
+  /* Capture sheet: shared image (Android share target) or picker */
+  function setupCapture(vp, shared) {
+    $('#cap-shared').hidden = !shared;
+    $('#cap-drop').hidden = !!shared;
+    $('#cap-hint').hidden = !shared;
+    $('#cap-sub').textContent = shared ? 'Shared into ConformUI. Pick the viewport it belongs to. It stays on this device.' : 'A screenshot of your built page. It stays on this device.';
+    document.querySelector('input[name="cap-vp"][value="' + vp + '"]').checked = true;
+  }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-open="sheet-capture"]'); if (b) setupCapture(b.dataset.vp || 'desktop', false);
+    b = e.target.closest('[data-open="sheet-snapshot"]'); if (b) setupSnapshot(b.dataset.vp || 'mobile');
+  }, true);
+  $('#sheet-capture').addEventListener('close', function () {
+    if (this.returnValue === 'add') {
+      var v = document.querySelector('input[name="cap-vp"]:checked').value;
+      window.cuiToast(VP[v][0] + ' capture added. Run 1 results for ' + VP[v][0].split(' ')[0] + ' are cleared.');
+    }
+  });
+
+  /* Snapshot sheet: real validation of pasted JSON, first 5 problems */
+  var els = []; for (var n = 0; n < 12; n++) els.push({ i: n, tag: n ? 'p' : 'header', box: { x: 0, y: n * 40, w: 390, h: 40 } });
+  els.push({ i: 12, tag: 'a', box: { x: 20, y: 284, w: 'auto', h: 52 } });
+  var BAD = JSON.stringify({ schema: 'dom', version: 1, viewport: { height: 844 }, elements: els }, null, 1);
+  function setupSnapshot(vp) {
+    snapVp = vp;
+    $('#sn-vp').textContent = VP[vp][0]; $('#sn-w').textContent = VP[vp][1];
+    var t = $('#sn-text');
+    if (state === 'invalid-snapshot' && vp === 'mobile') { t.value = BAD; showErrors(validate(BAD), false); }
+    else { t.value = ''; clearErrors(); }
+  }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function showErrors(list, warn) {
+    $('#sn-text').setAttribute('aria-invalid', warn ? 'false' : 'true');
+    $('#sn-errs').hidden = false;
+    $('#sn-errtitle').textContent = warn ? 'Check the viewport.' : 'This snapshot can\'t be used: ' + list.length + (list.length === 1 ? ' problem.' : ' problems.');
+    $('#sn-list').innerHTML = list.slice(0, 5).map(function (l) { return '<li>' + l + '</li>'; }).join('');
+    $('#sn-errfoot').textContent = warn ? 'Measurements are only exact when the widths match.' : 'The run will use images only.';
+    $('#sn-add').textContent = warn ? 'Use anyway' : 'Add snapshot';
+  }
+  function clearErrors() { $('#sn-text').removeAttribute('aria-invalid'); $('#sn-errs').hidden = true; $('#sn-add').textContent = 'Add snapshot'; }
+  function validate(text) {
+    var p = [], j;
+    if (!text.trim()) return ['Nothing pasted. Run the snippet, then paste here.'];
+    if (text.length > 1048576) return ['Larger than 1 MB. Run the snippet again; it trims long text automatically.'];
+    try { j = JSON.parse(text); } catch (er) {
+      var m = /line (\d+)/.exec(er.message), pos = /position (\d+)/.exec(er.message);
+      var line = m ? +m[1] : pos ? text.slice(0, +pos[1]).split('\n').length : 1;
+      return ['Not valid JSON (line ' + line + ')'];
+    }
+    var tag = function (k) { return '<span class="mono">' + k + '</span>'; };
+    if (!j || typeof j !== 'object') return ['This is not a ConformUI snapshot v1'];
+    if (j.schema !== 'conformui.dom-snapshot') p.push(tag('schema') + ': expected "conformui.dom-snapshot", got ' + esc(JSON.stringify(j.schema === undefined ? 'nothing' : j.schema)));
+    if (j.version !== 1) p.push(tag('version') + ': expected 1');
+    if (!j.viewport || typeof j.viewport.width !== 'number') p.push(tag('viewport.width') + ': missing');
+    if (!Array.isArray(j.elements)) p.push(tag('elements') + ': expected a list');
+    else j.elements.forEach(function (el, i) {
+      ['x', 'y', 'w', 'h'].forEach(function (k) {
+        var v = el && el.box ? el.box[k] : undefined;
+        if (typeof v !== 'number') p.push(tag('elements[' + i + '].box.' + k) + ': expected a number, got ' + esc(JSON.stringify(v === undefined ? 'nothing' : v)));
+      });
+    });
+    return p;
+  }
+  var warned = false;
+  $('#sn-text').addEventListener('input', function () { warned = false; clearErrors(); });
+  $('#sn-add').addEventListener('click', function (e) {
+    var text = $('#sn-text').value, p = validate(text);
+    if (p.length) { e.preventDefault(); showErrors(p, false); $('#sn-text').focus(); return; }
+    var j = JSON.parse(text), want = VP[snapVp][1];
+    if (Math.abs(j.viewport.width - want) > 1 && !warned) {
+      e.preventDefault(); warned = true;
+      showErrors(['The snapshot was taken at ' + j.viewport.width + ' px; the ' + VP[snapVp][0] + ' capture is ' + want + ' px wide.'], true); return;
+    }
+    window.cuiToast('Snapshot added, ' + j.elements.length + ' elements');
+  });
+
+  $('#sheet-delete').addEventListener('close', function () { if (this.returnValue === 'delete') location.href = 'projects.html?state=empty'; });
+
+  if (state === 'share') { setupCapture('mobile', true); window.cuiOpen('sheet-capture'); }
+})();
+</script>
+</body>
+</html>

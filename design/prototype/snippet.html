@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
+<title>DOM snippet · ConformUI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/app.css">
+<style>
+  /* PROPOSED: numbered-steps. Ordered list with a plain muted "1." numeral. */
+  .howto{list-style:none;margin:0;padding:0;display:grid;gap:var(--space-5);counter-reset:howto;max-width:var(--layout-prose)}
+  .howto>li{display:grid;grid-template-columns:24px minmax(0,1fr);gap:var(--space-1) var(--space-3);counter-increment:howto}
+  .howto>li::before{content:counter(howto) ".";color:var(--text-muted);font-size:var(--font-size-md);line-height:var(--leading-snug)}
+  .howto>li>*{grid-column:2}
+  .howto>li>.h3{grid-row:1}
+  .stack-lg>*,.stack>*{min-width:0}
+  .code pre{max-height:480px}
+  .code-head{flex-wrap:wrap;gap:var(--space-2)}
+  .code-head .name{font-family:var(--font-mono);font-size:var(--font-size-xs)}
+  .privacy{display:flex;align-items:center;gap:var(--space-2)}
+  .reads{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-6)}
+  .reads ul{margin:0;padding-left:var(--space-4);font-size:var(--font-size-sm);display:grid;gap:var(--space-1)}
+  @media (max-width:640px){.reads{grid-template-columns:1fr}}
+</style>
+</head>
+<body data-nav="snippet" data-title="DOM snippet" data-states="default">
+<script src="assets/sprite.js"></script>
+<header data-shell></header>
+
+<main id="main" tabindex="-1" class="page">
+  <div class="page-head">
+    <div class="stack-sm">
+      <a class="tlink small" href="project.html#captures">Back to Sample landing page</a>
+      <h1>DOM snippet</h1>
+      <p class="muted prose">Run this script on your own page to copy a DOM snapshot: real element boxes, text and styles, so measured checks report exact pixel values and selectors.</p>
+    </div>
+  </div>
+
+  <div class="stack-lg">
+    <ol class="howto" aria-label="How to take a snapshot">
+      <li><h2 class="h3">Open your page at the capture width</h2><p class="small muted">In Chrome, open the page you captured. Use 1440 px for Desktop and 390 px for Mobile; the DevTools device toolbar sets an exact width.</p></li>
+      <li><h2 class="h3">Paste the snippet into the DevTools Console and press Enter</h2><p class="small muted">Open the Console with Ctrl+Shift+J (Cmd+Option+J on Mac). It prints <span class="mono">ConformUI snapshot copied: 214 elements, 1440×1000</span>. If Chrome asks you to type "allow pasting", type it, then paste again.</p></li>
+      <li><h2 class="h3">Come back and choose Paste snapshot</h2><p class="small muted">In your project, under the same viewport, choose Paste snapshot. <a href="project.html#captures">Open Sample landing page</a></p></li>
+    </ol>
+
+    <div class="stack">
+      <div class="code">
+        <div class="code-head"><span class="name">conformui-snippet.js</span><span class="row"><span class="xs muted">v1.0.0 · 41 lines</span><button class="btn btn-primary" id="copy-snippet" data-copy-toast="Snippet copied"><svg class="i i-sm" aria-hidden="true"><use href="#i-copy"/></svg>Copy snippet</button></span></div>
+<pre tabindex="0" aria-label="Snippet source code" id="src"><code>/* ConformUI DOM snippet 1.0.0
+   Reads layout, text and styles only; sends nothing. */
+(() =&gt; {
+  const LANDMARK = 'header,nav,main,footer,aside,section[aria-label]';
+  const PICK = LANDMARK + ',h1,h2,h3,h4,h5,h6,a[href],button,[role=button],' +
+    'img,svg[role=img],input:not([type=hidden]),select,textarea,p,li,label';
+  const kind = (el) =&gt; el.matches(LANDMARK) ? 'landmark' : /^H\d$/.test(el.tagName) ? 'heading'
+    : el.matches('a[href]') ? 'link' : el.matches('button,[role=button]') ? 'button'
+    : el.matches('img,svg') ? 'image' : el.matches('input,select,textarea') ? 'control' : 'text';
+  const sel = (el) =&gt; {
+    const path = [];
+    for (let n = el; n &amp;&amp; n !== document.body &amp;&amp; path.length &lt; 5; n = n.parentElement) {
+      if (n.id &amp;&amp; !/\d{4,}|[a-f0-9]{8,}/.test(n.id)) { path.unshift('#' + CSS.escape(n.id)); break; }
+      const same = [...n.parentElement.children].filter((c) =&gt; c.tagName === n.tagName);
+      path.unshift(n.tagName.toLowerCase() + (same.length &gt; 1 ? `:nth-of-type(${same.indexOf(n) + 1})` : ''));
+    }
+    return path.join(' &gt; ');
+  };
+  const px = (v) =&gt; parseFloat(v) || 0, r2 = (v) =&gt; Math.round(v * 100) / 100;
+  const doc = document.documentElement;
+  const elements = [...document.querySelectorAll(PICK)].slice(0, 1500).flatMap((el) =&gt; {
+    const r = el.getBoundingClientRect(), s = getComputedStyle(el);
+    if (!r.width || !r.height || s.display === 'none' || s.visibility === 'hidden') return [];
+    const isControl = el.matches('input,select,textarea');
+    return [{ kind: kind(el), tag: el.tagName.toLowerCase(), selector: sel(el),
+      name: (el.getAttribute('aria-label') || el.getAttribute('alt') || '').slice(0, 120),
+      text: isControl ? undefined : el.innerText.replace(/\s+/g, ' ').trim().slice(0, 200),
+      box: { x: r2(r.left + scrollX), y: r2(r.top + scrollY), w: r2(r.width), h: r2(r.height) },
+      style: { fontSize: px(s.fontSize), fontWeight: px(s.fontWeight), color: s.color,
+        backgroundColor: s.backgroundColor, marginTop: px(s.marginTop), borderRadius: px(s.borderRadius) },
+      flags: { beyondViewport: r.right &gt; doc.clientWidth + 1 || r.left &lt; -1 } }];
+  }).map((e, i) =&gt; ({ i, ...e }));
+  const json = JSON.stringify({ schema: 'conformui.dom-snapshot', version: 1, snippetVersion: '1.0.0',
+    page: { url: location.origin + location.pathname, title: document.title.slice(0, 120) },
+    capturedAt: new Date().toISOString(), viewport: { width: innerWidth, height: innerHeight },
+    dpr: devicePixelRatio, document: { scrollWidth: doc.scrollWidth, clientWidth: doc.clientWidth },
+    overflow: { horizontal: doc.scrollWidth &gt; doc.clientWidth, horizontalPx: Math.max(0, doc.scrollWidth - doc.clientWidth) },
+    elements, truncated: elements.length &gt;= 1500 });
+  typeof copy === 'function' ? copy(json) : console.log(json);
+  return `ConformUI snapshot copied: ${elements.length} elements, ${innerWidth}×${innerHeight}`;
+})();</code></pre>
+      </div>
+      <p class="privacy small muted"><svg class="i i-sm" aria-hidden="true" style="color:var(--success)"><use href="#i-shield"/></svg>Reads layout, text and styles only; sends nothing</p>
+    </div>
+
+    <details class="disc">
+      <summary><svg class="i i-sm chev" aria-hidden="true"><use href="#i-chev"/></svg>What the snapshot contains<span class="aside">Up to 1500 elements, 1 MB</span></summary>
+      <div class="disc-body reads">
+        <div class="stack-sm"><h3>Reads</h3><ul>
+          <li>Page origin and path, title, viewport size and pixel density</li>
+          <li>Landmarks, headings, links, buttons, images, form controls and text blocks</li>
+          <li>Each element's box, a stable selector, its accessible name and up to 200 characters of text</li>
+          <li>Computed font size and weight, colours, margins and radius</li>
+          <li>Whether the page scrolls sideways, and by how much</li>
+        </ul></div>
+        <div class="stack-sm"><h3>Never reads</h3><ul>
+          <li>Form values, checked state or hidden inputs</li>
+          <li>Cookies, localStorage, sessionStorage or IndexedDB</li>
+          <li>Query strings or URL fragments</li>
+          <li>Anything over the network: the script makes no requests</li>
+        </ul></div>
+      </div>
+    </details>
+
+    <div class="stack-sm">
+      <div><button class="btn btn-ghost" aria-disabled="true" aria-describedby="bm-why"><svg class="i i-sm" aria-hidden="true"><use href="#i-external"/></svg>Bookmarklet (coming later)</button></div>
+      <p class="small muted" id="bm-why">A drag-to-bookmarks version of the same script is planned. For now, use the Console.</p>
+    </div>
+  </div>
+</main>
+
+<script src="assets/app.js"></script>
+<script>
+  document.getElementById('copy-snippet').dataset.copy = document.getElementById('src').textContent;
+</script>
+</body>
+</html>

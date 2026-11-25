@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Run 1 · Sample landing page · ConformUI</title>
+<link rel="stylesheet" href="caliper.css">
+<style>
+  /* Audit Report — editorial document. Serif display (system serif), report numbering, figures with captions. */
+  :root{ --font-serif: "Iowan Old Style","Charter","Bitstream Charter","Sitka Text",Cambria,Georgia,serif; }
+  body{background:var(--surface)}
+  .hdr{background:var(--surface);border-bottom-color:transparent}
+  .doc{display:grid;grid-template-columns:260px minmax(0,880px);gap:48px;justify-content:center;padding:24px 24px 96px}
+  .toc{position:sticky;top:80px;align-self:start;display:grid;gap:16px}
+  .toc ol{list-style:none;margin:0;padding:0;display:grid;gap:2px;counter-reset:f}
+  .toc a{display:grid;grid-template-columns:28px 18px 1fr;gap:8px;align-items:start;padding:8px 8px;border-radius:var(--r-md);text-decoration:none;color:var(--text);font-size:14px;line-height:1.35;min-height:44px}
+  .toc a:hover{background:var(--surface-2)}
+  .toc a[aria-current="true"]{background:var(--bg);box-shadow:inset 2px 0 0 var(--brand)}
+  .toc .no{font:600 12px/1.6 var(--font-mono);color:var(--text-muted)}
+  .toc .sevicon{width:16px;height:16px;margin-top:1px}
+  .progress{font-size:13px;color:var(--text-muted);display:grid;gap:6px}
+  .progress li{display:flex;gap:8px;align-items:center}
+  .progress ol{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+  .progress .now{color:var(--text);font-weight:600}
+  .paper{background:var(--bg);border:1px solid var(--border);border-radius:var(--r-lg);padding:56px 64px;display:grid;gap:40px}
+  .title h1{font-family:var(--font-serif);font-size:40px;line-height:1.1;font-weight:700;letter-spacing:-.01em}
+  .title .meta{margin-top:10px;font-size:14px;color:var(--text-muted)}
+  .verdict{font-family:var(--font-serif);font-size:24px;line-height:1.4;max-width:34ch;margin:0}
+  .verdict b{font-family:var(--font-mono);font-weight:700}
+  .tally{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--text);border-bottom:1px solid var(--border)}
+  .tally div{padding:12px 0;display:grid;gap:2px}
+  .tally b{font:700 32px/1 var(--font-mono)}
+  .tally span{font-size:13px;color:var(--text-muted);display:flex;gap:6px;align-items:center}
+  .actions{margin-left:0}
+  .finding{display:grid;gap:20px;padding-top:32px;border-top:1px solid var(--border)}
+  .finding h2{font-family:var(--font-serif);font-size:26px;line-height:1.25;font-weight:700;display:grid;grid-template-columns:56px 1fr;align-items:baseline}
+  .finding h2 .no{font:600 14px var(--font-mono);color:var(--text-muted)}
+  .finding .body{margin-left:56px;display:grid;gap:20px}
+  figure.fig{margin:0;display:grid;gap:8px}
+  .fig .pair{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--border);border:1px solid var(--border)}
+  .fig .pair svg{display:block;width:100%;height:auto;background:#fff}
+  figcaption.cap{font-size:13px;color:var(--text-muted)}
+  figcaption.cap b{color:var(--text)}
+  dl.meas{display:grid;grid-template-columns:repeat(4,auto);gap:0;margin:0;border-top:1px solid var(--border)}
+  dl.meas div{padding:10px 16px 10px 0;border-bottom:1px solid var(--border)}
+  dl.meas dt{font-size:12px;color:var(--text-muted)}
+  dl.meas dd{margin:0;font:600 18px var(--font-mono)}
+  .fixbox{border-left:3px solid var(--brand);padding:4px 0 4px 16px;display:grid;gap:6px}
+  .fixbox p{margin:0}
+  .rest li{display:grid;grid-template-columns:56px 20px 1fr auto;gap:8px;align-items:baseline;padding:14px 0;border-top:1px solid var(--border)}
+  .rest{list-style:none;margin:0;padding:0}
+  .rest .no{font:600 14px var(--font-mono);color:var(--text-muted)}
+  .rest .t{font-family:var(--font-serif);font-size:19px;line-height:1.35}
+  @media (max-width: 1100px){ .doc{grid-template-columns:1fr} .toc{position:static} .toc ol{display:none} }
+  @media (max-width: 720px){ .paper{padding:24px 20px;gap:28px} .title h1{font-size:30px} .finding .body{margin-left:0} .finding h2{grid-template-columns:40px 1fr;font-size:22px} .fig .pair{grid-template-columns:1fr} .tally{grid-template-columns:1fr 1fr} dl.meas{grid-template-columns:1fr 1fr} .rest li{grid-template-columns:40px 20px 1fr} .rest li .chip{grid-column:3} }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-chip" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10"/><path d="M10 3v4M14 3v4M10 17v4M14 17v4M3 10h4M3 14h4M17 10h4M17 14h4"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18h11a4 4 0 0 0 0-8 6 6 0 0 0-11.6 1.5A3.5 3.5 0 0 0 7 18z"/></symbol>
+    <symbol id="i-ruler" viewBox="0 0 24 24"><rect x="2" y="8" width="20" height="8"/><path d="M6 8v3M10 8v4M14 8v3M18 8v4"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-q" viewBox="0 0 24 24"><path d="M9 9a3 3 0 1 1 4.5 2.6c-1 .6-1.5 1.2-1.5 2.4"/><path d="M12 18v.5"/></symbol>
+    <symbol id="i-dash" viewBox="0 0 24 24"><path d="M7 12h10"/></symbol>
+    <symbol id="i-oct" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M8 2h8l6 6v8l-6 6H8l-6-6V8z"/><path stroke="var(--critical-bg)" d="M12 7v6M12 16.5v.5"/></symbol>
+    <symbol id="i-tri" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M12 2l11 20H1z"/><path stroke="var(--major-bg)" d="M12 9v6M12 18v.5"/></symbol>
+    <symbol id="i-circ" viewBox="0 0 24 24"><circle fill="currentColor" stroke="none" cx="12" cy="12" r="9"/></symbol>
+    <symbol id="i-qdash" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-dasharray="3 2.6"/><path d="M9.8 9.6a2.3 2.3 0 1 1 3.4 2c-.8.4-1.2.9-1.2 1.8"/><path d="M12 16.2v.4"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12"/><path d="M16 8V4H4v12h4"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M4 20h16"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></symbol>
+    <symbol id="i-desktop" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12"/><path d="M8 20h8M12 16v4"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20"/><path d="M11 18h2"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><rect x="3" y="3" width="12" height="12"/><rect x="9" y="9" width="12" height="12" stroke-dasharray="3 2"/></symbol>
+    <symbol id="i-expand" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M18 6l-2.5 2.5M8.5 15.5L6 18"/></symbol>
+
+    <!-- Sample page: design reference (desktop 1440) -->
+    <symbol id="sample-design" viewBox="0 0 1440 1000">
+      <rect width="1440" height="1000" fill="#FFFFFF"/>
+      <rect x="64" y="28" width="24" height="24" fill="#0F4C5C"/>
+      <text x="100" y="47" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#0F172A">Sample Co.</text>
+      <g font-family="Arial,sans-serif" font-size="15" fill="#334155"><text x="760" y="46">Product</text><text x="856" y="46">Pricing</text><text x="950" y="46">Docs</text><text x="1028" y="46">Company</text></g>
+      <rect x="1176" y="20" width="200" height="40" rx="8" fill="#0F4C5C"/>
+      <text x="1276" y="45" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" font-weight="700" fill="#FFFFFF">Start free trial</text>
+      <g font-family="Arial,sans-serif" font-weight="700" font-size="60" fill="#0F172A"><text x="64" y="240">Plan field visits</text><text x="64" y="312">in minutes.</text></g>
+      <g font-family="Arial,sans-serif" font-size="22" fill="#475569"><text x="64" y="366">Routes, schedules and site notes</text><text x="64" y="396">for teams on the road.</text></g>
+      <rect x="64" y="440" width="220" height="56" rx="8" fill="#0F4C5C"/>
+      <text x="174" y="475" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#FFFFFF">Book a demo</text>
+      <text x="316" y="475" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#0F4C5C">See how it works →</text>
+      <rect x="800" y="140" width="576" height="400" rx="16" fill="#E6F2F4"/>
+      <path d="M800 420 C 940 380, 980 250, 1120 260 S 1320 200, 1376 170" stroke="#B5D9E0" stroke-width="22" fill="none"/>
+      <path d="M900 540 C 920 440, 1040 400, 1080 330 S 1200 220, 1260 140" stroke="#B5D9E0" stroke-width="14" fill="none"/>
+      <path d="M880 470 L 1010 380 L 1140 300 L 1290 230" stroke="#0F4C5C" stroke-width="4" stroke-dasharray="10 8" fill="none"/>
+      <g fill="#0F4C5C"><circle cx="880" cy="470" r="12"/><circle cx="1140" cy="300" r="12"/><circle cx="1290" cy="230" r="16"/></g>
+      <g fill="#FFFFFF"><circle cx="880" cy="470" r="5"/><circle cx="1140" cy="300" r="5"/><circle cx="1290" cy="230" r="6"/></g>
+      <text x="64" y="644" font-family="Arial,sans-serif" font-size="32" font-weight="700" fill="#0F172A">How it works</text>
+      <g fill="#E6F2F4"><rect x="64" y="684" width="44" height="44" rx="8"/><rect x="528" y="684" width="44" height="44" rx="8"/><rect x="992" y="684" width="44" height="44" rx="8"/></g>
+      <g font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="#0F172A"><text x="64" y="766">Plan the route</text><text x="528" y="766">Brief the team</text><text x="992" y="766">Log site notes</text></g>
+      <g fill="#CBD5E1"><rect x="64" y="786" width="340" height="10" rx="5"/><rect x="64" y="806" width="280" height="10" rx="5"/><rect x="528" y="786" width="330" height="10" rx="5"/><rect x="528" y="806" width="260" height="10" rx="5"/><rect x="992" y="786" width="340" height="10" rx="5"/><rect x="992" y="806" width="230" height="10" rx="5"/></g>
+    </symbol>
+
+    <!-- Sample page: flawed implementation capture (desktop 1440) -->
+    <symbol id="sample-capture" viewBox="0 0 1440 1000">
+      <rect width="1440" height="1000" fill="#FFFFFF"/>
+      <rect x="64" y="28" width="24" height="24" fill="#0F4C5C"/>
+      <text x="100" y="47" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#0F172A">Sample Co.</text>
+      <g font-family="Arial,sans-serif" font-size="15" fill="#334155"><text x="856" y="46">Product</text><text x="950" y="46">Pricing</text><text x="1028" y="46">Company</text></g>
+      <rect x="1176" y="20" width="200" height="40" rx="8" fill="#1597B0"/>
+      <text x="1276" y="45" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" font-weight="700" fill="#FFFFFF">Start free trial</text>
+      <text x="64" y="236" font-family="Arial,sans-serif" font-weight="700" font-size="34" fill="#0F172A">Plan field visits in minutes.</text>
+      <g font-family="Arial,sans-serif" font-size="40" fill="#475569"><text x="64" y="320">Routes, schedules and site notes</text><text x="64" y="370">for teams on the road.</text></g>
+      <rect x="64" y="440" width="132" height="56" rx="8" fill="#1597B0"/>
+      <text x="130" y="474" text-anchor="middle" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#FFFFFF">Book a demo</text>
+      <text x="228" y="475" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#0F4C5C">See how it works →</text>
+      <text x="64" y="612" font-family="Arial,sans-serif" font-size="32" font-weight="700" fill="#0F172A">How it works</text>
+      <g fill="#E6F2F4"><rect x="64" y="652" width="44" height="44" rx="8"/><rect x="528" y="652" width="44" height="44" rx="8"/><rect x="992" y="652" width="44" height="44" rx="8"/></g>
+      <g font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="#0F172A"><text x="64" y="734">Plan the route</text><text x="528" y="734">Brief the team</text><text x="992" y="734">Log site notes</text></g>
+      <g fill="#CBD5E1"><rect x="64" y="754" width="340" height="10" rx="5"/><rect x="64" y="774" width="280" height="10" rx="5"/><rect x="528" y="754" width="330" height="10" rx="5"/><rect x="528" y="774" width="260" height="10" rx="5"/><rect x="992" y="754" width="340" height="10" rx="5"/><rect x="992" y="774" width="230" height="10" rx="5"/></g>
+    </symbol>
+  </defs>
+</svg>
+<header class="hdr">
+  <a class="brand" href="#"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="var(--brand)" stroke-width="3" stroke-linecap="square"><path d="M52 22 V12 H12 V52 H52 V42"/><path d="M23 26 V38 H35 V26"/><path d="M41 26 V38"/></g></svg>ConformUI</a>
+  <nav class="nav" aria-label="Main"><a href="#" aria-current="page">Projects</a><a href="#">Snippet</a><a href="#">Settings</a></nav>
+  <div class="hdr-right">
+    <button class="pill"><svg class="i sm"><use href="#i-chip"/></svg><span class="txt">On-device ready</span></button>
+    <button class="pill"><svg class="i sm" style="color:var(--pass)"><use href="#i-shield"/></svg><span class="txt">Nothing has left this device</span></button>
+  </div>
+</header>
+<div class="doc">
+  <aside class="toc" aria-label="Report contents">
+    <div class="progress">
+      <span class="eyebrow">Sample landing page</span>
+      <ol>
+        <li><svg class="i sm"><use href="#i-check"/></svg>Design</li>
+        <li><svg class="i sm"><use href="#i-check"/></svg>Contract v1</li>
+        <li><svg class="i sm"><use href="#i-check"/></svg>Captures</li>
+        <li><svg class="i sm"><use href="#i-check"/></svg>Run 1</li>
+        <li class="now"><svg class="i sm" style="color:var(--brand)"><use href="#i-chev"/></svg>Fix — next</li>
+        <li><svg class="i sm"><use href="#i-dash"/></svg>Re-verify</li>
+      </ol>
+    </div>
+    <ol>
+      <li><a href="#"><span class="no">§1</span><svg class="sevicon critical"><use href="#i-oct"/></svg><span>Hero illustration is missing</span></a></li>
+      <li><a href="#" aria-current="true"><span class="no">§2</span><svg class="sevicon major"><use href="#i-tri"/></svg><span>Primary CTA 132 px vs 220 px</span></a></li>
+      <li><a href="#"><span class="no">§3</span><svg class="sevicon major"><use href="#i-tri"/></svg><span>Subtitle larger than heading</span></a></li>
+      <li><a href="#"><span class="no">§4</span><svg class="sevicon major"><use href="#i-tri"/></svg><span>Nav has 3 of 4 links</span></a></li>
+      <li><a href="#"><span class="no">§5</span><svg class="sevicon minor"><use href="#i-circ"/></svg><span>Mobile overflow + overlap</span></a></li>
+      <li><a href="#"><span class="no">§6</span><svg class="sevicon minor"><use href="#i-circ"/></svg><span>Section spacing 32 vs 64 px</span></a></li>
+      <li><a href="#"><span class="no">§7</span><svg class="sevicon review"><use href="#i-qdash"/></svg><span>CTA colour — needs review</span></a></li>
+    </ol>
+  </aside>
+  <main class="paper">
+    <div class="title">
+      <div class="eyebrow">Acceptance report · <span class="mono">run_7f3a…c21e</span></div>
+      <h1 style="margin-top:8px">Sample landing page, Run 1</h1>
+      <div class="meta">25 Nov 2026, 14:32 · against Contract v1 (locked, 19 requirements) · Desktop 1440, Mobile 390</div>
+    </div>
+    <p class="verdict">The implementation fails <b>6</b> of 19 requirements; <b>1</b> needs review. The largest gap: the hero illustration is missing.</p>
+    <div class="tally">
+      <div><b class="c-fail" style="color:var(--critical)">6</b><span><svg class="i sm"><use href="#i-x"/></svg>Fail</span></div>
+      <div><b style="color:var(--review)">1</b><span><svg class="i sm"><use href="#i-qdash"/></svg>Needs review</span></div>
+      <div><b style="color:var(--pass)">11</b><span><svg class="i sm"><use href="#i-check"/></svg>Pass</span></div>
+      <div><b>1</b><span><svg class="i sm"><use href="#i-dash"/></svg>Not checked</span></div>
+    </div>
+    <div class="actions"><button class="btn primary"><svg class="i sm"><use href="#i-copy"/></svg>Copy fix prompt</button><button class="btn"><svg class="i sm"><use href="#i-cloud"/></svg>Deep Analysis</button><button class="btn"><svg class="i sm"><use href="#i-refresh"/></svg>Re-verify</button><button class="btn ghost"><svg class="i sm"><use href="#i-download"/></svg>Export</button></div>
+
+    <section class="finding" aria-labelledby="s2">
+      <h2 id="s2"><span class="no">§2</span><span>Primary CTA is 132 px wide; the design specifies 220 px.</span></h2>
+      <div class="body">
+        <div class="chips"><span class="chip major"><svg class="i"><use href="#i-tri"/></svg>Major</span><span class="chip fail"><svg class="i"><use href="#i-x"/></svg>Fail</span><span class="chip engine"><svg class="i"><use href="#i-ruler"/></svg>Measured</span><span class="chip label">Explicit</span><span class="chip neutral">Confidence: High</span><span class="chip neutral mono">R-D-04</span></div>
+        <figure class="fig">
+          <div class="pair">
+            <svg viewBox="24 396 600 128" role="img" aria-label="Design: primary CTA"><use href="#sample-design" width="1440" height="1000"/><rect x="58" y="434" width="232" height="68" rx="10" fill="none" style="stroke:var(--brand)" stroke-width="3"/></svg>
+            <svg viewBox="24 396 600 128" role="img" aria-label="Implementation: primary CTA"><use href="#sample-capture" width="1440" height="1000"/><rect x="58" y="434" width="144" height="68" rx="10" fill="none" stroke="#111827" stroke-width="3" stroke-dasharray="8 6"/></svg>
+          </div>
+          <figcaption class="cap"><b>Fig. 2</b> — Design (left, solid outline) and implementation (right, dashed outline) at the same scale, Desktop 1440.</figcaption>
+        </figure>
+        <dl class="meas">
+          <div><dt>Design</dt><dd>220 px</dd></div><div><dt>Implementation</dt><dd>132 px</dd></div><div><dt>Difference</dt><dd style="color:var(--critical)">−88 px · −40%</dd></div><div><dt>Source</dt><dd style="font-size:14px">DOM snapshot</dd></div>
+        </dl>
+        <div class="fixbox"><span class="eyebrow">Fix</span><p>Set the primary CTA to <span class="mono">width: 220px</span> and keep the 18 px label. <span class="muted">Passes when width is 202–238 px at Desktop 1440.</span></p></div>
+      </div>
+    </section>
+
+    <section aria-label="Other findings">
+      <ol class="rest">
+        <li><span class="no">§1</span><svg class="sevicon critical"><use href="#i-oct"/></svg><span class="t">Hero illustration is missing</span><span class="chip engine"><svg class="i"><use href="#i-ruler"/></svg>Measured</span></li>
+        <li><span class="no">§3</span><svg class="sevicon major"><use href="#i-tri"/></svg><span class="t">Subtitle (40 px) is larger than the hero heading (34 px)</span><span class="chip engine"><svg class="i"><use href="#i-ruler"/></svg>Measured</span></li>
+        <li><span class="no">§4</span><svg class="sevicon major"><use href="#i-tri"/></svg><span class="t">Navigation has 3 links; the contract expects 4</span><span class="chip engine"><svg class="i"><use href="#i-ruler"/></svg>Measured</span></li>
+        <li><span class="no">§7</span><svg class="sevicon review"><use href="#i-qdash"/></svg><span class="t">Primary CTA colour may be off-brand</span><span class="chip engine"><svg class="i"><use href="#i-chip"/></svg>On-device</span></li>
+      </ol>
+    </section>
+  </main>
+</div>
+</body>
+</html>

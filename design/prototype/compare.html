@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
+<title>Compare runs · Sample landing page · ConformUI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/app.css">
+<style>
+  .pickers{display:grid;grid-template-columns:repeat(2,minmax(0,280px));gap:var(--space-4);align-items:end}
+  .cmp td .val{display:block;color:var(--text-muted);font-size:var(--font-size-xs);margin-top:var(--space-1)}
+  .cmp td a{text-decoration:none;color:var(--text)}
+  .cmp td a:hover{text-decoration:underline}
+  table.cmp{min-width:640px}
+  .cmp .st-ink{color:var(--text)}
+  @media (max-width:640px){.pickers{grid-template-columns:1fr}}
+</style>
+</head>
+<body data-nav="projects" data-title="Compare runs · Sample landing page" data-states="default">
+<script src="assets/sprite.js"></script>
+<header data-shell></header>
+<div data-phead data-step="reverify" data-done="6" data-crumb="Compare runs"></div>
+
+<main id="main" tabindex="-1" class="page page-wide">
+  <div class="stack-lg">
+    <div class="stack">
+      <h1>Compare runs</h1>
+      <div class="pickers">
+        <div class="field"><label for="run-a">Run A, before</label><select class="select" id="run-a"><option value="1" selected>Run 1 · 25 Nov 2026, 14:32</option><option value="2">Run 2 · 25 Nov 2026, 15:06</option></select></div>
+        <div class="field"><label for="run-b">Run B, after</label><select class="select" id="run-b"><option value="1">Run 1 · 25 Nov 2026, 14:32</option><option value="2" selected>Run 2 · 25 Nov 2026, 15:06</option></select></div>
+      </div>
+      <p class="small muted" id="cmp-note">Both runs checked Contract v1 (locked), 19 requirements, Desktop 1440 and Mobile 390.</p>
+    </div>
+
+    <div class="notice" id="same" hidden role="status">
+      <svg class="i" aria-hidden="true"><use href="#i-info"/></svg>
+      <p class="title">Pick two different runs.</p>
+      <p class="small muted">Run A and Run B are the same, so there is nothing to compare.</p>
+    </div>
+
+    <section class="sec" id="result" aria-labelledby="sum-h">
+      <h2 id="sum-h" class="sr-only">Changes</h2>
+      <div class="summary" id="summary" role="status"></div>
+      <div class="table-wrap">
+        <table class="data cmp">
+          <caption class="sr-only">Status of each requirement in both runs</caption>
+          <thead><tr><th>Requirement</th><th id="th-a">Run 1</th><th id="th-b">Run 2</th><th>Change</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <p class="small muted" id="more">9 more requirements pass in both runs. <span class="mono xs">R-D-11</span> footer was not checked in either run: both Desktop captures end at 1000 px, above the footer.</p>
+    </section>
+
+    <div class="btn-row">
+      <a class="btn btn-ghost" href="run.html?state=reverify&amp;f=R-D-09"><svg class="i i-sm" aria-hidden="true"><use href="#i-chev"/></svg>Open Run 2</a>
+      <a class="btn btn-ghost" href="run.html"><svg class="i i-sm" aria-hidden="true"><use href="#i-chev"/></svg>Open Run 1</a>
+    </div>
+  </div>
+</main>
+
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  var I = window.cuiIcon;
+  // [id, requirement, run1 status, run1 value, run2 status, run2 value]
+  var R = [
+    ['R-D-06', 'Hero illustration sits right of the heading', 'critical', 'Region empty, 96% differs', 'pass', 'Illustration present'],
+    ['R-D-04', 'Primary CTA width is 220 px ±8%', 'major', '132 px, −40%', 'pass', '220 px'],
+    ['R-D-03', 'Hero heading is the largest text on the page', 'major', 'Heading 34 px, subtitle 40 px', 'pass', 'Heading 60 px, subtitle 22 px'],
+    ['R-D-02', 'Navigation contains logo, four links and a primary CTA', 'major', '3 links, “Docs” missing', 'pass', '4 links'],
+    ['I-M-01', 'Layout fits at 390 px', 'minor', 'Scrolls 86 px sideways', 'pass', '390 px, no overlap'],
+    ['R-D-05', 'Primary CTA uses the brand colour', 'review', 'ΔE 14.2, low confidence', 'pass', 'ΔE 0.8'],
+    ['R-D-09', '“How it works” starts 64 px below the hero', 'minor', '32 px, −50%', 'minor', '32 px, −50%'],
+    ['R-D-01', 'Logo sits at the top left of the header', 'pass', '', 'pass', ''],
+    ['R-D-12', 'Header is 80 px tall', 'pass', '80 px', 'pass', '80 px']
+  ];
+  var SEVW = { critical: 'Fail, Critical', major: 'Fail, Major', minor: 'Fail, Minor' };
+  function cell(s, v) {
+    var html = s === 'pass' ? '<span class="st st-ink">' + I('check') + 'Pass</span>'
+      : s === 'review' ? '<span class="st st-ink">' + I('review') + 'Needs review</span>'
+      : '<span class="sev">' + I(s) + SEVW[s] + '</span>';
+    return html + (v ? '<span class="val">' + v + '</span>' : '');
+  }
+  function change(a, b) {
+    var fa = a !== 'pass', fb = b !== 'pass';
+    if (fa && !fb) return ['res', '<span class="st st-pass">' + I('up') + 'Resolved</span>'];
+    if (fa && fb) return ['rem', '<span class="st st-fail">' + I('x') + 'Remaining</span>'];
+    if (!fa && fb) return ['reg', '<span class="st st-fail">' + I('down') + 'Regressed</span>'];
+    return ['same', '<span class="st st-nc">' + I('check') + 'Still passing</span>'];
+  }
+  function render() {
+    var a = document.getElementById('run-a').value, b = document.getElementById('run-b').value;
+    var same = a === b;
+    document.getElementById('same').hidden = !same; document.getElementById('result').hidden = same;
+    if (same) return;
+    document.getElementById('th-a').textContent = 'Run ' + a; document.getElementById('th-b').textContent = 'Run ' + b;
+    var n = { res: 0, rem: 0, reg: 0, neu: 0, same: 0 };
+    document.getElementById('rows').innerHTML = R.map(function (r) {
+      var A = a === '1' ? [r[2], r[3]] : [r[4], r[5]], B = b === '1' ? [r[2], r[3]] : [r[4], r[5]];
+      var c = change(A[0], B[0]); n[c[0]]++;
+      var href = 'run.html?' + (b === '2' ? 'state=reverify&amp;' : '') + 'f=' + r[0];
+      return '<tr><td><a href="' + href + '"><span class="mono xs">' + r[0] + '</span> ' + r[1] + '</a></td><td>' + cell(A[0], A[1]) + '</td><td>' + cell(B[0], B[1]) + '</td><td>' + c[1] + '</td></tr>';
+    }).join('');
+    n.same += 9;
+    document.getElementById('summary').innerHTML =
+      '<span class="st ' + (n.res ? 'st-pass' : 'st-nc') + '">' + I('up') + '<b>' + n.res + '</b>&nbsp;resolved</span>' +
+      '<span class="st ' + (n.rem ? 'st-fail' : 'st-nc') + '">' + I('x') + '<b>' + n.rem + '</b>&nbsp;remaining</span>' +
+      '<span class="st st-nc">' + I('plus') + '<b>' + n.neu + '</b>&nbsp;new</span>' +
+      '<span class="st ' + (n.reg ? 'st-fail' : 'st-nc') + '">' + I('down') + '<b>' + n.reg + '</b>&nbsp;regressed</span>' +
+      '<span class="st st-nc">' + I('check') + '<b>' + n.same + '</b>&nbsp;still passing</span>';
+    var u = new URL(location); u.searchParams.set('a', a); u.searchParams.set('b', b); history.replaceState(null, '', u);
+  }
+  var q = new URLSearchParams(location.search);
+  if (q.get('a')) document.getElementById('run-a').value = q.get('a');
+  if (q.get('b')) document.getElementById('run-b').value = q.get('b');
+  document.getElementById('run-a').addEventListener('change', render);
+  document.getElementById('run-b').addEventListener('change', render);
+  render();
+})();
+</script>
+</body>
+</html>

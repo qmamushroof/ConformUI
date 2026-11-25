@@ -1,0 +1,22 @@
+[
+  {
+    "file": "..\\shots\\directions\\workbench-375.png",
+    "url": "file:///c:/Users/Mushroof/source/repos/qmamushroof/ConformUI/design/directions/workbench.html",
+    "width": 375,
+    "scheme": "light",
+    "issues": [
+      {
+        "sev": "blocker",
+        "kind": "overflow",
+        "msg": "header.wb-top, div.r, button.pill, div.tool, span.sp"
+      }
+    ]
+  },
+  {
+    "file": "..\\shots\\directions\\workbench-1440.png",
+    "url": "file:///c:/Users/Mushroof/source/repos/qmamushroof/ConformUI/design/directions/workbench.html",
+    "width": 1440,
+    "scheme": "light",
+    "issues": []
+  }
+]

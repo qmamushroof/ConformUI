@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Design system · ConformUI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="prototype/assets/tokens.css">
+<link rel="stylesheet" href="prototype/assets/app.css">
+<style>
+  .sys section{display:grid;gap:var(--space-4);padding:var(--space-10) 0;border-top:1px solid var(--border)}
+  .sw{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:var(--space-4)}
+  .sw div{display:grid;gap:var(--space-1);font-size:var(--font-size-xs)}
+  .sw i{display:block;height:48px;border-radius:var(--radius-md);border:1px solid var(--border)}
+  .demo{display:flex;flex-wrap:wrap;gap:var(--space-4) var(--space-6);align-items:center}
+  .spec{display:grid;grid-template-columns:120px 1fr;gap:var(--space-3) var(--space-6);align-items:baseline}
+  .space i{display:inline-block;height:12px;background:var(--accent);vertical-align:middle;margin-right:var(--space-2)}
+  .col2{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-8)}
+  @media (max-width:900px){.col2{grid-template-columns:1fr}}
+</style>
+</head>
+<body data-nav="" data-states="default">
+<script src="prototype/assets/sprite.js"></script>
+<main id="main" class="page sys" tabindex="-1">
+  <div class="page-head"><div class="stack-sm"><h1>ConformUI design system</h1><p class="muted prose">Caliper, calmed. Four hues, IBM Plex, flat shapes. Switch theme with the control at the bottom right.</p></div><a class="btn" href="prototype/index.html">Open prototype</a></div>
+
+  <section aria-labelledby="c-h"><h2 id="c-h">Colour</h2>
+    <div class="sw">
+      <div><i style="background:var(--bg)"></i>bg</div><div><i style="background:var(--surface)"></i>surface</div><div><i style="background:var(--surface-raised)"></i>surface-raised</div><div><i style="background:var(--surface-sunken)"></i>surface-sunken</div>
+      <div><i style="background:var(--border)"></i>border</div><div><i style="background:var(--border-strong)"></i>border-strong</div><div><i style="background:var(--text)"></i>text</div><div><i style="background:var(--text-muted)"></i>text-muted</div>
+      <div><i style="background:var(--accent)"></i>accent</div><div><i style="background:var(--accent-subtle)"></i>accent-subtle</div><div><i style="background:var(--danger)"></i>danger (Fail)</div><div><i style="background:var(--success)"></i>success (Pass)</div><div><i style="background:var(--diff);opacity:.6"></i>diff (overlay only)</div>
+    </div>
+    <p class="small muted">Severity has no hue. Contrast: 64 pairs checked, 0 failing (WCAG AA).</p>
+  </section>
+
+  <section aria-labelledby="t-h"><h2 id="t-h">Type</h2>
+    <div class="spec">
+      <span class="small muted">h1 28/600</span><span class="h1">Run 1</span>
+      <span class="small muted">h2 20/600</span><span class="h2">Primary CTA is 132 px wide vs 220 px in the design (−40%).</span>
+      <span class="small muted">h3 16/600</span><span class="h3">Measurements</span>
+      <span class="small muted">body 16/400</span><span>Set the primary CTA to width: 220px and keep the 18 px label.</span>
+      <span class="small muted">small 14</span><span class="small">25 Nov 2026, 14:32 · Contract v1, locked</span>
+      <span class="small muted">xs 12</span><span class="xs muted">Major · Desktop · Measured</span>
+      <span class="small muted">mono</span><span><code>main .hero a.btn-primary</code> <span class="mono xs">R-D-04</span></span>
+    </div>
+  </section>
+
+  <section aria-labelledby="s-h"><h2 id="s-h">Space and radius</h2>
+    <div class="space small stack-sm">
+      <div><i style="width:4px"></i>4</div><div><i style="width:8px"></i>8</div><div><i style="width:12px"></i>12</div><div><i style="width:16px"></i>16</div><div><i style="width:24px"></i>24</div><div><i style="width:32px"></i>32</div><div><i style="width:48px"></i>48</div><div><i style="width:64px"></i>64</div>
+    </div>
+    <p class="small muted">Radius 3 (tags), 4 (buttons, inputs), 6 (cards, panes, sheets).</p>
+  </section>
+
+  <section aria-labelledby="b-h"><h2 id="b-h">Buttons</h2>
+    <div class="demo">
+      <button class="btn btn-primary"><svg class="i i-sm" aria-hidden="true"><use href="#i-copy"/></svg>Copy fix prompt</button>
+      <button class="btn">Cancel</button>
+      <button class="btn btn-ghost"><svg class="i i-sm" aria-hidden="true"><use href="#i-refresh"/></svg>Re-verify</button>
+      <button class="btn btn-ghost toggle" aria-pressed="true"><svg class="i i-sm" aria-hidden="true"><use href="#i-layers"/></svg>Diff overlay</button>
+      <button class="btn btn-link">Get the snippet</button>
+      <button class="btn btn-danger">Clear all data</button>
+      <button class="btn btn-primary" aria-busy="true">Running</button>
+      <span class="stack-sm"><button class="btn btn-ghost" aria-disabled="true" aria-describedby="dr"><svg class="i i-sm" aria-hidden="true"><use href="#i-cloud"/></svg>Deep Analysis</button><span class="xs muted" id="dr">Deep Analysis needs a connection; your results are kept.</span></span>
+      <button class="iconbtn" aria-label="More"><svg class="i" aria-hidden="true"><use href="#i-more"/></svg></button>
+    </div>
+  </section>
+
+  <section aria-labelledby="st-h"><h2 id="st-h">Status, severity, engine, label</h2>
+    <div class="demo">
+      <span class="st st-fail"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg>Fail</span>
+      <span class="st st-pass"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Pass</span>
+      <span class="st st-review"><svg class="i" aria-hidden="true"><use href="#i-review"/></svg>Needs review</span>
+      <span class="st st-nc"><svg class="i" aria-hidden="true"><use href="#i-dash"/></svg>Not checked: offline</span>
+    </div>
+    <div class="demo">
+      <span class="sev"><svg class="i" aria-hidden="true"><use href="#i-critical"/></svg>Critical</span>
+      <span class="sev"><svg class="i" aria-hidden="true"><use href="#i-major"/></svg>Major</span>
+      <span class="sev"><svg class="i" aria-hidden="true"><use href="#i-minor"/></svg>Minor</span>
+      <span class="eng"><svg class="i" aria-hidden="true"><use href="#i-ruler"/></svg>Measured</span>
+      <span class="eng"><svg class="i" aria-hidden="true"><use href="#i-chip"/></svg>On-device</span>
+      <span class="eng"><svg class="i" aria-hidden="true"><use href="#i-cloud"/></svg>Cloud</span>
+      <span class="eng"><svg class="i" aria-hidden="true"><use href="#i-file"/></svg>Pre-computed</span>
+      <span class="tag">Explicit</span><span class="tag tag-dashed">Inferred (advisory)</span><span class="tag">Sample</span>
+    </div>
+    <div class="demo">
+      <span class="st st-pass"><svg class="i" aria-hidden="true"><use href="#i-up"/></svg>Resolved</span>
+      <span class="st st-fail"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg>Remaining</span>
+      <span class="st st-nc"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>New</span>
+      <span class="st st-fail"><svg class="i" aria-hidden="true"><use href="#i-down"/></svg>Regressed</span>
+      <span class="st st-nc"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Still passing</span>
+    </div>
+  </section>
+
+  <section aria-labelledby="l-h"><h2 id="l-h">Finding rows, tabs, segmented</h2>
+    <div class="col2">
+      <div style="border:1px solid var(--border);border-radius:var(--radius-lg)">
+        <div class="split-list-head"><div class="tabs" role="tablist" aria-label="Viewport"><button role="tab" aria-selected="true">All 7</button><button role="tab" aria-selected="false">Desktop 6</button><button role="tab" aria-selected="false">Mobile 1</button></div></div>
+        <ul class="rows" role="listbox" aria-label="Example findings" aria-activedescendant="ex2" tabindex="0">
+          <li class="rowi" role="option" id="ex1" aria-selected="false"><span class="ic"><svg class="i" aria-hidden="true"><use href="#i-critical"/></svg></span><span class="t">Hero illustration is missing</span><span class="d st-fail">96%</span><span class="meta"><span>Critical</span><span>Desktop</span><span class="eng"><svg class="i" aria-hidden="true"><use href="#i-ruler"/></svg>Measured</span></span></li>
+          <li class="rowi" role="option" id="ex2" aria-selected="true"><span class="ic"><svg class="i" aria-hidden="true"><use href="#i-major"/></svg></span><span class="t">Primary CTA is 132 px wide vs 220 px</span><span class="d st-fail">−40%</span><span class="meta"><span>Major</span><span>Desktop</span><span class="eng"><svg class="i" aria-hidden="true"><use href="#i-ruler"/></svg>Measured</span></span></li>
+          <li class="rowi" role="option" id="ex3" aria-selected="false"><span class="ic"><svg class="i" aria-hidden="true"><use href="#i-review"/></svg></span><span class="t">Primary CTA colour may be off-brand</span><span class="d"></span><span class="meta"><span>Needs review</span><span>Desktop</span><span class="eng"><svg class="i" aria-hidden="true"><use href="#i-chip"/></svg>On-device</span></span></li>
+        </ul>
+      </div>
+      <div class="stack">
+        <div class="seg" role="radiogroup" aria-label="Format"><button role="radio" aria-checked="true">Markdown</button><button role="radio" aria-checked="false">JSON</button></div>
+        <div class="bar" role="progressbar" aria-label="Download" aria-valuenow="42" aria-valuemin="0" aria-valuemax="100"><span style="--p:42%"></span></div>
+        <ol class="stages"><li><svg class="i i-sm" aria-hidden="true" style="color:var(--success)"><use href="#i-check"/></svg><span>Measured checks (14)</span><span class="small muted">310 ms</span></li><li><span class="spinner" aria-hidden="true"></span><span>Visual checks (2)</span><span class="small muted">Running</span></li></ol>
+        <div class="stack-sm"><div class="skel" style="height:16px;width:60%"></div><div class="skel" style="height:12px;width:40%"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="e-h"><h2 id="e-h">Evidence (signature)</h2>
+    <div class="evidence">
+      <figure class="fig"><figcaption><b><span class="legend" aria-hidden="true"></span>Design</b><span>1440 × 1000</span></figcaption>
+        <svg class="shot" viewBox="24 396 600 128" role="img" aria-label="Design: primary CTA, 220 pixels wide"><use href="#sample-design" width="1440" height="1000"/><rect x="58" y="434" width="232" height="68" rx="6" fill="none" style="stroke:var(--accent)" stroke-width="3"/><g style="stroke:var(--accent)" stroke-width="2"><path d="M64 418 H284 M64 410 V426 M284 410 V426"/></g><rect x="134" y="394" width="80" height="20" fill="#FFFFFF"/><text x="174" y="409" text-anchor="middle" style="fill:var(--accent);font:600 17px var(--font-mono)">220 px</text></svg></figure>
+      <figure class="fig"><figcaption><b><span class="legend dashed" aria-hidden="true"></span>Implementation</b><span>1440 × 1000</span></figcaption>
+        <svg class="shot" viewBox="24 396 600 128" role="img" aria-label="Implementation: primary CTA, 132 pixels wide"><use href="#sample-capture" width="1440" height="1000"/><rect x="58" y="434" width="144" height="68" rx="6" fill="none" stroke="#111827" stroke-dasharray="8 6" stroke-width="3"/><g stroke="#111827" stroke-width="2"><path d="M64 418 H196 M64 410 V426 M196 410 V426"/></g><g stroke="#B42318" stroke-width="2"><path d="M196 418 H284" stroke-dasharray="4 4"/><path d="M284 410 V426"/></g><rect x="90" y="394" width="80" height="20" fill="#FFFFFF"/><text x="130" y="409" text-anchor="middle" fill="#111827" style="font:600 17px var(--font-mono)">132 px</text><text x="292" y="424" fill="#B42318" style="font:600 17px var(--font-mono)">−88</text></svg></figure>
+    </div>
+    <div class="table-wrap"><table class="data"><thead><tr><th>Property</th><th class="r">Design</th><th class="r">Implementation</th><th class="r">Difference</th><th>Source</th></tr></thead><tbody><tr><td>Width</td><td class="r">220 px</td><td class="r">132 px</td><td class="r val-fail">−88 px</td><td class="muted">DOM snapshot</td></tr><tr><td>Height</td><td class="r">56 px</td><td class="r">56 px</td><td class="r">0</td><td class="muted">DOM snapshot</td></tr></tbody></table></div>
+  </section>
+
+  <section aria-labelledby="f-h"><h2 id="f-h">Forms and inputs</h2>
+    <div class="col2">
+      <div class="stack">
+        <div class="field"><label for="n1">Project name</label><input class="input" id="n1" value="Sample landing page"><span class="help">Shown in reports and the fix prompt.</span></div>
+        <div class="field"><label for="n2">Project name</label><input class="input" id="n2" aria-invalid="true" aria-describedby="n2e"><span class="error" id="n2e"><svg class="i i-sm" aria-hidden="true"><use href="#i-alert"/></svg>Give the project a name.</span></div>
+        <fieldset><legend>Mode</legend><label class="choice"><input type="radio" name="m" checked><span>Auto</span><span class="help">On-device first; cloud only for projects you allow.</span></label><label class="choice"><input type="radio" name="m"><span>Cloud only</span><span class="help">Every AI step uses the cloud, after consent per project.</span></label></fieldset>
+      </div>
+      <div class="stack">
+        <button class="drop" type="button"><svg class="i" aria-hidden="true"><use href="#i-upload"/></svg><span class="t">Add a design image</span><span class="small muted">PNG, JPEG or WebP, up to 20 MB. Drop a file or choose one.</span></button>
+        <button class="drop is-invalid" type="button" aria-describedby="de"><svg class="i" aria-hidden="true"><use href="#i-upload"/></svg><span class="t">Add a capture</span><span class="error" id="de">Use PNG, JPEG or WebP up to 20 MB and 8192 px per side.</span></button>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="n-h"><h2 id="n-h">Notices, code, sheet</h2>
+    <div class="notice notice-info"><svg class="i" aria-hidden="true"><use href="#i-offline"/></svg><p class="title">You're offline.</p><p class="small">Measured and visual checks still run; AI checks and Deep Analysis wait for a connection.</p></div>
+    <div class="notice notice-danger"><svg class="i" aria-hidden="true"><use href="#i-alert"/></svg><p class="title">Cloud limit reached.</p><p class="small">Your results are kept; try again later.</p></div>
+    <div class="code"><div class="code-head"><span class="mono">conformui-snippet.js</span><button class="btn btn-ghost" data-toast="Snippet copied"><svg class="i i-sm" aria-hidden="true"><use href="#i-copy"/></svg>Copy</button></div><pre>(() =&gt; {
+  const els = [...document.querySelectorAll('body *')];
+  /* … */
+})();</pre></div>
+    <div><button class="btn" data-open="demo-sheet">Open a sheet</button></div>
+  </section>
+</main>
+<dialog class="sheet" id="demo-sheet" aria-labelledby="ds-h"><form method="dialog" class="sheet-in">
+  <div class="sheet-head"><h2 id="ds-h">Send this run for Deep Analysis?</h2><button class="iconbtn" value="cancel" aria-label="Close"><svg class="i" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+  <ul class="sendlist"><li><span>Design, Desktop (1024 px)</span><span>118 KB</span></li><li class="total"><span>Total</span><span>412 KB</span></li></ul>
+  <div class="sheet-foot"><button class="btn" value="cancel" autofocus>Cancel</button><button class="btn btn-primary" value="send">Send to cloud</button></div>
+</form></dialog>
+<script src="prototype/assets/app.js"></script>
+</body>
+</html>

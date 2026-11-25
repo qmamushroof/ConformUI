@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
+<title>Projects · ConformUI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/app.css">
+<style>
+  /* Card with a menu outside the link: the link fills the card, the menu sits in its top-right corner. */
+  .pcard{position:relative;display:grid}
+  .pcard .card{align-content:start;padding-right:calc(var(--space-5) + var(--layout-target))}
+  .pcard .menu-wrap{position:absolute;top:var(--space-2);right:var(--space-2)}
+  .card .title-row{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2)}
+  .counts{display:flex;flex-wrap:wrap;gap:var(--space-1) var(--space-4)}
+  .skel-card{display:grid;gap:var(--space-3);padding:var(--space-5);border:1px solid var(--border);border-radius:var(--radius-lg)}
+  .skel-line{height:12px}
+  /* PROPOSED: loop-line (horizontal numbered step sequence, text only) */
+  .loopline{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2) var(--space-3);font-size:var(--font-size-sm);color:var(--text-muted)}
+  .loopline li{display:inline-flex;align-items:center;gap:var(--space-2)}
+  .loopline li+li::before{content:"→";color:var(--text-subtle)}
+  .loopline .n{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;border:1px solid var(--border-strong);font-size:var(--font-size-xs);color:var(--text)}
+  .menu [aria-disabled="true"]{color:var(--text-muted);cursor:not-allowed}
+  .foot-note{margin-top:var(--space-8)}
+</style>
+</head>
+<body data-nav="projects" data-title="Projects" data-states="default,empty,loading,error">
+<script src="assets/sprite.js"></script>
+<header data-shell></header>
+
+<main id="main" tabindex="-1" class="page">
+  <div class="page-head">
+    <div class="stack-sm">
+      <h1>Projects</h1>
+      <p class="small muted" data-state-show="default">3 projects, stored on this device</p>
+    </div>
+    <div class="btn-row" data-state-show="default loading">
+      <a class="btn btn-ghost" href="project.html"><svg class="i i-sm" aria-hidden="true"><use href="#i-play"/></svg>Try the sample</a>
+      <button class="btn btn-primary" type="button" data-open="sheet-new"><svg class="i i-sm" aria-hidden="true"><use href="#i-plus"/></svg>New project</button>
+    </div>
+  </div>
+
+  <!-- Default: list -->
+  <section data-state-show="default" aria-label="Your projects">
+    <ul class="cards" id="cards" role="list" style="list-style:none;margin:0;padding:0">
+      <li class="pcard" data-name="Sample landing page" data-runs="2" data-file="sample-landing-page">
+        <a class="card" href="project.html">
+          <div class="title-row"><h2 class="h3">Sample landing page</h2><span class="tag">Sample</span></div>
+          <div class="meta"><span>Desktop 1440</span><span>Mobile 390</span></div>
+          <div class="meta"><span>Last run 25 Nov 2026, 14:32</span></div>
+          <div class="counts" aria-label="Last run: 6 fail, 1 needs review, 11 pass">
+            <span class="st st-fail"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg>6 fail</span>
+            <span class="st st-review"><svg class="i" aria-hidden="true"><use href="#i-review"/></svg>1 needs review</span>
+            <span class="st st-pass"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>11 pass</span>
+          </div>
+        </a>
+        <div class="menu-wrap">
+          <button class="iconbtn" type="button" data-menu aria-haspopup="true" aria-expanded="false" aria-label="More actions for Sample landing page"><svg class="i" aria-hidden="true"><use href="#i-more"/></svg></button>
+          <div class="menu" hidden>
+            <button type="button" data-act="rename"><svg class="i i-sm" aria-hidden="true"><use href="#i-edit"/></svg>Rename</button>
+            <button type="button" data-toast="Contract exported: sample-landing-page.contract.md"><svg class="i i-sm" aria-hidden="true"><use href="#i-download"/></svg>Export contract</button>
+            <button type="button" data-act="delete"><svg class="i i-sm" aria-hidden="true"><use href="#i-trash"/></svg>Delete…</button>
+          </div>
+        </div>
+      </li>
+      <li class="pcard" data-name="Field ops pricing page" data-runs="3">
+        <a class="card" href="project.html">
+          <div class="title-row"><h2 class="h3">Field ops pricing page</h2></div>
+          <div class="meta"><span>Desktop 1440</span><span>No Mobile capture</span></div>
+          <div class="meta"><span>Last run 24 Nov 2026, 09:10</span></div>
+          <div class="counts" aria-label="Last run: 2 fail, 14 pass">
+            <span class="st st-fail"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg>2 fail</span>
+            <span class="st st-pass"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>14 pass</span>
+          </div>
+        </a>
+        <div class="menu-wrap">
+          <button class="iconbtn" type="button" data-menu aria-haspopup="true" aria-expanded="false" aria-label="More actions for Field ops pricing page"><svg class="i" aria-hidden="true"><use href="#i-more"/></svg></button>
+          <div class="menu" hidden>
+            <button type="button" data-act="rename"><svg class="i i-sm" aria-hidden="true"><use href="#i-edit"/></svg>Rename</button>
+            <button type="button" data-toast="Contract exported: field-ops-pricing-page.contract.md"><svg class="i i-sm" aria-hidden="true"><use href="#i-download"/></svg>Export contract</button>
+            <button type="button" data-act="delete"><svg class="i i-sm" aria-hidden="true"><use href="#i-trash"/></svg>Delete…</button>
+          </div>
+        </div>
+      </li>
+      <li class="pcard" data-name="Northwind signup flow" data-runs="0">
+        <a class="card" href="project.html?state=design-only">
+          <div class="title-row"><h2 class="h3">Northwind signup flow</h2></div>
+          <div class="meta"><span>Desktop 1440</span><span>Mobile 390</span></div>
+          <div class="meta"><span>No runs yet</span><span>Created 25 Nov 2026</span></div>
+          <p class="st st-nc"><svg class="i" aria-hidden="true"><use href="#i-dash"/></svg>Contract not extracted</p>
+        </a>
+        <div class="menu-wrap">
+          <button class="iconbtn" type="button" data-menu aria-haspopup="true" aria-expanded="false" aria-label="More actions for Northwind signup flow"><svg class="i" aria-hidden="true"><use href="#i-more"/></svg></button>
+          <div class="menu" hidden>
+            <button type="button" data-act="rename"><svg class="i i-sm" aria-hidden="true"><use href="#i-edit"/></svg>Rename</button>
+            <button type="button" aria-disabled="true" data-toast="No contract to export yet. Extract one first."><svg class="i i-sm" aria-hidden="true"><use href="#i-download"/></svg>Export contract: none yet</button>
+            <button type="button" data-act="delete"><svg class="i i-sm" aria-hidden="true"><use href="#i-trash"/></svg>Delete…</button>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <p class="small muted foot-note"><svg class="i i-sm" aria-hidden="true"><use href="#i-shield"/></svg> Designs, captures, contracts and runs stay in this browser. <a href="settings.html#privacy">Privacy and data</a></p>
+  </section>
+
+  <!-- Empty -->
+  <section class="empty" data-state-show="empty" aria-labelledby="empty-h">
+    <h2 id="empty-h">No projects yet</h2>
+    <p class="muted">Check a page against its design: build a contract, run it, hand the fixes to your coding agent.</p>
+    <ol class="loopline" aria-label="How it works">
+      <li><span class="n" aria-hidden="true">1</span>Contract</li>
+      <li><span class="n" aria-hidden="true">2</span>Run</li>
+      <li><span class="n" aria-hidden="true">3</span>Fix prompt</li>
+      <li><span class="n" aria-hidden="true">4</span>Re-verify</li>
+    </ol>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="project.html"><svg class="i i-sm" aria-hidden="true"><use href="#i-play"/></svg>Try the sample</a>
+      <button class="btn btn-ghost" type="button" data-open="sheet-new"><svg class="i i-sm" aria-hidden="true"><use href="#i-plus"/></svg>New project</button>
+    </div>
+    <p class="small muted">The sample is a landing page with a design, two captures and a contract ready to run.</p>
+  </section>
+
+  <!-- Loading -->
+  <section data-state-show="loading" aria-busy="true" aria-label="Loading projects">
+    <p class="sr-only" role="status">Loading projects</p>
+    <div class="cards" aria-hidden="true">
+      <div class="skel-card"><div class="skel skel-line" style="width:60%;height:16px"></div><div class="skel skel-line" style="width:45%"></div><div class="skel skel-line" style="width:70%"></div><div class="skel skel-line" style="width:55%"></div></div>
+      <div class="skel-card"><div class="skel skel-line" style="width:50%;height:16px"></div><div class="skel skel-line" style="width:35%"></div><div class="skel skel-line" style="width:65%"></div><div class="skel skel-line" style="width:40%"></div></div>
+      <div class="skel-card"><div class="skel skel-line" style="width:55%;height:16px"></div><div class="skel skel-line" style="width:45%"></div><div class="skel skel-line" style="width:60%"></div><div class="skel skel-line" style="width:30%"></div></div>
+    </div>
+  </section>
+
+  <!-- Error -->
+  <section data-state-show="error" class="prose">
+    <div class="notice notice-danger" role="alert">
+      <svg class="i" aria-hidden="true"><use href="#i-alert"/></svg>
+      <p class="title">Couldn't open local storage. Nothing was deleted.</p>
+      <p class="small muted">The browser blocked access to this site's data, which can happen in private windows or when storage is full. Reload to try again.</p>
+      <p class="xs muted">Code <span class="mono">STORAGE_UNAVAILABLE</span></p>
+      <div class="btn-row"><button class="btn" type="button" id="reload"><svg class="i i-sm" aria-hidden="true"><use href="#i-refresh"/></svg>Reload</button><a class="btn btn-ghost" href="settings.html#data">Check storage in Settings</a></div>
+    </div>
+  </section>
+</main>
+
+<!-- New project -->
+<dialog class="sheet" id="sheet-new" aria-labelledby="new-h">
+  <form method="dialog" class="sheet-in" id="new-form" novalidate>
+    <div class="sheet-head"><div class="stack-sm"><h2 id="new-h">New project</h2><p class="muted small">One page, checked at the viewports you pick. You add the design next.</p></div><button class="iconbtn" value="cancel" formnovalidate aria-label="Close"><svg class="i" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <div class="field">
+      <label for="new-name">Project name</label>
+      <input class="input" id="new-name" name="name" autocomplete="off" placeholder="Checkout page" aria-describedby="new-name-err">
+      <p class="error" id="new-name-err" hidden><svg class="i i-sm" aria-hidden="true"><use href="#i-alert"/></svg>Give the project a name</p>
+    </div>
+    <fieldset aria-describedby="vp-err">
+      <legend class="label">Viewports</legend>
+      <label class="choice"><input type="checkbox" name="vp" value="desktop" checked><span>Desktop 1440</span></label>
+      <label class="choice"><input type="checkbox" name="vp" value="mobile" checked><span>Mobile 390</span></label>
+      <label class="choice" style="cursor:not-allowed"><input type="checkbox" disabled aria-describedby="tab-help"><span class="muted">Tablet 768</span><span class="help" id="tab-help">Coming later</span></label>
+      <p class="error" id="vp-err" hidden><svg class="i i-sm" aria-hidden="true"><use href="#i-alert"/></svg>Pick at least one viewport</p>
+    </fieldset>
+    <div class="sheet-foot"><button class="btn" value="cancel" formnovalidate>Cancel</button><button class="btn btn-primary" value="create" id="new-create">Create project</button></div>
+  </form>
+</dialog>
+
+<!-- Rename (P1) -->
+<dialog class="sheet" id="sheet-rename" aria-labelledby="ren-h">
+  <form method="dialog" class="sheet-in" id="ren-form">
+    <div class="sheet-head"><h2 id="ren-h">Rename project</h2><button class="iconbtn" value="cancel" aria-label="Close"><svg class="i" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <div class="field">
+      <label for="ren-name">Project name</label>
+      <input class="input" id="ren-name" autocomplete="off" aria-describedby="ren-err">
+      <p class="error" id="ren-err" hidden><svg class="i i-sm" aria-hidden="true"><use href="#i-alert"/></svg>Give the project a name</p>
+    </div>
+    <div class="sheet-foot"><button class="btn" value="cancel">Cancel</button><button class="btn btn-primary" value="save" id="ren-save">Save name</button></div>
+  </form>
+</dialog>
+
+<!-- Delete -->
+<dialog class="sheet" id="sheet-delete" aria-labelledby="del-h">
+  <form method="dialog" class="sheet-in" id="del-form">
+    <div class="sheet-head"><h2 id="del-h">Delete project “<span class="del-name">Field ops pricing page</span>”?</h2><button class="iconbtn" value="cancel" aria-label="Close"><svg class="i" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <p class="small" id="del-desc">Its designs, captures, contract and <span id="del-runs">3 runs</span> are removed from this device. This can't be undone.</p>
+    <div class="field">
+      <label for="del-confirm">Type <b class="del-name">Field ops pricing page</b> to confirm</label>
+      <input class="input" id="del-confirm" autocomplete="off" spellcheck="false" aria-describedby="del-help">
+      <p class="help" id="del-help">The Delete button turns on when the name matches.</p>
+    </div>
+    <div class="sheet-foot"><button class="btn" value="cancel" autofocus>Cancel</button><button class="btn btn-danger" value="delete" id="del-go" aria-disabled="true" aria-describedby="del-help"><svg class="i i-sm" aria-hidden="true"><use href="#i-trash"/></svg>Delete project</button></div>
+  </form>
+</dialog>
+
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  var $ = function (s) { return document.querySelector(s); };
+  var current = null;
+
+  $('#reload').addEventListener('click', function () { location.href = 'projects.html'; });
+
+  /* New project: validate name and viewports */
+  var nf = $('#new-form'), nn = $('#new-name');
+  function setErr(input, err, on) { err.hidden = !on; if (input) input.setAttribute('aria-invalid', on ? 'true' : 'false'); }
+  $('#new-create').addEventListener('click', function (e) {
+    var noName = !nn.value.trim(), noVp = !nf.querySelectorAll('input[name=vp]:checked').length;
+    setErr(nn, $('#new-name-err'), noName); setErr(null, $('#vp-err'), noVp);
+    if (noName || noVp) { e.preventDefault(); (noName ? nn : nf.querySelector('input[name=vp]')).focus(); }
+  });
+  nn.addEventListener('input', function () { if (nn.value.trim()) setErr(nn, $('#new-name-err'), false); });
+  $('#sheet-new').addEventListener('close', function () { if (this.returnValue === 'create') location.href = 'project.html?state=new'; });
+
+  /* Card menu actions: remember which card */
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-act]'); if (!b) return;
+    current = b.closest('.pcard');
+    var name = current.dataset.name;
+    if (b.dataset.act === 'rename') {
+      $('#ren-name').value = name; $('#ren-err').hidden = true; window.cuiOpen('sheet-rename', current.querySelector('[data-menu]'));
+      $('#ren-name').select();
+    } else {
+      var runs = +current.dataset.runs;
+      document.querySelectorAll('.del-name').forEach(function (n) { n.textContent = name; });
+      $('#del-runs').textContent = runs === 1 ? '1 run' : runs + ' runs';
+      $('#del-confirm').value = ''; gate();
+      window.cuiOpen('sheet-delete', current.querySelector('[data-menu]'));
+    }
+  });
+
+  /* Rename */
+  $('#ren-save').addEventListener('click', function (e) {
+    var v = $('#ren-name').value.trim();
+    $('#ren-err').hidden = !!v; $('#ren-name').setAttribute('aria-invalid', v ? 'false' : 'true');
+    if (!v) e.preventDefault();
+  });
+  $('#sheet-rename').addEventListener('close', function () {
+    if (this.returnValue !== 'save' || !current) return;
+    var v = $('#ren-name').value.trim();
+    current.dataset.name = v; current.querySelector('.h3').textContent = v;
+    current.querySelector('[data-menu]').setAttribute('aria-label', 'More actions for ' + v);
+    window.cuiToast('Renamed to ' + v);
+  });
+
+  /* Delete: typed confirmation */
+  var go = $('#del-go'), dc = $('#del-confirm');
+  function gate() { var ok = current && dc.value.trim() === current.dataset.name; go.setAttribute('aria-disabled', ok ? 'false' : 'true'); return ok; }
+  dc.addEventListener('input', gate);
+  go.addEventListener('click', function (e) { if (!gate()) e.preventDefault(); });
+  $('#sheet-delete').addEventListener('close', function () {
+    if (this.returnValue !== 'delete' || !current) return;
+    var name = current.dataset.name; current.remove(); current = null;
+    var left = document.querySelectorAll('.pcard').length;
+    if (!left) window.cuiApplyState('empty');
+    else document.querySelector('.page-head p').textContent = left + (left === 1 ? ' project' : ' projects') + ', stored on this device';
+    document.getElementById('main').focus();
+    window.cuiToast('Deleted ' + name);
+  });
+})();
+</script>
+</body>
+</html>

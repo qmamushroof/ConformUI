@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Screen map · ConformUI prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/app.css">
+<style>
+  .map{list-style:none;margin:0;padding:0;display:grid;gap:0}
+  .map>li{display:grid;grid-template-columns:minmax(160px,220px) minmax(0,1fr);gap:var(--space-2) var(--space-6);padding:var(--space-5) 0;border-top:1px solid var(--border)}
+  .map h2{font-size:var(--font-size-md)}
+  .map h2 a{color:var(--text);text-decoration:none}
+  .map h2 a:hover{text-decoration:underline}
+  .states{display:flex;flex-wrap:wrap;gap:var(--space-1) var(--space-4);font-size:var(--font-size-sm)}
+  .states a{display:inline-flex;align-items:center;min-height:var(--layout-target)}
+  @media (max-width:640px){.map>li{grid-template-columns:1fr}}
+</style>
+</head>
+<body data-nav="" data-states="default">
+<script src="assets/sprite.js"></script>
+<header data-shell></header>
+<main id="main" class="page" tabindex="-1">
+  <div class="page-head"><div class="stack-sm"><h1>Screen map</h1><p class="muted">Every screen and state of the ConformUI prototype. Use the control at the bottom right of any screen to switch state, theme or offline.</p></div>
+  <a class="btn btn-primary" href="onboarding.html">Start at first run</a></div>
+  <ol class="map">
+    <li><h2><a href="onboarding.html">Onboarding</a></h2><div class="stack-sm"><p class="small muted">First run: the loop, the three engines, privacy.</p><div class="states"><a href="onboarding.html">Default</a><a href="onboarding.html?state=can-download">Model can download</a></div></div></li>
+    <li><h2><a href="projects.html">Projects</a></h2><div class="stack-sm"><p class="small muted">List, new project, rename, delete.</p><div class="states"><a href="projects.html">Default</a><a href="projects.html?state=empty">Empty</a><a href="projects.html?state=loading">Loading</a><a href="projects.html?state=error">Error</a></div></div></li>
+    <li><h2><a href="project.html">Project</a></h2><div class="stack-sm"><p class="small muted">Designs, captures and DOM snapshots per viewport; contract summary; run history.</p><div class="states"><a href="project.html?state=new">New</a><a href="project.html?state=design-only">Design only</a><a href="project.html?state=ready">Ready to run</a><a href="project.html">Has runs</a><a href="project.html?state=invalid-snapshot">Invalid snapshot</a><a href="project.html?state=image-error">Image error</a><a href="project.html?state=share">Shared from Android</a></div></div></li>
+    <li><h2><a href="contract.html">Contract</a></h2><div class="stack-sm"><p class="small muted">Extract, review, accept, add, lock; AI versus verified comparison.</p><div class="states"><a href="contract.html">Default</a><a href="contract.html?state=no-design">No design</a><a href="contract.html?state=extracting">Extracting</a><a href="contract.html?state=review">Review</a><a href="contract.html?state=locked">Locked</a><a href="contract.html?state=consent">Cloud consent</a><a href="contract.html?state=bad-output">Unreadable model output</a></div></div></li>
+    <li><h2><a href="run.html">Run</a></h2><div class="stack-sm"><p class="small muted">Findings, evidence, measurements, engine trace, Deep Analysis, fix prompt, export, Re-verify.</p><div class="states"><a href="run.html">Default</a><a href="run.html?state=running">Running</a><a href="run.html?state=deep-refined&amp;f=R-D-05">Refined by Cloud</a><a href="run.html?state=reverify&amp;f=R-D-09">Re-verify result</a><a href="run.html?state=offline">Offline</a><a href="run.html?state=precomputed&amp;f=R-D-05">Pre-computed</a><a href="run.html?state=error">Invalid snapshot</a></div></div></li>
+    <li><h2><a href="compare.html">Compare runs</a></h2><div class="stack-sm"><p class="small muted">Run 1 against Run 2, per requirement.</p><div class="states"><a href="compare.html">Default</a></div></div></li>
+    <li><h2><a href="snippet.html">Snippet</a></h2><div class="stack-sm"><p class="small muted">The DOM snippet and how to use it.</p><div class="states"><a href="snippet.html">Default</a></div></div></li>
+    <li><h2><a href="settings.html">Settings</a></h2><div class="stack-sm"><p class="small muted">Engine, mode, cloud consent, privacy, data, about.</p><div class="states"><a href="settings.html">Ready</a><a href="settings.html?state=downloadable">Downloadable</a><a href="settings.html?state=downloading">Downloading</a><a href="settings.html?state=flag">Flag off</a><a href="settings.html?state=not-chrome">Not desktop Chrome</a><a href="settings.html?state=offline">Offline</a><a href="settings.html?state=sent">After a cloud call</a></div></div></li>
+    <li><h2><a href="404.html">Error screens</a></h2><div class="stack-sm"><p class="small muted">Not found and the route error boundary.</p><div class="states"><a href="404.html">Not found</a><a href="404.html?state=crash">Route error</a></div></div></li>
+    <li><h2><a href="../system.html">Design system</a></h2><div class="stack-sm"><p class="small muted">Tokens and every component state, light and dark.</p></div></li>
+  </ol>
+</main>
+<script src="assets/app.js"></script>
+</body>
+</html>
