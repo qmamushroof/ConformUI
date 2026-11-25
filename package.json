@@ -1,0 +1,71 @@
+{
+  "name": "conformui",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Turn designs into checkable contracts, verify implementations with measured evidence, and hand failures back to the coding agent.",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/qmamushroof/ConformUI"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=26"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -b",
+    "lint": "biome ci",
+    "depcruise": "depcruise src --config .dependency-cruiser.cjs",
+    "test": "vitest run",
+    "build:e2e": "vite build --mode e2e --outDir dist-e2e",
+    "test:e2e": "playwright test",
+    "icons": "pwa-assets-generator",
+    "sample:capture": "node scripts/capture-sample.mjs",
+    "check:fast": "npm run lint && npm run typecheck && npm run depcruise && npm test",
+    "check": "npm run check:fast && npm run build && node scripts/check-size.mjs && npm run test:e2e"
+  },
+  "dependencies": {
+    "@fontsource/ibm-plex-mono": "5.3.0",
+    "@fontsource/ibm-plex-sans": "5.3.0",
+    "firebase": "13.4.0",
+    "idb": "8.0.4",
+    "pixelmatch": "8.0.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "react-router": "8.5.2",
+    "workbox-window": "7.4.1",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
+    "@biomejs/biome": "2.6.8",
+    "@playwright/test": "1.65.1",
+    "@tailwindcss/vite": "4.3.5",
+    "@testing-library/dom": "10.4.2",
+    "@testing-library/react": "16.3.3",
+    "@types/node": "26.6.6",
+    "@types/pngjs": "6.0.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vite-pwa/assets-generator": "2.0.0",
+    "@vitejs/plugin-react": "6.3.0",
+    "@vitest/coverage-v8": "5.1.1",
+    "dependency-cruiser": "18.9.0",
+    "fake-indexeddb": "6.2.8",
+    "firebase-tools": "15.37.0",
+    "jsdom": "31.0.1",
+    "pngjs": "7.0.0",
+    "tailwindcss": "4.3.5",
+    "typescript": "6.0.3",
+    "vite": "8.3.8",
+    "vite-plugin-pwa": "2.0.0",
+    "vitest": "5.1.1",
+    "workbox-build": "7.4.1",
+    "workbox-core": "7.4.1",
+    "workbox-precaching": "7.4.1",
+    "workbox-routing": "7.4.1"
+  }
+}
