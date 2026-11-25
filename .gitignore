@@ -1,0 +1,10 @@
+node_modules
+dist
+dist-e2e
+.env*
+!.env.example
+playwright-report
+test-results
+.firebase
+coverage
+*.tsbuildinfo

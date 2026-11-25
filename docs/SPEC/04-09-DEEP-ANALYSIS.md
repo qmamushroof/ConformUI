@@ -11,7 +11,7 @@ export interface DeepDeps { ai: AiEngine; config: RuntimeConfig; store: ProjectS
   settings: SettingsStore; clock: Clock }
 export interface DeepPreview { runId: string; targets: string[] /*finding ids*/; images: { label: string; bytes: number }[];
   contractItems: number; measurements: number; totalBytes: number; model: string; remaining: { used: number; cap: number } }
-export type DeepAvailability = { ok: true } | { ok: false; reason: 'offline' | 'cloud-disabled' | 'daily-cap' | 'nothing-to-refine' };
+export type DeepAvailability = { ok: true } | { ok: false; reason: 'offline' | 'cloud-disabled' | 'mode-on-device-only' | 'daily-cap' | 'nothing-to-refine' };
 export interface DeepService {
   availability(run: Run, status: EngineStatus): Promise<DeepAvailability>;
   preview(run: Run): Promise<DeepPreview>;                                 // what is sent, before any request (PRD-F-06.1)

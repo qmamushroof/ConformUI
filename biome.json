@@ -1,0 +1,38 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  "files": {
+    "includes": [
+      "**",
+      "!design",
+      "!docs",
+      "!**/*.md",
+      "!sample-site",
+      "!src/features/dom-snippet/snippet.js",
+      "!package-lock.json",
+      "!tests/architecture/fixtures",
+      "!src/app/styles/tokens.css",
+      "!src/app/styles/tokens.tailwind.css"
+    ]
+  },
+  "formatter": { "enabled": true, "indentStyle": "space", "indentWidth": 2, "lineWidth": 120 },
+  "css": { "parser": { "tailwindDirectives": true } },
+  "javascript": { "formatter": { "quoteStyle": "single" } },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended",
+      "suspicious": {
+        "noExplicitAny": "error",
+        "noConsole": { "level": "error", "options": { "allow": ["warn", "error"] } }
+      },
+      "security": { "noDangerouslySetInnerHtml": "error" }
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["scripts/**", "tests/**", "*.config.ts"],
+      "linter": { "rules": { "suspicious": { "noConsole": "off" } } }
+    }
+  ]
+}

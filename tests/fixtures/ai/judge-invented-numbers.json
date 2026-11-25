@@ -1,0 +1,6 @@
+{
+  "verdict": "fail",
+  "confidence": "high",
+  "explanation": "The hero image is about 40 px shorter than in the design.",
+  "suggestedFix": "Increase the hero image height by 40 px."
+}

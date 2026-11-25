@@ -1,0 +1,12 @@
+{
+  "items": [
+    {
+      "findingId": "run-1:R-01:desktop",
+      "status": "meh",
+      "confidence": "high",
+      "explanation": "x",
+      "suggestedFix": "y"
+    },
+    { "status": "fail" }
+  ]
+}

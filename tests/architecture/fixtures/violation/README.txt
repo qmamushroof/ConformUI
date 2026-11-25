@@ -1,0 +1,1 @@
+Negative fixture (SPEC-ARCH-06 g): a mini project whose feature imports @fb. It is excluded from biome, vitest, the root tsc -b and the real depcruise run; tests/architecture/architecture.test.ts compiles and cruises it on purpose.

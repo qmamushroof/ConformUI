@@ -1,0 +1,13 @@
+{
+  "requirements": [
+    {
+      "category": "size",
+      "statement": "Primary CTA is 999 px wide",
+      "condition": "CTA width within 8% of 999 px",
+      "checkKind": "size",
+      "box": [120, 640, 300, 700],
+      "matchHint": { "tag": "button" },
+      "primary": true
+    }
+  ]
+}

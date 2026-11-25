@@ -1,0 +1,20 @@
+{
+  "parameters": {
+    "cloud_first_pass_model": { "defaultValue": { "value": "gemini-3.5-flash-lite" }, "valueType": "STRING" },
+    "deep_model": { "defaultValue": { "value": "gemini-3.8-flash" }, "valueType": "STRING" },
+    "prompt_version": { "defaultValue": { "value": "1" }, "valueType": "STRING" },
+    "cloud_enabled": { "defaultValue": { "value": "true" }, "valueType": "BOOLEAN" },
+    "deep_daily_cap": { "defaultValue": { "value": "10" }, "valueType": "NUMBER" },
+    "feature_ai_infer_responsive": { "defaultValue": { "value": "false" }, "valueType": "BOOLEAN" },
+    "size_tolerance_pct": { "defaultValue": { "value": "8" }, "valueType": "NUMBER" },
+    "major_deviation_pct": { "defaultValue": { "value": "25" }, "valueType": "NUMBER" },
+    "spacing_tolerance_pct": { "defaultValue": { "value": "15" }, "valueType": "NUMBER" },
+    "pixel_threshold": { "defaultValue": { "value": "0.1" }, "valueType": "NUMBER" },
+    "visual_diff_ratio": { "defaultValue": { "value": "0.2" }, "valueType": "NUMBER" },
+    "presence_ink_ratio": { "defaultValue": { "value": "0.03" }, "valueType": "NUMBER" },
+    "colour_delta_e": { "defaultValue": { "value": "0.08" }, "valueType": "NUMBER" },
+    "snap_min_iou": { "defaultValue": { "value": "0.3" }, "valueType": "NUMBER" },
+    "search_window_px": { "defaultValue": { "value": "160" }, "valueType": "NUMBER" },
+    "width_mismatch_pct": { "defaultValue": { "value": "2" }, "valueType": "NUMBER" }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./src/shared/kernel" },
+    { "path": "./src/platform/firebase" },
+    { "path": "./src/features/measure" }
+  ]
+}

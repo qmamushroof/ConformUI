@@ -1,0 +1,11 @@
+{
+  "items": [
+    {
+      "findingId": "run-1:R-01:desktop",
+      "status": "fail",
+      "confidence": "high",
+      "explanation": "The CTA is 88 px narrower and the heading 14 px smaller than the design.",
+      "suggestedFix": "Set the CTA to 310 px."
+    }
+  ]
+}

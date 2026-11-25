@@ -19,7 +19,7 @@ export type Label = 'explicit' | 'inferred';
 export type CheckType = 'measured' | 'visual' | 'judged';
 export type Status = 'pass' | 'fail' | 'needs-review' | 'not-checked';
 export type NotCheckedReason = 'no-capture' | 'no-dom-snapshot' | 'offline' | 'consent-declined' | 'device-unavailable'
-  | 'region-unresolved' | 'misaligned' | 'outside-capture' | 'ai-invalid-output' | 'ai-failed' | 'cloud-disabled' | 'no-inferred-items';
+  | 'region-unresolved' | 'misaligned' | 'outside-capture' | 'ai-invalid-output' | 'ai-failed' | 'cloud-disabled' | 'mode-on-device-only' | 'no-inferred-items';
 export type Severity = 'critical' | 'major' | 'minor';
 export type Confidence = 'high' | 'medium' | 'low';
 export type Change = 'resolved' | 'remaining' | 'new' | 'regressed' | 'still-passing';
@@ -150,16 +150,16 @@ export function resolveMode(i: { setting: Settings['mode']; purpose: 'first-pass
 
 | ID | Rule (`resolveMode`, pure, table-tested) |
 |---|---|
-| `SPEC-KERNEL-04` | `deep` → `ONLY_IN_CLOUD` with `deepConsent`; without it → `needs-consent`. Offline → `blocked offline`; `cloud:'disabled'` → `blocked cloud-disabled`. |
+| `SPEC-KERNEL-04` | `deep` → `ONLY_IN_CLOUD` with `deepConsent`; without it → `needs-consent cloud-only-mode`. Offline → `blocked offline` (checked first, with or without consent); `cloud:'disabled'` → `blocked cloud-disabled`; [P1] setting `on-device-only` (checked after offline) → `blocked mode-on-device-only` (S32). A token of the wrong scope counts as no consent. |
 | `SPEC-KERNEL-05` | `auto` + no project consent: device `available` and (`!needsImage` or `deviceImage===true`) → `ONLY_ON_DEVICE`; device available, `needsImage`, no image support → `needs-consent device-no-image`; `downloading` → `needs-consent device-downloading` (UI offers wait or cloud, PRD-H-06); `downloadable`/`unavailable` → `needs-consent device-unavailable`. Never `PREFER_*`. Table rows include: available + `deviceImage:false` + `needsImage:false` → `ONLY_ON_DEVICE` (text-only judge, §4.8.2). |
-| `SPEC-KERNEL-06` | `auto` + project consent → `PREFER_ON_DEVICE` (offline and device not usable → `blocked offline`). `cloud-only` → `ONLY_IN_CLOUD`, needs project consent else `needs-consent cloud-only-mode`. [P1] `on-device-only` → `ONLY_ON_DEVICE` or `blocked device-unavailable`, never cloud. |
+| `SPEC-KERNEL-06` | `auto` + project consent → `PREFER_ON_DEVICE` (offline and device not usable → `blocked offline`; `cloud:'disabled'` → `ONLY_ON_DEVICE` when the device is usable, else `blocked cloud-disabled`, since `SPEC-AI-09` rejects any cloud-capable call). `cloud-only` → `ONLY_IN_CLOUD`, needs project consent else `needs-consent cloud-only-mode`; offline → `blocked offline`, `cloud:'disabled'` → `blocked cloud-disabled` (both before the consent check). [P1] `on-device-only` → `ONLY_ON_DEVICE` or `blocked device-unavailable`, never cloud. |
 
 ## 4.1.5 Pure helpers, limits, errors
 
 | ID | Rule |
 |---|---|
 | `SPEC-KERNEL-07` | Limits: `ACCEPTED_INPUT_MIME` png/jpeg/webp; `MAX_INPUT_BYTES` 20 MiB; `MAX_SOURCE_SIDE` 8192 px; `MAX_CSS_HEIGHT` 16 000 px; `MAX_SNAPSHOT_BYTES` 1 MiB; `MAX_SNAPSHOT_ELEMENTS` 1500; `MAX_REQUIREMENTS` 60; `MAX_PROJECTS` 50 (notice only). Stated in the UI (PRD-F-02.2). |
-| `SPEC-KERNEL-08` | `guardNumbers(text, allowed)`: every number token (`/-?\d+(?:[.,]\d+)?/`) in model text must equal (±0.5) a value in `allowed`, else the field falls back to the deterministic template and `numberGuardTripped` is recorded (PRD-P-02, PRD-H-02, PRD-M-03). |
+| `SPEC-KERNEL-08` | `guardNumbers(text, allowed)`: every number token in model text must equal (±0.5) a value in `allowed`, else the field falls back to the deterministic template and `numberGuardTripped` is recorded (PRD-P-02, PRD-H-02, PRD-M-03). Tokenisation, in order: U+2212 → `-`; requirement ids (`/\b(?:R|I-[A-Z])-\d+\b/g`) are removed; tokens are `/(?:(?<![\w.])(-))?([1-9]\d{0,2}(?:,\d{3})+(?:\.\d+)?(?!\d)|\d+(?:[.,]\d+)?)/g`. The `-` is a sign only when not preceded by a word character or `.` (`10-20` is 10 and 20, `2-column` is 2). `\d{1,3}(,\d{3})+` with a first group not 0 is a thousands separator (`1,440` = 1440, so `3,500` is 3500, never 3.5); any other comma between digits is a decimal point (`0,250` = 0.25, `3,5` = 3.5). |
 | `SPEC-KERNEL-10` | `iou(a: Rect, b: Rect): number` (0 when either area is 0). Used by contract dedupe (`SPEC-CON-01`) and the sample comparison (`SPEC-DEMO-03`). |
 | `SPEC-KERNEL-11` | `lockContract(c: Contract): Contract` returns `{ ...c, locked: true }`; `nextContractVersion(c, ids, clock)` returns an unlocked copy with `version + 1`, new id, same Requirement ids (`SPEC-CON-06`). |
 | `SPEC-KERNEL-12` | `suggestViewport(sourceWidth: number): ViewportId`: rule of `SPEC-MEAS-04`; pure, table-tested. |

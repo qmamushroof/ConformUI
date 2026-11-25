@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "./node_modules/.cache/tsc/node",
+    "tsBuildInfoFile": "./node_modules/.cache/tsc/node/tsconfig.tsbuildinfo",
+    "lib": ["ES2023"],
+    "types": ["node"],
+    "allowImportingTsExtensions": true
+  },
+  "include": [
+    "vite.config.ts",
+    "vite.aliases.ts",
+    "vitest.config.ts",
+    "playwright.config.ts",
+    "pwa-assets.config.ts",
+    "tests/architecture/modules.json"
+  ]
+}

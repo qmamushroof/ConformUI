@@ -1,0 +1,6 @@
+{
+  "items": [
+    { "fromRequirementId": "R-01", "checkKind": "size", "statement": "Not an allowed kind", "condition": "x" },
+    { "checkKind": "visible", "statement": "Missing source requirement", "condition": "x" }
+  ]
+}
