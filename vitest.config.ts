@@ -1,5 +1,5 @@
 import { defineConfig } from 'vitest/config';
-import { moduleAliases } from './vite.aliases';
+import { moduleAliases } from './vite.aliases.ts';
 
 // Two projects (SPEC §7.1): node for unit + architecture, jsdom for component tests. E2E runs under Playwright.
 export default defineConfig({
