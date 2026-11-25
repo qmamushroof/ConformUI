@@ -6,6 +6,7 @@
       "**",
       "!design",
       "!docs",
+      "!**/*.md",
       "!sample-site",
       "!src/features/dom-snippet/snippet.js",
       "!package-lock.json",
