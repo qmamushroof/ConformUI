@@ -52,8 +52,34 @@ describe('SPEC-KERNEL-08, PRD-P-02, PRD-H-02, PRD-M-03: guardNumbers', () => {
     expect(guardNumbers('gap 16 then 25 then 8', [8, 16, 24])).toBe(false);
   });
 
-  it('SPEC-KERNEL-08: a thousands comma reads as a decimal, so it trips (falls back to the template, the safe side)', () => {
-    expect(guardNumbers('page is 1,200 px', [1200])).toBe(false);
+  it('SPEC-KERNEL-08: a thousands comma (1-3 digits then 3-digit groups, first group not 0) reads as thousands', () => {
+    expect(guardNumbers('page is 1,200 px', [1200])).toBe(true);
+    expect(guardNumbers('1,440 px', [1440])).toBe(true);
+    expect(guardNumbers('1,440 px', [1.44])).toBe(false);
+    expect(guardNumbers('about 1,234,567 px', [1234567])).toBe(true);
+    expect(guardNumbers('1,200.5 px', [1200.5])).toBe(true);
+  });
+
+  it('SPEC-KERNEL-08: a comma not followed by exactly three digits stays a decimal comma', () => {
+    expect(guardNumbers('0,250', [0.25])).toBe(true);
+    expect(guardNumbers('1,2345', [1.2345])).toBe(true); // four digits after the comma: decimal
+    expect(guardNumbers('1,25', [1.25])).toBe(true);
+  });
+
+  it('SPEC-KERNEL-08: requirement ids are not numbers (R-01, I-D-01, I-M-02, I-T-03)', () => {
+    expect(guardNumbers('R-01 fails and I-D-01 passes; I-M-12 is open, I-T-03 too', [])).toBe(true);
+    expect(guardNumbers('R-01 is 132 px', [132])).toBe(true);
+    expect(guardNumbers('R-01 is 133 px', [132])).toBe(false);
+  });
+
+  it('SPEC-KERNEL-08: a minus is a sign only when not preceded by a word character or a dot', () => {
+    expect(guardNumbers('10-20', [10, 20])).toBe(true);
+    expect(guardNumbers('10-20', [10, -20])).toBe(false);
+    expect(guardNumbers('2-column grid', [2])).toBe(true);
+    expect(guardNumbers('a 2-column grid', [-2])).toBe(false);
+    expect(guardNumbers('shift -4 px', [-4])).toBe(true);
+    expect(guardNumbers('(-4 px)', [-4])).toBe(true);
+    expect(guardNumbers('x -4', [4])).toBe(false);
   });
 
   it('SPEC-KERNEL-08: accepts a readonly list and does not mutate it', () => {
