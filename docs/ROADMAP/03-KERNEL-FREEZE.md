@@ -27,9 +27,9 @@
 **Accept:** `tsc -b` and `npm run build` pass; build emits a service worker; every SPEC §4.x.1 export exists with its signature; SPEC-ARCH-00, SPEC-ARCH-04.
 
 ### 3.3 Architecture enforcement · 0 · 0.4 h · needs 3.2
-- [ ] `.dependency-cruiser.cjs`: every SPEC-ARCH-05 rule, allow-list generated from `modules.json`.
-- [ ] `tests/architecture/`: checks (a)–(f) of SPEC-ARCH-06.
-- [ ] Negative fixture `tests/architecture/fixtures/violation/` (feature importing `@fb`): test asserts `tsc -b` fails with TS6307 and depcruise reports `layer-allow-list` (SPEC-ARCH-06 (g)).
+- [x] `.dependency-cruiser.cjs`: every SPEC-ARCH-05 rule, allow-list generated from `modules.json`.
+- [x] `tests/architecture/`: checks (a)–(f) of SPEC-ARCH-06.
+- [x] Negative fixture `tests/architecture/fixtures/violation/` (feature importing `@fb`): test asserts `tsc -b` fails with TS6307 and depcruise reports `layer-allow-list` (SPEC-ARCH-06 (g)).
 
 **Accept:** SPEC-ARCH-01..06 and SPEC-ARCH-10 tests green; a scratch forbidden import in `src/` turns them red.
 
