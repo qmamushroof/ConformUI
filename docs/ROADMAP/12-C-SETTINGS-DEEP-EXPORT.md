@@ -25,8 +25,8 @@ Services and pure functions only; UI is 13.2 and 13.6.
 **Accept:** request images and bytes equal the preview list; `pass` removes a Finding; measured numbers and Inferred cap unchanged; unknown ids ignored; trace gains a `deep` Cloud step; cap boundary test; `applyPrecomputed` makes zero `ai.run` calls and labels every merged item pre-computed.
 
 ### 12.3 Export functions · C · 0.5 h · needs G0
-- [ ] `fixPrompt` template, order and determinism (SPEC-EXP-01, S20); `contractMarkdown`/`contractJson` (SPEC-EXP-02); `reportMarkdown`/`reportJson` (SPEC-EXP-03, SPEC-EXP-04); `fileName`.
-- [ ] Source-tag walk and zod validation before download (SPEC-EXP-05).
+- [x] `fixPrompt` template, order and determinism (SPEC-EXP-01, S20); `contractMarkdown`/`contractJson` (SPEC-EXP-02); `reportMarkdown`/`reportJson` (SPEC-EXP-03, SPEC-EXP-04); `fileName`.
+- [x] Source-tag walk and zod validation before download (SPEC-EXP-05).
 
 **Accept:** two calls byte-identical; passing items absent; needs-review "verify first"; JSON round-trip through zod; source-tag walk (PRD-M-03). Snapshot tests on the sample flawed Run are added in 14.3, after the 14.4 re-record.
 
