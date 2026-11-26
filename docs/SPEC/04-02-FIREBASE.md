@@ -43,6 +43,6 @@ initializeAppCheck(app, { provider: new ReCaptchaEnterpriseProvider(key), isToke
 
 ## 4.2.4 Acceptance tests
 
-- Test for `SPEC-FB-04`: production build output contains no `FIREBASE_APPCHECK_DEBUG_TOKEN`.
+- Test for `SPEC-FB-04`: production build output contains no assignment to `FIREBASE_APPCHECK_DEBUG_TOKEN`; the SDK's own read of that global is allowed.
 - Test for `SPEC-FB-07`: remote `size_tolerance_pct="abc"` and `"500"` both yield default `8`; valid `"10"` yields `10`.
 - Test for `SPEC-FB-08`: template ↔ defaults parity.
