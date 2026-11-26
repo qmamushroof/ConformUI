@@ -1,0 +1,8 @@
+{
+  "R-07:desktop": {
+    "verdict": "pass",
+    "confidence": "high",
+    "explanation": "The button colour and the arrow icon match the design.",
+    "suggestedFix": "No change needed."
+  }
+}

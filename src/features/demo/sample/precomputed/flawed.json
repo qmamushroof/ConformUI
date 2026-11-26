@@ -1,0 +1,8 @@
+{
+  "R-07:desktop": {
+    "verdict": "uncertain",
+    "confidence": "low",
+    "explanation": "The button hue looks close to the design, but the icon looks like a chevron instead of an arrow.",
+    "suggestedFix": "Use the design arrow icon and the design button colour."
+  }
+}

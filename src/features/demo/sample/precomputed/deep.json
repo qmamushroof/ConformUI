@@ -1,0 +1,18 @@
+{
+  "items": [
+    {
+      "findingId": "R-07:desktop",
+      "status": "needs-review",
+      "confidence": "medium",
+      "explanation": "The icon on the button is a chevron where the design shows an arrow; the colour is within a slight hue shift.",
+      "suggestedFix": "Swap the chevron for the design arrow icon and use the design button colour."
+    },
+    {
+      "findingId": "R-06:desktop",
+      "status": "fail",
+      "confidence": "medium",
+      "explanation": "The sections sit closer together than in the design, which makes the page feel more crowded.",
+      "suggestedFix": "Restore the spacing between the hero and the features section from the design."
+    }
+  ]
+}

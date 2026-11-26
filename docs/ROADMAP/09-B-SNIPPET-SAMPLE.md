@@ -35,9 +35,9 @@ Touches `src/features/dom-snippet` and `src/features/demo` (not their `ui/`), `s
 **Accept:** SPEC §4.5.6 values: 390 px flawed `overflow.horizontalPx = 64`, nav link count 3; 1440 px CTA box width 132; size budgets pass (SPEC-DEMO-06).
 
 ### 9.5 Demo feature and verified Contract · B · 0.5 h · needs 8.2, 9.4
-- [ ] `loadSampleAssets()` lazy via `import.meta.glob` + `?url` (SPEC-DEMO-06); `compareWithVerified` with kernel `iou` (SPEC-DEMO-03).
-- [ ] `contract.json`: hand-authored `R-01…R-07`, passing items and `I-M-01`, `I-M-02` (SPEC-DEMO-01), regions checked against `snapRegion`.
-- [ ] `precomputed/*.json`: valid `PrecomputedJudged` seed (flawed, fixed, deep, extraction) so tests and the offline demo work; re-recorded from a real run in 14.4 (SPEC §4.11.2).
+- [x] `loadSampleAssets()` lazy via `import.meta.glob` + `?url` (SPEC-DEMO-06); `compareWithVerified` with kernel `iou` (SPEC-DEMO-03).
+- [x] `contract.json`: hand-authored `R-01…R-07`, passing items and `I-M-01`, `I-M-02` (SPEC-DEMO-01), regions checked against `snapRegion`.
+- [x] `precomputed/*.json`: valid `PrecomputedJudged` seed (flawed, fixed, deep, extraction) so tests and the offline demo work; re-recorded from a real run in 14.4 (SPEC §4.11.2).
 
 **Accept:** SPEC-MEAS-07 test: snapping returns every verified region within 2 px; `compareWithVerified` unit test; sample assets absent from the initial chunk (size check).
 
