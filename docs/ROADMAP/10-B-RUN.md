@@ -30,8 +30,8 @@ Touches `src/features/run` (not `ui/`, which is lane C 13.5) and `tests/*/run`, 
 **Accept:** no Inferred Finding above Minor (PRD-M-10); missing evidence → Needs review; invented-number fixture falls back to template (PRD-M-03); sort order test.
 
 ### 10.4 Re-verify, history, sample acceptance · B · 0.25 h · needs 10.3
-- [ ] `compareRuns`, summary line, `history` (SPEC-RUN-09..11).
-- [ ] `tests/unit/demo/sample-acceptance.test.ts` per SPEC-TEST-03 (node codec, `fake-indexeddb` or in-memory stores, fake engine returning precomputed Judged outputs).
+- [x] `compareRuns`, summary line, `history` (SPEC-RUN-09..11).
+- [x] `tests/unit/demo/sample-acceptance.test.ts` per SPEC-TEST-03 (node codec, `fake-indexeddb` or in-memory stores, fake engine returning precomputed Judged outputs).
 
 **Accept:** PRD-M-01, PRD-M-02, PRD-M-03, PRD-M-09, PRD-M-10 asserted on the committed sample; the Fix prompt (`fixPrompt` from 12.3, on `main` since M1) lists exactly the `fail` and `needs-review` Findings, the latter "verify first" (S20).
 
