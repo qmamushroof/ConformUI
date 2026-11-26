@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ConformUI spike</title>
+<style>
+  body { font: 14px/1.4 system-ui, sans-serif; margin: 16px auto; max-width: 980px; padding: 0 16px; }
+  h2 { margin: 20px 0 6px; font-size: 16px; border-bottom: 1px solid #ccc; }
+  button { margin: 3px 6px 3px 0; padding: 6px 10px; cursor: pointer; }
+  .big { background: #2563eb; color: #fff; border: 0; border-radius: 4px; }
+  pre { background: #f4f4f5; padding: 8px; overflow: auto; max-height: 300px; white-space: pre-wrap; }
+  .ok { color: #15803d } .bad { color: #b91c1c } .note { color: #555 }
+  textarea { width: 100%; height: 90px; }
+</style>
+</head>
+<body>
+<h1>ConformUI VERIFY spike (throwaway)</h1>
+<p id="env" class="note"></p>
+<p><b>Click anywhere / any button first</b> (user activation is needed before on-device model downloads).</p>
+<p><button id="run-all" class="big">Run all (online): 4.2 + 4.3 + 4.4 cloud + CSP report</button></p>
+
+<h2>4.2 A1: availability and image prompt</h2>
+<button data-check="a1-availability">A1 availability (image / text)</button>
+<button data-check="a1-image-prompt">A1 ONLY_ON_DEVICE image prompt</button>
+
+<h2>4.3 A2 + A6: image size and structured output</h2>
+<button data-check="a2-one-image">A2 one 1024px JPEG</button>
+<button data-check="a2-two-images">A2 two images in one prompt</button>
+<button data-check="a6-schemas">A6 four task schemas on-device</button>
+
+<h2>4.4 A4 + A3 + O1</h2>
+<button data-check="a4-cloud-models">A4 cloud call per default model</button>
+<p>A3: paste the model info from <code>chrome://on-device-internals</code> (Model Status tab):</p>
+<textarea id="a3-text" placeholder="paste here"></textarea><br />
+<button id="a3-save">A3 save note</button>
+<p><b>O1</b> network-off variant used:
+  <select id="o1-variant"><option>wifi-off (real)</option><option>devtools-offline (fallback)</option></select>
+  <button data-check="o1-offline-image-prompt">O1 offline on-device image prompt</button>
+  <span class="note">navigator.onLine now: <b id="online">?</b></span></p>
+
+<h2>4.5 D1: CSP violations (preview server only)</h2>
+<button data-check="d1-csp-report">D1 report CSP violations so far</button>
+<button data-check="d1-cloud-call">D1 one cloud call (App Check + connect-src)</button>
+<span class="note">On the preview server, also run A1 image prompt and A2 above.</span>
+
+<h2>Results (this page load)</h2>
+<pre id="log"></pre>
+<script type="module" src="./main.ts"></script>
+</body>
+</html>
