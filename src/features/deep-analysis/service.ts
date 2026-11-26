@@ -321,7 +321,19 @@ export function createDeepService(d: DeepDeps): DeepService {
   }
 
   async function applyPrecomputed(r: Run, deep: DeepOutput): Promise<Run> {
-    const merged = merge(r, deep, new Set(rankTargets(r).map((f) => f.id)), 'precomputed');
+    // The static seed cannot know the run id: it uses `requirementId:viewport` (or a full id). Map each item onto
+    // exactly one live target id, or drop it.
+    const ids = rankTargets(r).map((f) => f.id);
+    const items = deep.items.flatMap((item) => {
+      const id = ids.includes(item.findingId)
+        ? item.findingId
+        : (() => {
+            const hits = ids.filter((x) => x.endsWith(`:${item.findingId}`));
+            return hits.length === 1 ? hits[0] : undefined;
+          })();
+      return id ? [{ ...item, findingId: id }] : [];
+    });
+    const merged = merge(r, { ...deep, items }, new Set(ids), 'precomputed');
     const saved: Run = { ...merged.run, precomputed: true };
     await d.store.putRun(saved);
     return saved;
