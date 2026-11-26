@@ -37,13 +37,13 @@ Inferred items (advisory, no design shows this viewport): listed last with "(inf
 After fixing, take new screenshots and DOM snapshots at the same widths so the result can be re-verified.
 ```
 
-Ordering = `SPEC-RUN-08`. Numbers appear only inside "Observed"/"Done when" from Measurements (PRD-P-02). Markdown-safe plain text (no HTML).
+Ordering = `SPEC-RUN-08` with Inferred items after all Explicit ones. Free text is whitespace-collapsed, HTML-escaped and capped at 400 characters; the page URL drops query and hash. `fileName` uses UTC. Numbers appear only inside "Observed"/"Done when" from Measurements (PRD-P-02). Markdown-safe plain text (no HTML).
 
 ## 4.10.3 Contract and report (`SPEC-EXP-02..04`, PRD-F-09.3, PRD-F-09.4)
 
 | ID | Rule |
 |---|---|
-| `SPEC-EXP-02` | `ContractExportV1 = { schema: 'conformui.contract', version: 1, exportedAt /*ISO-8601*/, app: { version }, project: { name, viewports }, contract: { version, locked, requirements: Requirement[] } }`. Each Requirement keeps `label`, `checkType`, `origin`, `engine` (or null), region `source`. No images, no snapshot text. |
+| `SPEC-EXP-02` | `exportedAt` is the Contract creation time (Run creation time for the report) so output is deterministic; `app.version` is the package version. `ContractExportV1 = { schema: 'conformui.contract', version: 1, exportedAt /*ISO-8601*/, app: { version }, project: { name, viewports }, contract: { version, locked, requirements: Requirement[] } }`. Each Requirement keeps `label`, `checkType`, `origin`, `engine` (or null), region `source`. No images, no snapshot text. |
 | `SPEC-EXP-03` | `ReportExportV1 = { schema: 'conformui.report', version: 1, exportedAt, app, project, contract: { id, version }, run: { id, createdAt, viewports, thresholds, summary /*{ pass, fail, review, notChecked }*/, changes, trace: TraceStep[], precomputed }, results: RequirementResult[] (with findings, measurements and source tags) }`. Crops are referenced as rects, not embedded (size, privacy). |
 | `SPEC-EXP-04` | Markdown: title, summary line, engine trace table (step, engine, duration, bytes sent), Findings grouped by severity with Engine and every measurement's source tag ("132 px (DOM snapshot) vs 220 px (design image)"), then Passing / Not checked (with reasons). Pre-computed runs carry the banner "Sample results (pre-computed)". |
 | `SPEC-EXP-05` | Every exported item carries its Engine and every number its source tag (PRD-F-09.4, PRD-M-03); a test walks the JSON and fails on any numeric measurement field without a source. JSON validates against the kernel zod schema before download. |
