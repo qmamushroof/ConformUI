@@ -26,7 +26,7 @@
 | **Run** | One verification of the Contract against one set of implementation captures. |
 | **Finding** | A failed or uncertain Requirement in a Run, with Evidence, severity, confidence, suggested fix and verification condition. |
 | **Evidence** | Design vs implementation crops, diff overlay, measured deltas, and the source of every number. |
-| **Engine** | Which path produced an output: **On-device** (Gemini Nano), **Cloud** (Gemini) — from the SDK's reported inference source — or **Measured** (deterministic engine, no model). |
+| **Engine** | Which path produced an output: **On-device** (Gemma 4 (Chrome built-in AI, enabled by `#gemma4-for-built-in-ai`)), **Cloud** (Gemini) — from the SDK's reported inference source — or **Measured** (deterministic engine, no model). |
 | **First pass** | Contract extraction and discrepancy candidates; on-device when available. |
 | **Deep Analysis** | Cloud analysis of a Run on explicit user action (§7). |
 | **Re-verify** | A new Run against the same Contract; each Requirement shows Resolved, Remaining, New or Regressed. |

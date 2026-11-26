@@ -68,7 +68,7 @@
         </div>
 
         <div class="stack-sm" data-state-show="downloading">
-          <div class="row-between small"><span>Gemini Nano</span><span class="muted" id="dl-pct">42%</span></div>
+          <div class="row-between small"><span>Gemma 4</span><span class="muted" id="dl-pct">42%</span></div>
           <div class="bar" role="progressbar" aria-label="Model download" aria-valuemin="0" aria-valuemax="100" aria-valuenow="42" id="dl-bar"><span style="--p:42%"></span></div>
           <p class="small muted">You can use the cloud meanwhile, with your consent. Measured and Visual checks work now.</p>
         </div>
@@ -161,9 +161,9 @@
 (function () {
   var I = window.cuiIcon;
   var E = {
-    ready: { icon: 'chip', head: 'On-device model ready: first pass stays on this device', detail: 'Gemini Nano in Chrome 139 on this computer. Contract extraction and judged checks run here unless you choose otherwise.', image: 'On', hdr: 'On-device ready' },
-    downloadable: { icon: 'chip', head: 'On-device model not downloaded', detail: 'Chrome can run Gemini Nano on this computer once the model is downloaded.', image: 'On, after download', hdr: 'Model not downloaded', off: 1 },
-    downloading: { icon: 'chip', head: 'Downloading 42%', detail: 'Chrome is downloading Gemini Nano. You can keep working; the download continues in the background.', image: 'On, after download', hdr: 'Downloading 42%', off: 1 },
+    ready: { icon: 'chip', head: 'On-device model ready: first pass stays on this device', detail: 'Gemma 4 in Chrome 139 on this computer. Contract extraction and judged checks run here unless you choose otherwise.', image: 'On', hdr: 'On-device ready' },
+    downloadable: { icon: 'chip', head: 'On-device model not downloaded', detail: 'Chrome can run Gemma 4 on this computer once the model is downloaded.', image: 'On, after download', hdr: 'Model not downloaded', off: 1 },
+    downloading: { icon: 'chip', head: 'Downloading 42%', detail: 'Chrome is downloading Gemma 4. You can keep working; the download continues in the background.', image: 'On, after download', hdr: 'Downloading 42%', off: 1 },
     flag: { icon: 'chip', head: 'On-device image input is off', detail: 'Chrome 139 has the model, but image input is turned off, so it can’t read designs yet. Text-only steps still run here.', image: 'Off', hdr: 'On-device off', off: 1 },
     unavailable: { icon: 'cloud', head: 'On-device AI needs desktop Chrome. ConformUI uses the cloud here, after you allow it per project.', detail: 'This browser has no on-device model. Measured and Visual checks still run on this device.', image: 'Not available', hdr: 'Cloud with consent', off: 1 }
   };
