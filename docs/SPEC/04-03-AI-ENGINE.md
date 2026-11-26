@@ -46,7 +46,7 @@ export function schemaFor(task: AiTask): { cloud: Schema; device: object /*JSON 
 
 ## 4.3.4 Request shape and structured output (`SPEC-AI-05`, PRD-H-01)
 
-Content = `[ { type:'text', text: user }, ...images.map(i => ({ type:'inlineData', inlineData: { mimeType: i.mime, data: i.base64 } })) ]`. One request = one task = one JSON object. `schemaFor(task)` derives both the Firebase `Schema` (cloud) and JSON Schema (device) from the kernel zod schema via one mapper (unit-tested: enums, required, arrays, nullable); length/range limits are re-checked by zod after the call.
+Content = `[ { type:'text', text: user }, ...images.map(i => ({ type:'inlineData', inlineData: { mimeType: i.mime, data: i.base64 } })) ]`. One request = one task = one JSON object. `schemaFor(task)` derives both the Firebase `Schema` (cloud) and JSON Schema (device) from the kernel zod schema via one mapper (unit-tested: enums, required, arrays, nullable); length/range limits are re-checked by zod after the call. Mapper detail: zod draft-7 JSON Schema (output side) is normalised once (tuples become fixed-size arrays, `$schema` dropped); that is the device schema (keeps `maxLength`, `additionalProperties:false`); the cloud `Schema` is built from it (nullable via `nullable:true`, optional keys via `optionalProperties`, no `maxLength`); unsupported constructs (unions, references) throw.
 
 | Task | Output (zod, kernel) |
 |---|---|

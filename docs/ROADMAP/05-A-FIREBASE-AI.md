@@ -19,7 +19,7 @@ Touches only `src/platform/firebase`, `src/platform/ai-engine`, `remoteconfig.te
 **Accept:** SPEC §4.2.4 tests (FB-04 dist grep, FB-07 invalid values → defaults, FB-08 template parity); init-order test with mocked SDK.
 
 ### 5.2 schemaFor mapper · A · 0.25 h · needs G0
-- [ ] One mapper from kernel zod to Firebase `Schema` (cloud) and JSON Schema (device) for the four tasks (SPEC-AI-05).
+- [x] One mapper from kernel zod to Firebase `Schema` (cloud) and JSON Schema (device) for the four tasks (SPEC-AI-05).
 
 **Accept:** round-trip test for all four tasks: enums, required, arrays, nullable.
 
