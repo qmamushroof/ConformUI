@@ -1,5 +1,6 @@
 import type { ContractService } from '@contract';
 import type { DeepService } from '@deep';
+import type { SampleAssets } from '@demo';
 import type {
   AiEngine,
   BlobStore,
@@ -15,6 +16,7 @@ import type { ProjectsService } from '@projects';
 import type { RunService } from '@run';
 import type { SettingsService } from '@settings';
 import { createContext, type FC, type ReactNode, useContext } from 'react';
+import type { ConsentCache } from './flows/consent-cache';
 
 // SPEC-APP-01: the service graph, provided to route components through React context. Features get what they need
 // as props from the route components; they never import `app`.
@@ -34,6 +36,10 @@ export interface Services {
   config: RuntimeConfig;
   clock: Clock;
   ids: Ids;
+  /** Project consent tokens minted this session (SPEC-PROJ-07). */
+  consents: ConsentCache;
+  /** The sample's committed files, loaded on first use and kept (SPEC-DEMO-06). */
+  sample(): Promise<SampleAssets>;
   /** Calls `listener` whenever the AI engine finishes loading (or fails to), so status views can refresh. */
   onEngineChange(listener: () => void): () => void;
 }

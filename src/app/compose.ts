@@ -1,15 +1,17 @@
 import type { ContractDeps } from '@contract';
 import { createContractService } from '@contract';
 import { createDeepService } from '@deep';
+import type { SampleAssets } from '@demo';
 import type { FirebaseEnv } from '@fb';
 import { createImageCodec } from '@imaging';
-import type { AiEngine, BlobStore, Clock, Ids, ProjectStore, RuntimeConfig, SettingsStore } from '@kernel';
+import type { AiEngine, BlobStore, Clock, Ids, ImageCodec, ProjectStore, RuntimeConfig, SettingsStore } from '@kernel';
 import { inlineMeasureClient } from '@measure';
 import { createProjectsService } from '@projects';
 import { createRunService } from '@run';
 import { createSettingsService } from '@settings';
 import { openStorage } from '@store';
 import type { AppEnv } from './env';
+import { createConsentCache } from './flows/consent-cache';
 import { createLazyAiEngine, createLazyRuntimeConfig } from './lazy-engine';
 import type { Services } from './services';
 
@@ -44,6 +46,19 @@ export interface Composed {
 const systemClock: Clock = { now: () => Date.now() };
 const randomIds: Ids = { next: () => crypto.randomUUID() };
 
+/** The sample files are fetched once; a failed load is retried on the next call. */
+let sampleLoad: Promise<SampleAssets> | undefined;
+function cachedSample(): Promise<SampleAssets> {
+  // Dynamic: the demo module stays out of the initial chunk (SPEC-PERF-04).
+  sampleLoad ??= import('@demo')
+    .then((m) => m.loadSampleAssets())
+    .catch((e: unknown) => {
+      sampleLoad = undefined;
+      throw e;
+    });
+  return sampleLoad;
+}
+
 /** Run and Deep factories are Step 0 stubs until M3 and throw on construction; defer so composition never fails. */
 function lazyService<T extends object>(build: () => T): T {
   let built: T | undefined;
@@ -63,6 +78,9 @@ export interface GraphInput {
   config: RuntimeConfig;
   clock?: Clock;
   ids?: Ids;
+  /** Tests only; the default composes the browser codec. */
+  codec?: ImageCodec;
+  sample?: () => Promise<SampleAssets>;
   onEngineChange?: Services['onEngineChange'];
 }
 
@@ -70,7 +88,7 @@ export interface GraphInput {
 export function buildServices(i: GraphInput): Services {
   const clock = i.clock ?? systemClock;
   const ids = i.ids ?? randomIds;
-  const codec = createImageCodec();
+  const codec = i.codec ?? createImageCodec();
   const measure = inlineMeasureClient();
   const { projects: store, blobs, settings: settingsStore } = i.storage;
   const { ai, config } = i;
@@ -90,6 +108,8 @@ export function buildServices(i: GraphInput): Services {
     config,
     clock,
     ids,
+    consents: createConsentCache(),
+    sample: i.sample ?? cachedSample,
     onEngineChange: i.onEngineChange ?? (() => () => undefined),
   };
 }

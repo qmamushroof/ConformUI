@@ -49,7 +49,7 @@ export default defineConfig(({ mode }) => ({
         ],
       },
       injectManifest: {
-        globPatterns: ['**/*.{js,css,html,woff2,png,svg,webp}'],
+        globPatterns: ['**/*.{js,css,html,woff2,png,svg,webp,json}'],
         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
       },
     }),

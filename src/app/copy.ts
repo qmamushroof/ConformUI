@@ -37,6 +37,45 @@ export const copy = {
   routeError: {
     back: 'Back to Projects',
   },
+  /** SPEC-DEEP-04: why Deep Analysis is disabled, by `DeepAvailability` reason. */
+  deepReason: {
+    offline: 'Deep Analysis needs a connection; your results are kept.',
+    'cloud-disabled': 'Cloud analysis is paused.',
+    'daily-cap': 'Daily limit reached. Try tomorrow.',
+    'nothing-to-refine': 'Nothing needs a deeper look.',
+    'mode-on-device-only': 'Deep Analysis is off in on-device-only mode.',
+  },
+  /** Cross-feature flows (ROADMAP 7.3). */
+  flows: {
+    sampleName: 'Sample landing page',
+    sampleBusy: 'Preparing the sample',
+    copied: { fixPrompt: 'Fix prompt copied', text: 'Copied' },
+    copyFailed: "Couldn't copy. Select the text and copy it.",
+    downloaded: (name: string) => `Downloaded ${name}`,
+    reverify: {
+      title: (version: number) => `Re-verify against Contract v${version}`,
+      lead: (n: number) => `Add the new captures your agent produced. The same ${n} requirements are checked again.`,
+      sampleHint: "Use the sample's fixed captures, or drop your own: PNG, JPEG or WebP up to 20 MB.",
+      go: 'Run Re-verify',
+      noCapture: 'No capture yet',
+      replace: (vp: string) => `Replace ${vp} capture`,
+    },
+    consent: {
+      extract: 'Reading the design needs a cloud model, because this device cannot do it.',
+      run: 'Judging the visual items needs a cloud model, because this device cannot do it.',
+    },
+    deep: {
+      showPrecomputed: 'Show pre-computed result',
+      failed: 'Deep Analysis did not finish. Your results are kept.',
+    },
+    runFailed: 'The run did not finish. Your captures and contract are kept.',
+    project: {
+      noRuns: (n: number) => `No runs yet. Run checks the ${n} requirements against both captures.`,
+      noRunsEarly: 'No runs yet. Add a design, extract the contract, then add captures.',
+      needCapture: 'Add a capture to run the checks.',
+      needContract: 'Extract the contract first.',
+    },
+  },
   /** PRD §6 privacy statement, plain language (SPEC-SET-08). */
   privacy: {
     stored: 'Projects, images, contracts and runs, on this device only. Delete one project or everything.',
