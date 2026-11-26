@@ -53,7 +53,7 @@ interface DomElement { i: number; parent: number | null /*index of nearest captu
 
 ## 4.5.5 Paste validation (`SPEC-SNIP-08`, PRD-F-13.5, PRD-F-13.6)
 
-`parseSnapshot`: size ≤ 1 MiB else `SNAPSHOT_TOO_LARGE`; `JSON.parse` error → "Not valid JSON (line L)"; zod errors → up to 5 human messages ("elements[12].box.w must be a number"); wrong `schema`/`version` → "This is not a ConformUI snapshot v1". Invalid snapshots are never stored (PRD-F-13.5); the Run proceeds image-only with DOM-based Measured checks Not checked (`no-dom-snapshot`). `|viewport.width − cssWidth| > 1` → warning `dom-viewport-mismatch` shown with "Use anyway" (PRD-F-13.6).
+`parseSnapshot`: takes the text from the first `{` to the last `}` (tolerates BOM, whitespace and console noise such as the snippet's "ConformUI snapshot copied" line); that JSON ≤ 1 MiB (bytes) else `SNAPSHOT_TOO_LARGE`; `JSON.parse` error → "Not valid JSON (line L)"; zod errors → up to 5 human messages ("elements[12].box.w must be a number"); wrong `schema`/`version` → "This is not a ConformUI snapshot v1". Invalid snapshots are never stored (PRD-F-13.5); the Run proceeds image-only with DOM-based Measured checks Not checked (`no-dom-snapshot`). `|viewport.width − cssWidth| > 1` → warning `dom-viewport-mismatch` shown with "Use anyway" (PRD-F-13.6); `truncated: true` → warning `truncated`.
 
 ## 4.5.6 Acceptance tests
 

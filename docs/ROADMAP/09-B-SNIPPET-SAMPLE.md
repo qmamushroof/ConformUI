@@ -18,7 +18,7 @@ Touches `src/features/dom-snippet` and `src/features/demo` (not their `ui/`), `s
 **Accept:** static test scans `snippet.js` for every banned token of SPEC-SNIP-07; runtime proof is E7 (14.2).
 
 ### 9.2 parseSnapshot · B · 0.2 h · needs G0
-- [ ] Size cap before `JSON.parse`, zod `DomSnapshotV1`, human messages, version check, width-mismatch warning (SPEC-SNIP-01, SPEC-SNIP-08, SPEC-SEC-12).
+- [x] Size cap before `JSON.parse`, zod `DomSnapshotV1`, human messages, version check, width-mismatch warning (SPEC-SNIP-01, SPEC-SNIP-08, SPEC-SEC-12).
 
 **Accept:** fixtures in `tests/fixtures/snapshots/`: invalid JSON (line), wrong version, oversized, width mismatch, ≤ 5 messages.
 

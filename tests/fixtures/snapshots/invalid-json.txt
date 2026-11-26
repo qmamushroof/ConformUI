@@ -1,0 +1,7 @@
+{
+  "schema": "conformui.dom-snapshot",
+  "version": 1,
+  "elements": [
+    { "id": 1, }
+  ]
+}
