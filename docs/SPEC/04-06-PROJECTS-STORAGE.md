@@ -21,6 +21,7 @@ export interface ProjectsService {
   grantCloudConsent(projectId: string, token: ConsentToken): Promise<void>; revokeCloudConsent(projectId: string): Promise<void>;
   recordCloudUsage(projectId: string, bytes: number): Promise<void>;
 }
+export function staleViewports(project: Project, latest: Run | undefined): ViewportId[];   // SPEC-PROJ-04
 export interface ProjectSummary { id: string; name: string; viewports: ViewportId[]; lastRun?: { at: number; pass: number; fail: number; review: number }; isSample: boolean }
 export function createProjectsService(d: ProjectsDeps): ProjectsService;
 export const ProjectsScreen, ProjectInputs, ImageDropZone: React.FC<…>;
@@ -35,10 +36,10 @@ export function openStorage(): Promise<{ projects: ProjectStore; blobs: BlobStor
 | `SPEC-PROJ-01` | Inputs by file picker, drag-and-drop and clipboard paste (`paste` event on the drop zone and the Project page; first `image/*` item) (PRD-F-02.1). [P1] Android share target prefills "Add capture" (§4.13). |
 | `SPEC-PROJ-02` | On add: validate + normalise via `ImageCodec` (§4.4.2), store the PNG in `BlobStore`, keep `ImageRef`. Errors name the format/limit (PRD-F-02.2); nothing is silently cut. Accepted formats and limits are printed under every drop zone. |
 | `SPEC-PROJ-03` | Viewport assignment: suggested from width (`SPEC-MEAS-04`), user can change before saving (PRD-F-02.3). One design and one current capture per viewport; adding a second replaces the first (old blob deleted unless referenced by a Run). |
-| `SPEC-PROJ-04` | Replacing a capture keeps the Contract and marks the latest Run's results for that viewport stale ("Captures changed: Re-verify"); other viewports unaffected (PRD-F-02.6). Runs keep `captureIds`, so their evidence stays viewable; capture blobs referenced by any Run are kept until the Project is deleted. |
-| `SPEC-PROJ-05` | Capture CSS width = attached snapshot `viewport.width`, else the preset. Attaching a snapshot later re-normalises the stored capture if the width changes. Warnings `width-mismatch`/`dom-viewport-mismatch` are stored on the Capture and shown. |
+| `SPEC-PROJ-04` | Replacing a capture keeps the Contract and marks the latest Run's results for that viewport stale ("Captures changed: Re-verify"; derived, not stored: `staleViewports(project, run)` lists the viewports the Run covered whose current capture id is not in `run.captureIds`); other viewports unaffected (PRD-F-02.6). Runs keep `captureIds`, so their evidence stays viewable; capture blobs referenced by any Run are kept until the Project is deleted. |
+| `SPEC-PROJ-05` | Capture CSS width = attached snapshot `viewport.width`, else the preset. Attaching a snapshot later re-normalises the stored capture if the width changes. Warnings are stored on the Capture and shown: `width-mismatch` when the capture CSS width differs from that viewport's design by more than `width_mismatch_pct` (default), `dom-viewport-mismatch` when the snapshot width differs from the preset by more than 1 px. |
 | `SPEC-PROJ-06` | `create` default name "Untitled page n"; names ≤ 80 chars. `list` sorted by `updatedAt` desc; > `MAX_PROJECTS` shows a notice, never auto-deletes. |
-| `SPEC-PROJ-07` | Cloud consent: `grantCloudConsent` stores `{ grantedAt }` only when given a token minted from a trusted click (`mintConsent`, §4.1.4); `revokeCloudConsent` clears it immediately (PRD-F-11.3). `cloudUsage` accumulates request count and bytes for the privacy counter (PRD-F-11.5). |
+| `SPEC-PROJ-07` | Cloud consent: `grantCloudConsent` stores `{ grantedAt }` only when given a token minted from a trusted click (`mintConsent`, §4.1.4); `revokeCloudConsent` clears it immediately (PRD-F-11.3). `recordCloudUsage` accumulates `cloudUsage` request count and bytes (negative or non-finite bytes add 0) for the privacy counter (PRD-F-11.5). |
 
 ## 4.6.3 IndexedDB schema (`SPEC-STORE-01`)
 

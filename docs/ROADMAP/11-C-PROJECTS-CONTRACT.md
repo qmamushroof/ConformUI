@@ -12,9 +12,9 @@
 Services only; screens are 13.3 and 13.4. Tests use the 3.6 in-memory stores, the fake engine and a stub `MeasureClient` until M2 brings `inlineMeasureClient`.
 
 ### 11.1 ProjectsService · C · 0.5 h · needs G0
-- [ ] `create`, `list` summaries, `get`, `remove` (SPEC-PROJ-06, PRD-F-01.2).
-- [ ] `addDesign`, `addCapture`, `attachSnapshot` through `ImageCodec` with errors naming the limit; replace keeps the Contract and marks that viewport stale; snapshot width re-normalises (SPEC-PROJ-01..05).
-- [ ] `suggestViewport(file)` = `ImageCodec.probe` + kernel `suggestViewport` (SPEC-MEAS-04, SPEC-KERNEL-12); consent grant/revoke with token only; `cloudUsage` (SPEC-PROJ-07).
+- [x] `create`, `list` summaries, `get`, `remove` (SPEC-PROJ-06, PRD-F-01.2).
+- [x] `addDesign`, `addCapture`, `attachSnapshot` through `ImageCodec` with errors naming the limit; replace keeps the Contract and marks that viewport stale; snapshot width re-normalises (SPEC-PROJ-01..05).
+- [x] `suggestViewport(file)` = `ImageCodec.probe` + kernel `suggestViewport` (SPEC-MEAS-04, SPEC-KERNEL-12); consent grant/revoke with token only; `cloudUsage` (SPEC-PROJ-07).
 
 **Accept:** SPEC §4.6.4 service tests: replace marks only that viewport stale; grant without token rejected; usage accumulates; viewport suggestion table.
 
