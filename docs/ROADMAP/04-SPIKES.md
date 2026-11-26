@@ -12,8 +12,8 @@
 Live spikes run on the demo machine (2.8) from a throwaway branch `spike/hybrid` (never merged) with a scratch page that calls `initFirebase` and `firebase/ai` directly. Only the recorded answers, SPEC edits and fallback code reach `main`. If human setup is not ready on Day 1, run 4.2–4.5 first thing Day 2; lane A continues on mocks meanwhile.
 
 ### 4.1 I1: multi-size favicon.ico · A · 0.1 h · needs G0
-- [ ] `pwa-assets.config.ts` per SPEC-PWA-01; run `npm run icons`; inspect the `.ico` for 16 and 32 px entries.
-- [ ] Record `// SPEC-PWA-01 verified <date>: …` in `pwa-assets.config.ts`.
+- [x] `pwa-assets.config.ts` per SPEC-PWA-01; run `npm run icons`; inspect the `.ico` for 16 and 32 px entries.
+- [x] Record `// SPEC-PWA-01 verified <date>: …` in `pwa-assets.config.ts`.
 
 **Fallback:** one size emitted → ship 32 px (SPEC-PWA-01). No `.ico` at all → ship the SVG favicon link plus the ≥ 48 px PNGs and amend SPEC-PWA-01.
 **Accept:** generated files committed; record present.
