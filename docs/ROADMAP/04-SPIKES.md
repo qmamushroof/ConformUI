@@ -27,24 +27,24 @@ Live spikes run on the demo machine (2.8) from a throwaway branch `spike/hybrid`
 **Accept:** record present; status mapping test in 5.5 uses the observed values.
 
 ### 4.3 A2 + A6: image size and on-device structured output · A · 0.2 h · needs 4.2
-- [ ] A2: one 1024 px JPEG band + prompt, then two images in one prompt; note success, latency, any token-limit error.
-- [ ] A6: each of the four task schemas (SPEC §4.3.4) once on-device with `responseConstraint`.
+- [x] A2: one 1024 px JPEG band + prompt, then two images in one prompt; note success, latency, any token-limit error.
+- [x] A6: each of the four task schemas (SPEC §4.3.4) once on-device with `responseConstraint`.
 - [ ] Record at the SPEC-AI-11 and `schemaFor` code sites.
 
 **Fallback:** token error at 1024 → on-device max side 768 (SPEC-AI-11). Schema rejected → flatten that task's device JSON Schema in `schemaFor`; zod stays the authority (SPEC-AI-05). Multi-image is not needed (S11).
 **Accept:** records present; SPEC edits made where answers differ.
 
 ### 4.4 A4 + A3 + O1 (offline on-device) · A · 0.15 h · needs 4.2
-- [ ] A4: one `ONLY_IN_CLOUD` call per default model id (`cloud_first_pass_model`, `deep_model`).
+- [x] A4: one `ONLY_IN_CLOUD` call per default model id (`cloud_first_pass_model`, `deep_model`).
 - [x] A3: answered 2026-11-26 (PRD-D-33, SPEC §10.2): the on-device model is Gemma 4; Event Logs show "Loading model [gemma4_gpu_high_tier_model] on backend [GPU]". Note this in the README (16.2).
-- [ ] O1 (SPEC §10.2): load the scratch page, switch the network off, run one `ONLY_ON_DEVICE` image prompt (demo beat 0:20, PRD-M-07).
+- [x] O1 (SPEC §10.2): load the scratch page, switch the network off, run one `ONLY_ON_DEVICE` image prompt (demo beat 0:20, PRD-M-07).
 
 **Fallback:** a model id unavailable → pick the nearest listed id; change `DEFAULT_RUNTIME_VALUES` + `remoteconfig.template.json` + SPEC §4.1.6 in one kernel-change commit ([00](00-HOW-TO-USE.md)). Offline call fails → record the cause; the demo keeps the network on for beat 0:20 and shows the trace with 0 bytes; PRD-M-07 is reported as not met in the README.
 **Accept:** records present.
 
 ### 4.5 D1 (local): on-device image prompt under the enforced CSP · A · 0.1 h · needs 4.2
-- [ ] On the spike branch only: `vite preview` serving the SPEC-SEC-08 CSP as a response header.
-- [ ] Run one on-device image prompt and one cloud call; collect console CSP violations.
+- [x] On the spike branch only: `vite preview` serving the SPEC-SEC-08 CSP as a response header.
+- [x] Run one on-device image prompt and one cloud call; collect console CSP violations.
 
 **Fallback:** violation on the image part → add `blob:` to `connect-src`; still blocked → widen only `connect-src`, record an `S#` and amend SPEC-SEC-08. Final proof on Hosting is 15.3.
 **Accept:** zero violations, or the amended CSP recorded for 15.3.
@@ -52,4 +52,5 @@ Live spikes run on the demo machine (2.8) from a throwaway branch `spike/hybrid`
 ## Exit gate
 
 - Every spike has a `// SPEC-… verified` record or an applied fallback with its SPEC edit.
+- 4.3 to 4.5 answered 2026-11-26 (A2 keep 1024, A6 no flattening, A4 both ids ok, O1 offline pass, D1 local: CSP unchanged, one zod `eval` probe violation fixed by jitless config in 7.1).
 - Remaining VERIFY: D1 on Hosting (15.3), T1 timings and O1 network-off run (14.4).
