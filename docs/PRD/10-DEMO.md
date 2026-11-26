@@ -44,7 +44,7 @@ Committed pre-computed AI outputs (extraction, Judged verdicts, Deep Analysis) a
 | 1:20–1:45 | Hybrid escalation | Network on. **Deep Analysis**: confirm sheet lists what is sent; result labelled **Cloud** refines the CTA colour Needs-review Finding to Fail ("Refined by Cloud"). Engine trace adds a Cloud step with bytes sent; privacy counter updates. |
 | 1:45–2:10 | Close the loop | **Copy fix prompt**; paste into a coding agent (cut); show the fixed captures. |
 | 2:10–2:35 | Re-verify | **Re-verify**: "6 resolved, 1 remaining"; the remaining spacing Finding still has evidence. |
-| 2:35–2:50 | Export and platforms | Export report (Markdown). The sample Project on an installed Android PWA: **Extract contract** asks for cloud consent, then runs Cloud; Engine shows **Cloud**. |
+| 2:35–2:50 | Export and platforms | Export report (Markdown). The sample Project in desktop Chrome device emulation (390 px, on-device unavailable): **Extract contract** asks for cloud consent, then runs Cloud; Engine shows **Cloud**. |
 | 2:50–3:00 | Close | "Design intent as a contract. Measured, not guessed. Private by default." Repo + hosted demo URL. |
 
 The video is recorded on desktop Chrome with the multimodal flag enabled and the model ready (R-14). Keep a pre-recorded fallback take of each beat in case the on-device model is not ready on demo day.

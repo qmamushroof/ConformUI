@@ -26,7 +26,7 @@
 - [ ] A: clean `npm ci && npm run build`, `npm run check` green on `main`, tag `v1.0.0`.
 - [ ] Human: `npx firebase deploy --only hosting` (SPEC-DEPLOY-01; no CI deploy, S18).
 
-**Accept:** hosted URL loads over HTTPS; installs on desktop Chrome and Android; second visit offline opens the shell and sample (PRD-M-12, SPEC-PWA-02).
+**Accept:** hosted URL loads over HTTPS; installs on desktop Chrome; second visit offline opens the shell and sample (PRD-M-12, SPEC-PWA-02).
 
 ### 16.4 Remote Config publish · Human · 0 h · needs 16.3
 - [ ] Import `remoteconfig.template.json` in the console (or `npx firebase deploy --only remoteconfig`) and publish (SPEC-FB-08, SPEC §8.3 step 3).
@@ -38,7 +38,7 @@
 
 **Accept:** both `inferenceSource` values seen; App Check accepted (no 401/403); zero CSP violations.
 
-### 16.6 Demo video · Human · 0 h · needs 16.5, 2.9
+### 16.6 Demo video · Human · 0 h · needs 16.5
 - [ ] Record per [17](17-DEMO-SCRIPT.md); ≤ 3:00; upload publicly to YouTube; add the link to the README.
 
 **Accept:** link plays signed out; length ≤ 3:00.
@@ -52,7 +52,7 @@
 | Open-source license (Apache preferred) | `LICENSE` Apache-2.0 (16.1) | [ ] |
 | Firebase AI Logic implemented and called | `firebase/ai` in `src/platform/ai-engine/`; Engine badge shows `inferenceSource` | [ ] |
 | ≥ 1 supported Firebase product | App Check (enforced for AI Logic) + Remote Config (16.4) | [ ] |
-| Supported platform | Web/Chrome desktop with on-device Gemini Nano via hybrid; Android installed PWA (cloud) | [ ] |
+| Supported platform | Web/Chrome desktop with on-device Gemini Nano via hybrid; installed PWA (cloud-only path checked in device emulation, PRD-D-32) | [ ] |
 | Description: what it does, how AI Logic is used, features and value | README sections (16.2) | [ ] |
 | Demo video ≤ 3 min, public | YouTube link (16.6) | [ ] |
 | Hosted demo | README link to the hosted URL | [ ] |

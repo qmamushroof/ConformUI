@@ -55,7 +55,7 @@ Sources: [hybrid on-device inference](https://firebase.google.com/docs/ai-logic/
 | Hybrid on-device inference on web needs Chrome desktop 139+ and Firebase AI Logic JS SDK 12.5.0+. | Docs |
 | On-device supports text and text+image (JPEG, PNG) prompts and structured output (JSON, enums); single-turn only, no chat; no function calling or Google Search grounding; files as inline data. | Docs |
 | On-device token limit 9,216 tokens. | Docs |
-| On-device image input requires enabling `chrome://flags/#prompt-api-for-gemini-nano-multimodal-input`; the app detects this and shows copy-paste enable steps (F-11.1). | Docs — VERIFY at build |
+| On-device image input requires enabling `chrome://flags/#prompt-api-multimodal-input`; the app detects this and shows copy-paste enable steps (F-11.1). | Docs — VERIFY at build |
 | Modes `PREFER_ON_DEVICE`, `ONLY_ON_DEVICE`, `PREFER_IN_CLOUD`, `ONLY_IN_CLOUD`; Prefer modes fall back to cloud while the model is downloading or unavailable (hence H-04). | Docs |
 | Responses report `inferenceSource`, compared with the SDK constants `InferenceSource.ON_DEVICE` / `InferenceSource.IN_CLOUD` (values `"on_device"` / `"in_cloud"`; SDK 12.5.0+). | Docs |
 | Model download is triggered on user activation via `initializeDeviceModel()`; it can take several minutes. | Docs |

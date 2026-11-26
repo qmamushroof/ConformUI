@@ -85,7 +85,7 @@ Priorities: **P0** ships in release 1 (cut line), **P1** ships if P0 is done, **
 - F-09.5 (P1) Import a Contract JSON into a new Project.
 
 ### F-11 Engine status and settings
-- F-11.1 Engine panel: on-device Available / Downloading (progress) / Unavailable (reason); detects a missing Chrome flag or Prompt API and shows copy-paste enable steps (e.g. `chrome://flags/#prompt-api-for-gemini-nano-multimodal-input`); Cloud reachable or not; current mode.
+- F-11.1 Engine panel: on-device Available / Downloading (progress) / Unavailable (reason); detects a missing Chrome flag or Prompt API and shows copy-paste enable steps (e.g. `chrome://flags/#prompt-api-multimodal-input`); Cloud reachable or not; current mode.
 - F-11.2 Download the on-device model from a button.
 - F-11.3 Mode switch (H-04: Auto, Cloud only; P1 On-device only); per-Project cloud consent can be revoked.
 - F-11.4 Clear all local data, with confirmation.

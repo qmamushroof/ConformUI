@@ -16,7 +16,7 @@ export function schemaFor(task: AiTask): { cloud: Schema; device: object /*JSON 
 
 | Fact | Status |
 |---|---|
-| Web hybrid needs SDK >= 12.5.0 and Chrome desktop >= 139; flag `chrome://flags/#prompt-api-for-gemini-nano-multimodal-input` = Enabled for local testing | Docs |
+| Web hybrid needs SDK >= 12.5.0 and Chrome desktop >= 139; flag `chrome://flags/#prompt-api-multimodal-input` = Enabled for local testing | Docs |
 | `InferenceMode` = `PREFER_ON_DEVICE` (`"prefer_on_device"`), `ONLY_ON_DEVICE`, `PREFER_IN_CLOUD`, `ONLY_IN_CLOUD`; `HybridParams = { mode, onDeviceParams?: { createOptions?, promptOptions? }, inCloudParams?: ModelParams }` | Typings 3.1.0 |
 | During a model download: `ONLY_ON_DEVICE` **waits** for the download (minutes) — only if `initializeDeviceModel` ran on the same model instance; otherwise `create()` starts a download without a user gesture and fails. `PREFER_*` and `ONLY_IN_CLOUD` use the cloud | Docs |
 | `result.response.inferenceSource?: InferenceSource`; constants `InferenceSource.ON_DEVICE = "on_device"`, `IN_CLOUD = "in_cloud"` (the config doc prints `ON_DEVICE`/`IN_CLOUD`: always compare with the imported constant, never a literal). The SDK sets it on every hybrid response | Typings 3.1.0 |

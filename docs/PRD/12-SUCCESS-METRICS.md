@@ -17,7 +17,7 @@
 | M-09 | Reproducibility | Re-running an unchanged Run gives identical Measured/Visual statuses | Automated test |
 | M-10 | Inferred discipline | No Inferred Finding rated above Minor; every Inferred item labelled | Automated test |
 | M-11 | Accessibility | axe-core in Playwright on Projects, Contract, Run and Finding views: zero serious/critical violations | Automated test |
-| M-12 | Installability | Install works on desktop Chrome and Android; app shell and sample open offline | Manual install and offline check |
+| M-12 | Installability | Install works on desktop Chrome (PRD-D-32); app shell and sample open offline | Manual install and offline check; mobile layout in DevTools device emulation |
 | M-13 | Time to first value | New visitor reaches sample Findings in 2 clicks (Try the sample → Run), with no consent modal; if no live engine can judge the Judged item, its labelled pre-computed result is used | Manual check |
 | M-14 | AI extraction quality | AI extraction on the sample design proposes Requirements covering ≥ 4 of the 6 measurable planted defects (1–6); report which Engine ran | Manual run, result in README |
 
