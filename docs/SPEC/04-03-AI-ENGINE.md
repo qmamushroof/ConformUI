@@ -30,7 +30,7 @@ export function schemaFor(task: AiTask): { cloud: Schema; device: object /*JSON 
 | `LanguageModel.availability()` → `available` / `downloadable` / `downloading` (and `unavailable`) | Docs (Chrome Prompt API) |
 | Image token cost on-device, and whether one on-device prompt accepts more than one image | **VERIFY** spike A2 |
 | Exact availability signal when the multimodal flag is off (image `availability` returns `unavailable` vs throws) and whether the flag is still required on current stable Chrome | **VERIFY** spike A1 |
-| Chrome's model is "Gemini Nano 4" (PRD-§7). The Prompt API has no model/version parameter; record `chrome://on-device-internals` model info at demo time | **VERIFY** spike A3 |
+| The on-device model is Gemma 4 (PRD-D-33), enabled by `chrome://flags/#gemma4-for-built-in-ai`. The Prompt API has no model/version parameter and reports no model name; identity is proven in `chrome://on-device-internals` > Event Logs ("Loading model [gemma4_gpu_high_tier_model] on backend [GPU]"). Verified 2026-11-26, Chrome 158.0.8127.89 | Verified, spike A3 |
 
 ## 4.3.3 Model construction (`SPEC-AI-01`, PRD-H-04, PRD-D-18)
 

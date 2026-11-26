@@ -6,7 +6,7 @@ Three engines, each doing what it is best at. Hybrid is a visible feature, not a
 
 | Engine | What it is | Strength |
 |---|---|---|
-| **On-device** | Gemini Nano in desktop Chrome via Firebase AI Logic hybrid inference | Private, free, offline, no network latency |
+| **On-device** | Gemma 4 (Chrome built-in AI, enabled by `#gemma4-for-built-in-ai`) in desktop Chrome via Firebase AI Logic hybrid inference | Private, free, offline, no network latency |
 | **Cloud** | Gemini via Firebase AI Logic | More capable reasoning, multi-image context, works on any browser |
 | **Measured** | Deterministic TypeScript engine (image/region diff, geometry, DOM snapshot measurements) | Exact, reproducible, trustworthy numbers |
 
@@ -61,4 +61,4 @@ Sources: [hybrid on-device inference](https://firebase.google.com/docs/ai-logic/
 | Model download is triggered on user activation via `initializeDeviceModel()`; it can take several minutes. | Docs |
 | The cloud model is set explicitly (SPEC §4.1.6) and overridable via Remote Config (H-07). | Docs |
 | On-device is Chrome desktop only; Android PWA uses cloud. | Docs |
-| Model shipped in Chrome is "Gemini Nano 4" as the challenge states. | VERIFY |
+| The on-device model is Gemma 4, not Chrome's default Gemini Nano v3. Chrome's default is Nano v3; enabling `chrome://flags/#gemma4-for-built-in-ai` makes a page-initiated `LanguageModel.create()` download `gemma4_component`. Verified 2026-11-26 on Chrome 158 via `chrome://on-device-internals` Event Logs (PRD-D-33). | Verified |

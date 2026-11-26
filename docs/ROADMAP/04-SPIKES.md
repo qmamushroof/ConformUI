@@ -36,7 +36,7 @@ Live spikes run on the demo machine (2.8) from a throwaway branch `spike/hybrid`
 
 ### 4.4 A4 + A3 + O1 (offline on-device) · A · 0.15 h · needs 4.2
 - [ ] A4: one `ONLY_IN_CLOUD` call per default model id (`cloud_first_pass_model`, `deep_model`).
-- [ ] A3: copy the model info from `chrome://on-device-internals` into a note for the README (16.2).
+- [x] A3: answered 2026-11-26 (PRD-D-33, SPEC §10.2): the on-device model is Gemma 4; Event Logs show "Loading model [gemma4_gpu_high_tier_model] on backend [GPU]". Note this in the README (16.2).
 - [ ] O1 (SPEC §10.2): load the scratch page, switch the network off, run one `ONLY_ON_DEVICE` image prompt (demo beat 0:20, PRD-M-07).
 
 **Fallback:** a model id unavailable → pick the nearest listed id; change `DEFAULT_RUNTIME_VALUES` + `remoteconfig.template.json` + SPEC §4.1.6 in one kernel-change commit ([00](00-HOW-TO-USE.md)). Offline call fails → record the cause; the demo keeps the network on for beat 0:20 and shows the trace with 0 bytes; PRD-M-07 is reported as not met in the README.

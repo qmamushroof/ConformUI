@@ -52,7 +52,7 @@
 | Open-source license (Apache preferred) | `LICENSE` Apache-2.0 (16.1) | [ ] |
 | Firebase AI Logic implemented and called | `firebase/ai` in `src/platform/ai-engine/`; Engine badge shows `inferenceSource` | [ ] |
 | ≥ 1 supported Firebase product | App Check (enforced for AI Logic) + Remote Config (16.4) | [ ] |
-| Supported platform | Web/Chrome desktop with on-device Gemini Nano via hybrid; installed PWA (cloud-only path checked in device emulation, PRD-D-32) | [ ] |
+| Supported platform | Web/Chrome desktop with on-device Gemma 4 via hybrid; installed PWA (cloud-only path checked in device emulation, PRD-D-32) | [ ] |
 | Description: what it does, how AI Logic is used, features and value | README sections (16.2) | [ ] |
 | Demo video ≤ 3 min, public | YouTube link (16.6) | [ ] |
 | Hosted demo | README link to the hosted URL | [ ] |

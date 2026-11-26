@@ -56,7 +56,7 @@ Needed only on the demo machine (ROADMAP 2.8).
 1. **Chrome ≥ 139**, 64-bit desktop (verified on 158.0.8127.x, Windows). Open `chrome://on-device-internals` > Broker State to see the install criteria: ≥ 3000 MiB VRAM, ≥ 20480 MiB free disk to install, ≥ 5120 MiB to retain. The verified machine reported performance class High.
 2. **Flags** (`chrome://flags`), then Relaunch:
    - `#prompt-api-multimodal-input` (older name: `#prompt-api-for-gemini-nano-multimodal-input`): Enabled.
-   - `#gemma4-for-built-in-ai` ("Gemma 4 for Built-in AI"): Enabled. The product requires the Gemma 4 on-device model; this is being verified in spike A3 (ROADMAP 4).
+   - `#gemma4-for-built-in-ai` ("Gemma 4 for Built-in AI"): Enabled. Required: the product uses the Gemma 4 on-device model (PRD-D-33). Chrome's default Gemini Nano v3 may remain installed; that is fine, Chrome uses Gemma 4 once this flag is on and the model is downloaded.
    - "Decisions API" and "Multi-Token Prediction": leave at Default.
 3. **Start the model download.** It needs a user click on a page. Open https://example.com, open DevTools > Console (type `allow pasting` if Chrome asks), paste the snippet, then click the page content (not the console):
 
@@ -75,7 +75,7 @@ Needed only on the demo machine (ROADMAP 2.8).
    ```
 
    Attaching to `document.body.onclick` can miss clicks on short pages. Chrome warns if no output language is given (supported: de, en, es, fr, ja).
-4. **Verify.** Console: `await LanguageModel.availability({ expectedInputs: [{ type: 'image' }] })` returns `'available'`. In `chrome://on-device-internals` > Broker State > Assets, the model component shows "Ready". Components seen: Gemini Nano v3 `nano_v3_gpu` (about 4 GB); Gemma 4 `gemma4_component`, `gemma4_4b_component`, `gemma4_12b_component` (use cases `prompt_api_gemma4*`). The Prompt API has no model-selection parameter and no API reports which model answered: confirm through Broker State and the session's `contextWindow` (Nano v3 reported 9216). The "Tools" tab message "Unable to load model … /tmp/model" belongs to a manual model loader; ignore it.
+4. **Verify.** Console: `await LanguageModel.availability({ expectedInputs: [{ type: 'image' }] })` returns `'available'`. In `chrome://on-device-internals` > Broker State > Assets, the model component shows "Ready". Components seen: Gemini Nano v3 `nano_v3_gpu` (about 4 GB); Gemma 4 `gemma4_component`, `gemma4_4b_component`, `gemma4_12b_component` (use cases `prompt_api_gemma4*`). The Prompt API has no model-selection parameter and no API reports which model answered: confirm through the Event Logs (above); `contextWindow` is 9216 on both Nano v3 and Gemma 4, so it does not distinguish them. To prove which model answers: open `chrome://on-device-internals` > Event Logs BEFORE prompting, then run a prompt. Expected log lines: "Loading model [gemma4_gpu_high_tier_model] on backend [GPU]" and "Model generates text response with PromptApi". Broker State shows use case `prompt_api_gemma4` Requested + Available. Chrome picks the variant (`gemma4_4b`/`gemma4_12b` can stay "Pending Usage"); a page cannot. The "Tools" tab message "Unable to load model … /tmp/model" belongs to a manual model loader; ignore it.
 5. **Mobile.** Android device testing was dropped (PRD-D-32). Check the mobile layout in desktop Chrome DevTools device emulation (390 px); verify install on desktop Chrome.
 
 ## D. Live VERIFY spikes
