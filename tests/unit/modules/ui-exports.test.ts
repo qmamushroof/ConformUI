@@ -7,22 +7,18 @@ import * as settings from '@settings';
 import * as snippet from '@snippet';
 import { describe, expect, it } from 'vitest';
 
-// SPEC-ARCH-11: every index.ts declares its full public API from Step 0, UI components included (stubs until lane C).
-const UI: [string, Record<string, unknown>, string[]][] = [
-  ['deep-analysis', deep, ['DeepAnalysisButton', 'DeepConfirmSheet']],
-  ['demo', demo, ['TrySampleButton', 'SampleBanner', 'LoadFixedButton']],
-];
+describe('SPEC-ARCH-11, 13.6: deep-analysis and demo UI names are implemented components', () => {
+  it('SPEC-ARCH-11: deep-analysis exports DeepAnalysisButton and DeepConfirmSheet as functions', () => {
+    for (const n of ['DeepAnalysisButton', 'DeepConfirmSheet']) {
+      expect(typeof (deep as Record<string, unknown>)[n], n).toBe('function');
+    }
+  });
 
-describe('SPEC-ARCH-11: UI component names are declared in each module index', () => {
-  for (const [name, mod, names] of UI) {
-    it(`SPEC-ARCH-11: ${name} exports ${names.join(', ')} as stubs that throw 'not implemented'`, () => {
-      for (const n of names) {
-        const component = mod[n] as (props: unknown) => unknown;
-        expect(typeof component, n).toBe('function');
-        expect(() => component({}), n).toThrow('not implemented');
-      }
-    });
-  }
+  it('SPEC-ARCH-11: demo exports TrySampleButton, SampleBanner, LoadFixedButton as functions', () => {
+    for (const n of ['TrySampleButton', 'SampleBanner', 'LoadFixedButton']) {
+      expect(typeof (demo as Record<string, unknown>)[n], n).toBe('function');
+    }
+  });
 });
 
 describe('SPEC-ARCH-11, 13.2: settings UI names are implemented components', () => {
