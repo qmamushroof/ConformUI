@@ -9,9 +9,10 @@ import type {
   TraceStep,
 } from '@kernel';
 
-// Public API of features/contract (SPEC §4.7.1). Bodies: lane C (task 11.x). UI components: lane C (./ui).
+// Public API of features/contract (SPEC §4.7.1). UI components: lane C (./ui).
 
 import { runExtract } from './extract';
+import * as review from './review';
 import type { ContractDeps, ExtractOutcome } from './types';
 
 export * from './ui';
@@ -35,10 +36,6 @@ export interface ContractService {
   loadPrecomputedExtraction(projectId: string, reqs: Requirement[]): Promise<Contract>; // stored as pendingAiContractId, origin 'precomputed' (S29)
 }
 
-const notYet = (): never => {
-  throw new Error('not implemented'); // task 11.3
-};
-
 export function createContractService(d: ContractDeps): ContractService {
   return {
     extract: (projectId, ctx, onProgress) => runExtract(d, projectId, ctx, onProgress),
@@ -46,13 +43,13 @@ export function createContractService(d: ContractDeps): ContractService {
       const id = (await d.store.get(projectId))?.activeContractId;
       return id ? d.store.getContract(id) : undefined;
     },
-    accept: notYet,
-    editText: notYet,
-    remove: notYet,
-    add: notYet,
-    setRegion: notYet,
-    loadCommitted: notYet,
-    useAiContract: notYet,
-    loadPrecomputedExtraction: notYet,
+    accept: (id, reqIds) => review.accept(d, id, reqIds),
+    editText: (id, reqId, patch) => review.editText(d, id, reqId, patch),
+    remove: (id, reqId) => review.remove(d, id, reqId),
+    add: (id, draft) => review.add(d, id, draft),
+    setRegion: (id, reqId, rect) => review.setRegion(d, id, reqId, rect),
+    loadCommitted: (projectId, c) => review.loadCommitted(d, projectId, c),
+    useAiContract: (projectId) => review.useAiContract(d, projectId),
+    loadPrecomputedExtraction: (projectId, reqs) => review.loadPrecomputedExtraction(d, projectId, reqs),
   };
 }

@@ -106,6 +106,7 @@ const done = (o: ExtractOutcome): Contract => {
   if (o.kind !== 'done') throw new Error(`expected done, got ${o.kind}`);
   return o.contract;
 };
+const explicit = (c: Contract) => c.requirements.filter((r) => r.label === 'explicit');
 const calls = (task: AiTask = 'extract-contract') => ai.calls.filter((c) => c.task === task);
 
 beforeEach(() => {
@@ -208,7 +209,7 @@ describe('SPEC-CON-01 mapping', () => {
     const c = done(await extract());
     expect(c.version).toBe(1);
     expect(c.locked).toBe(false);
-    expect(c.requirements.map((r) => r.id)).toEqual(['R-01', 'R-02', 'R-03']);
+    expect(explicit(c).map((r) => r.id)).toEqual(['R-01', 'R-02', 'R-03']);
     // document order: nav count box (y 20..70), hero h1 (200..320), CTA (640..700) of a 500 px band
     expect(c.requirements[0]?.check.kind).toBe('count');
     expect(c.requirements[1]?.check.kind).toBe('text');
@@ -220,7 +221,7 @@ describe('SPEC-CON-01 mapping', () => {
     expect(r0?.y).toBeCloseTo(320, 5);
     expect(r0?.w).toBeCloseTo(259.2, 5);
     expect(r0?.h).toBeCloseTo(30, 5);
-    for (const r of c.requirements) {
+    for (const r of explicit(c)) {
       expect(r.origin).toBe('ai');
       expect(r.engine).toBe('on-device');
       expect(r.accepted).toBe(false);
@@ -309,8 +310,8 @@ describe('SPEC-CON-01 mapping', () => {
     };
     measureRects = () => ({ unresolved: true });
     const c = done(await extract());
-    expect(c.requirements).toHaveLength(2);
-    for (const r of c.requirements) {
+    expect(explicit(c)).toHaveLength(2);
+    for (const r of explicit(c)) {
       const reg = r.region;
       const rect = reg && 'rect' in reg ? reg.rect : reg && 'suggested' in reg ? reg.suggested : undefined;
       expect(rect?.w).toBeGreaterThan(0);
@@ -332,7 +333,11 @@ describe('SPEC-CON-01 mapping', () => {
       },
     };
     const c = done(await extract());
-    expect(c.requirements.map((r) => r.statement).sort()).toEqual(['Far away', 'First', 'Other category']);
+    expect(
+      explicit(c)
+        .map((r) => r.statement)
+        .sort(),
+    ).toEqual(['Far away', 'First', 'Other category']);
   });
 
   it('SPEC-CON-01: total is capped at MAX_REQUIREMENTS (60)', async () => {
@@ -356,7 +361,7 @@ describe('SPEC-CON-01 mapping', () => {
       'extract-contract': { requirements: Array.from({ length: 9 }, () => valid.requirements[0]) },
     };
     const c = done(await extract());
-    expect(c.requirements).toHaveLength(0);
+    expect(explicit(c)).toHaveLength(0);
     expect(c.extraction?.some((s) => /Band 1 could not be read/.test(s.note ?? ''))).toBe(true);
   });
 
@@ -364,7 +369,7 @@ describe('SPEC-CON-01 mapping', () => {
     await seed({ height: 500 });
     fakeCfg.outputs = { 'extract-contract': { requirements: [] } };
     const c = done(await extract());
-    expect(c.requirements).toEqual([]);
+    expect(explicit(c)).toEqual([]);
     expect(c.extraction).toHaveLength(1);
   });
 
@@ -416,7 +421,7 @@ describe('SPEC-CON-01 failures', () => {
     await seed({ height: 1000 });
     fakeCfg.outputs = { 'extract-contract': { sequence: [malformed, malformed, valid] } };
     const c = done(await extract());
-    expect(c.requirements).toHaveLength(3);
+    expect(explicit(c)).toHaveLength(3);
     const notes = (c.extraction ?? []).map((s) => s.note).filter(Boolean);
     expect(notes).toContain('Band 1 could not be read. Add requirements manually.');
     expect(calls()).toHaveLength(3);
@@ -426,7 +431,7 @@ describe('SPEC-CON-01 failures', () => {
     await seed({ height: 500 });
     fakeCfg.outputs = { 'extract-contract': { sequence: [malformed, valid] } };
     const c = done(await extract());
-    expect(c.requirements).toHaveLength(3);
+    expect(explicit(c)).toHaveLength(3);
     expect(calls()[1]?.user).toContain('Return only valid JSON matching the schema.');
     expect((c.extraction ?? []).some((s) => /could not be read/.test(s.note ?? ''))).toBe(false);
   });
@@ -440,7 +445,7 @@ describe('SPEC-CON-01 failures', () => {
       return real(req, sig);
     };
     const c = done(await extract());
-    expect(c.requirements).toHaveLength(3);
+    expect(explicit(c)).toHaveLength(3);
     expect((c.extraction ?? []).some((s) => /Band 1 could not be read/.test(s.note ?? ''))).toBe(true);
   });
 
@@ -464,7 +469,8 @@ describe('SPEC-CON-01 failures', () => {
       expect(out).toMatchObject({ kind: 'blocked', reason });
       if (out.kind === 'blocked') expect(out.contract.requirements.filter((r) => r.origin === 'ai')).toHaveLength(0);
       expect(calls()).toHaveLength(1); // no point asking the next band
-      expect(await svc.active(PID)).toBeUndefined();
+      const kept = await svc.active(PID); // only rule-based Inferred items may be saved (SPEC-CON-03)
+      expect((kept?.requirements ?? []).every((r) => r.origin === 'rule')).toBe(true);
     });
   }
 
@@ -524,7 +530,7 @@ describe('SPEC-CON-01 consent and mode (PRD-M-06, PRD-H-05)', () => {
     expect(calls()[0]?.mode).toBe('PREFER_ON_DEVICE');
     expect(calls()[0]?.consent?.scope).toBe('project');
     expect(calls()[0]?.images[0]?.bytes).toBe(1000 + 1536);
-    expect(c.requirements.every((r) => r.engine === 'cloud')).toBe(true);
+    expect(explicit(c).every((r) => r.engine === 'cloud')).toBe(true);
     expect(steps[0]).toMatchObject({ engine: 'cloud', requestedMode: 'PREFER_ON_DEVICE' });
     expect(steps[0]?.bytesSent).toBeGreaterThan(0);
   });
@@ -598,7 +604,7 @@ describe('SPEC-CON-09 output versioning', () => {
     expect(c.locked).toBe(false);
     expect(c.requirements.find((r) => r.statement === 'Mine')).toMatchObject({ origin: 'user', accepted: true });
     expect(c.requirements.filter((r) => r.origin === 'ai')).toHaveLength(3);
-    expect(c.requirements.some((r) => r.origin === 'rule')).toBe(false);
+    expect(c.requirements.filter((r) => r.origin === 'rule').map((r) => r.id)).toEqual(['I-M-01', 'I-M-02', 'I-M-03']); // regenerated (manual primary counts), not kept
     expect(new Set(c.requirements.map((r) => r.id)).size).toBe(c.requirements.length);
     expect((await store.get(PID))?.activeContractId).toBe(c.id);
     expect(await store.getContract('old')).toEqual(old);
