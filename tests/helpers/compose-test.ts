@@ -1,4 +1,5 @@
-import type { AiEngine, RuntimeConfig } from '@kernel';
+import type { SampleAssets } from '@demo';
+import type { AiEngine, Clock, Ids, ImageCodec, RuntimeConfig } from '@kernel';
 import { DEFAULT_RUNTIME_VALUES } from '@kernel';
 import { openStorage } from '@store';
 import { buildServices, type StorageSet } from '../../src/app/compose';
@@ -22,11 +23,34 @@ function deleteDb(name: string): Promise<void> {
   });
 }
 
-export async function composeForTest(over: { ai?: AiEngine; config?: RuntimeConfig } = {}): Promise<TestComposition> {
+export interface ComposeOverrides {
+  ai?: AiEngine;
+  config?: RuntimeConfig;
+  /** In-memory or other ports instead of the IndexedDB adapter. */
+  storage?: StorageSet;
+  /** A codec for jsdom, where the browser codec cannot decode. */
+  codec?: ImageCodec;
+  sample?: () => Promise<SampleAssets>;
+  clock?: Clock;
+  ids?: Ids;
+}
+
+export async function composeForTest(over: ComposeOverrides = {}): Promise<TestComposition> {
   // A fresh database per call keeps compositions isolated.
-  for (const d of await indexedDB.databases()) if (d.name) await deleteDb(d.name);
-  const storage = await openStorage();
+  if (!over.storage) for (const d of await indexedDB.databases()) if (d.name) await deleteDb(d.name);
+  const storage = over.storage ?? (await openStorage());
   const config: RuntimeConfig = over.config ?? { get: () => DEFAULT_RUNTIME_VALUES, refresh: async () => undefined };
   const ai = over.ai ?? createFakeAiEngine({}, {});
-  return { services: buildServices({ storage, ai, config }), storage };
+  return {
+    services: buildServices({
+      storage,
+      ai,
+      config,
+      ...(over.codec && { codec: over.codec }),
+      ...(over.sample && { sample: over.sample }),
+      ...(over.clock && { clock: over.clock }),
+      ...(over.ids && { ids: over.ids }),
+    }),
+    storage,
+  };
 }

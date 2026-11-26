@@ -83,3 +83,13 @@ describe('SPEC-PWA-03 precache manifest', () => {
     }
   });
 });
+
+describe('SPEC-DEMO-06: the sample opens offline', () => {
+  it('SPEC-DEMO-06: the precache lists every sample PNG and JSON file (design, flawed, fixed, contract, pre-computed)', () => {
+    const assets = precacheUrls.filter((u) => u.startsWith('assets/'));
+    const count = (re: RegExp) => assets.filter((u) => re.test(u)).length;
+    expect(count(/.png$/), 'pngs').toBeGreaterThanOrEqual(5);
+    // 4 DOM snapshots, the contract and extraction.json; the three small pre-computed files are inlined (under 4 KB) into the lazy chunk, which is precached too.
+    expect(count(/.json$/), 'json files').toBeGreaterThanOrEqual(6);
+  });
+});

@@ -116,17 +116,16 @@ describe('routes', () => {
     expect(await screen.findByRole('heading', { level: 1, name: 'Projects screen' })).toBeTruthy();
   });
 
-  it('SPEC-APP-02: exactly one main landmark per route, including the not-found and placeholder routes', async () => {
+  it('SPEC-APP-02: exactly one main landmark per route, including the not-found route', async () => {
     await mount({ path: '/nope', screens });
     await screen.findByRole('heading', { level: 1 });
     expect(screen.getAllByRole('main')).toHaveLength(1);
   });
 
-  it('SPEC-APP-02: a screen that is still a Step 0 stub renders a placeholder heading, not an error', async () => {
+  it('SPEC-APP-03, 7.3: a screen throwing "not implemented" is an ordinary route error now (no stub placeholder)', async () => {
     await mount({ path: '/snippet', screens: { snippet: Boom(new Error('not implemented')) } });
-    expect(await screen.findByRole('heading', { level: 1, name: 'DOM snippet' })).toBeTruthy();
-    expect(screen.queryByRole('alert')).toBeNull();
-    expect(screen.getAllByRole('main')).toHaveLength(1);
+    expect(await screen.findByRole('alert')).toBeTruthy();
+    expect(screen.queryByText('not implemented')).toBeNull();
   });
 });
 

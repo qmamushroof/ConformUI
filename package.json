@@ -2,6 +2,12 @@
   "name": "conformui",
   "version": "0.1.0",
   "private": true,
+  "sideEffects": [
+    "**/*.css",
+    "**/zod-jitless.ts",
+    "**/main.tsx",
+    "**/pwa-register.ts"
+  ],
   "description": "Turn designs into checkable contracts, verify implementations with measured evidence, and hand failures back to the coding agent.",
   "license": "Apache-2.0",
   "repository": {

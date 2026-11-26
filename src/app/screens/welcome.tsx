@@ -4,11 +4,17 @@ import { useNavigate } from 'react-router';
 import { copy } from '../copy';
 import { useServices } from '../services';
 
-// `/welcome` (SPEC-SET-08). The sample entry point is wired in 7.3; until then both actions open Projects.
+// `/welcome` (SPEC-SET-08). Try the sample opens the sample Project (SPEC-DEMO-02): two clicks to Findings.
 const WelcomeRoute: FC = () => {
   const { settings } = useServices();
   const navigate = useNavigate();
-  const home = () => navigate('/');
-  return <OnboardingScreen settings={settings} privacy={copy.privacy} onTrySample={home} onStartProject={home} />;
+  return (
+    <OnboardingScreen
+      settings={settings}
+      privacy={copy.privacy}
+      onTrySample={() => navigate('/?sample=1')}
+      onStartProject={() => navigate('/')}
+    />
+  );
 };
 export default WelcomeRoute;
