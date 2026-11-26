@@ -12,8 +12,8 @@
 Touches `src/features/run` (not `ui/`, which is lane C 13.5) and `tests/*/run`, `tests/unit/demo/`.
 
 ### 10.1 Check handlers · B · 0.7 h · needs 8.4, 9.5 (own branch)
-- [ ] One handler per `CheckSpec.kind` × `checkType` row of SPEC-RUN-03, DOM and no-DOM paths, registry keyed by kind (SPEC-ARCH-08).
-- [ ] Region issues → `needs-review` / `not-checked misaligned`, never a guessed number (SPEC-RUN-04, S21).
+- [x] One handler per `CheckSpec.kind` × `checkType` row of SPEC-RUN-03, DOM and no-DOM paths, registry keyed by kind (SPEC-ARCH-08).
+- [x] Region issues → `needs-review` / `not-checked misaligned`, never a guessed number (SPEC-RUN-04, S21).
 
 **Accept:** one test per table row with and without a DOM snapshot; unresolved region → Needs review.
 
