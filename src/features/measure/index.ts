@@ -1,4 +1,6 @@
 import type { MeasureApi, MeasureClient } from '@kernel';
+import { locateOnCapture } from './locate';
+import { snapRegion } from './snap';
 
 // Public API of features/measure (SPEC §4.4.1). Bodies: lane B (task 8.x).
 
@@ -6,12 +8,8 @@ export const measureApi: MeasureApi = {
   align: () => {
     throw new Error('not implemented');
   },
-  snapRegion: () => {
-    throw new Error('not implemented');
-  },
-  locateOnCapture: () => {
-    throw new Error('not implemented');
-  },
+  snapRegion,
+  locateOnCapture,
   regionDiff: () => {
     throw new Error('not implemented');
   },
