@@ -42,7 +42,7 @@ export function schemaFor(task: AiTask): { cloud: Schema; device: object /*JSON 
 
 - `SPEC-AI-02` (guards): (a) a mode other than `ONLY_ON_DEVICE` requires `req.consent` (project or deep scope) else `CONSENT_REQUIRED`; `deep-analysis` requires scope `deep`. (b) An `ONLY_ON_DEVICE` result whose `inferenceSource !== InferenceSource.ON_DEVICE` is discarded → `AI_FAILED`. (c) An `ONLY_ON_DEVICE` call is never made unless `status().device === 'available'` (avoids the silent waiting download).
 - `SPEC-AI-03`: model instances cached per `(mode, task, model, promptVersion, hasImages)`; rebuilt when Remote Config model names change. The `ONLY_ON_DEVICE` instance used by `downloadDeviceModel` is the one reused for prompts (same `createOptions`).
-- `SPEC-AI-04`: `AiResponse.engine = response.inferenceSource === InferenceSource.ON_DEVICE ? 'on-device' : 'cloud'`; a missing `inferenceSource` (defensive branch only; the SDK always sets it) → `'cloud'` under `ONLY_IN_CLOUD`, `AI_FAILED` otherwise (never assumed). `bytesSent` = UTF-8 byte length of `JSON.stringify({system,user,images})` when engine is cloud, else 0 (labelled "request payload bytes" in the UI).
+- `SPEC-AI-04`: `AiResponse.engine = response.inferenceSource === InferenceSource.ON_DEVICE ? 'on-device' : 'cloud'`; a missing or unrecognised `inferenceSource` (defensive branch only; the SDK always sets it) → `'cloud'` under `ONLY_IN_CLOUD`, `AI_FAILED` otherwise (never assumed). `bytesSent` = UTF-8 byte length of `JSON.stringify({system,user,images})` when engine is cloud, else 0 (labelled "request payload bytes" in the UI). `AiResponse.model` is the cloud model name, or `on-device` for `ONLY_ON_DEVICE`.
 
 ## 4.3.4 Request shape and structured output (`SPEC-AI-05`, PRD-H-01)
 

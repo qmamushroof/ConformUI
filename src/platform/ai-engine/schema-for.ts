@@ -1,3 +1,5 @@
+import type { AiTask } from '@kernel';
+import { DeepOutputSchema, ExtractOutputSchema, InferOutputSchema, JudgeOutputSchema } from '@kernel';
 import { Schema } from 'firebase/ai';
 
 // SPEC-AI-05: one mapper. zod -> JSON Schema (draft-7, output side) -> normalised once -> device schema as is,
@@ -85,4 +87,18 @@ export interface JsonSchemaSource {
 export function zodToSchemas(schema: JsonSchemaSource): { cloud: Schema; device: object } {
   const device = normalise(schema.toJSONSchema({ target: 'draft-7', io: 'output' }));
   return { cloud: toCloud(device), device };
+}
+
+const OUTPUT_SCHEMAS = {
+  'extract-contract': ExtractOutputSchema,
+  'infer-responsive': InferOutputSchema,
+  judge: JudgeOutputSchema,
+  'deep-analysis': DeepOutputSchema,
+} as const;
+
+/** Implementation of the public `schemaFor` (kept here so model-factory does not import the package index). */
+export function schemaForTask(task: AiTask): { cloud: Schema; device: object } {
+  const schema = OUTPUT_SCHEMAS[task];
+  if (!schema) throw new Error(`schemaFor: unknown task ${String(task)}`);
+  return zodToSchemas(schema);
 }
