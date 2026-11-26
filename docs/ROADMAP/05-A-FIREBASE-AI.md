@@ -24,9 +24,9 @@ Touches only `src/platform/firebase`, `src/platform/ai-engine`, `remoteconfig.te
 **Accept:** round-trip test for all four tasks: enums, required, arrays, nullable.
 
 ### 5.3 Model construction and engine label · A · 0.4 h · needs 5.1, 5.2
-- [ ] `getAI(app, { backend: new GoogleAIBackend() })` after App Check; `getGenerativeModel` per `AiMode` exactly as the SPEC §4.3.3 table (SPEC-AI-01); system text in both `initialPrompts` and `systemInstruction`.
-- [ ] Instance cache key and rebuild on model-name change (SPEC-AI-03).
-- [ ] `engine` from `inferenceSource` compared with the imported constant; `bytesSent` (SPEC-AI-04).
+- [x] `getAI(app, { backend: new GoogleAIBackend() })` after App Check; `getGenerativeModel` per `AiMode` exactly as the SPEC §4.3.3 table (SPEC-AI-01); system text in both `initialPrompts` and `systemInstruction`.
+- [x] Instance cache key and rebuild on model-name change (SPEC-AI-03).
+- [x] `engine` from `inferenceSource` compared with the imported constant; `bytesSent` (SPEC-AI-04).
 
 **Accept:** mocked SDK asserts mode and params per `AiMode`; `ONLY_ON_DEVICE` never gets `inCloudParams`; mapping test with both constants and the missing-value branch.
 
