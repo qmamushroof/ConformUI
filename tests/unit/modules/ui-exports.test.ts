@@ -9,7 +9,6 @@ import { describe, expect, it } from 'vitest';
 
 // SPEC-ARCH-11: every index.ts declares its full public API from Step 0, UI components included (stubs until lane C).
 const UI: [string, Record<string, unknown>, string[]][] = [
-  ['run', run, ['RunScreen', 'FindingList', 'FindingDetail', 'ComparisonView', 'EngineTrace', 'RunHistory']],
   ['deep-analysis', deep, ['DeepAnalysisButton', 'DeepConfirmSheet']],
   ['demo', demo, ['TrySampleButton', 'SampleBanner', 'LoadFixedButton']],
 ];
@@ -59,6 +58,22 @@ describe('SPEC-ARCH-11, 13.3: projects and dom-snippet UI names are implemented 
   it('SPEC-ARCH-11: dom-snippet exports SnippetPanel and SnapshotPasteField as functions', () => {
     for (const n of ['SnippetPanel', 'SnapshotPasteField']) {
       expect(typeof (snippet as Record<string, unknown>)[n], n).toBe('function');
+    }
+  });
+});
+
+describe('SPEC-ARCH-11, 13.5: run UI names are implemented components', () => {
+  it('SPEC-ARCH-11: run exports RunScreen, FindingList, FindingDetail, ComparisonView, EngineTrace, RunHistory, RunProgress as functions', () => {
+    for (const n of [
+      'RunScreen',
+      'FindingList',
+      'FindingDetail',
+      'ComparisonView',
+      'EngineTrace',
+      'RunHistory',
+      'RunProgress',
+    ]) {
+      expect(typeof (run as Record<string, unknown>)[n], n).toBe('function');
     }
   });
 });
