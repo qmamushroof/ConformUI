@@ -1,0 +1,102 @@
+/* Contract screen, copied from the prototype page styles (SPEC-UI-02: tokens only). */
+.chead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4) var(--space-6);
+  padding: var(--space-6) var(--space-6) var(--space-5);
+}
+.chead .stack-sm {
+  gap: var(--space-2);
+  flex: 1 1 320px;
+  min-width: 0;
+}
+@media (min-width: 901px) {
+  .chead {
+    flex-wrap: nowrap;
+  }
+  .chead > .btn-row {
+    flex: none;
+  }
+}
+.cband {
+  padding: 0 var(--space-6) var(--space-6);
+  display: grid;
+  gap: var(--space-6);
+  max-width: 1440px;
+}
+.canvas .rg {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1;
+  stroke-opacity: 0.35;
+  vector-effect: non-scaling-stroke;
+  cursor: pointer;
+  pointer-events: all;
+}
+.canvas .rg.hl {
+  stroke-opacity: 0.8;
+}
+.canvas .rg.sel {
+  stroke-width: 3;
+  stroke-opacity: 1;
+}
+.canvas .rg.unres {
+  stroke: var(--text);
+  stroke-dasharray: 6 4;
+}
+.nodesign {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1440 / 1000;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+.xstages {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-4);
+  font-size: var(--font-size-sm);
+}
+.xstages li {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) auto;
+  gap: var(--space-2) var(--space-2);
+  align-items: center;
+}
+.xstages .bar {
+  grid-column: 2 / -1;
+}
+.xstages .w {
+  color: var(--text-muted);
+}
+.extract-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 360px) minmax(0, 1fr);
+  gap: var(--space-8);
+  align-items: start;
+}
+.redit {
+  display: grid;
+  gap: var(--space-4);
+}
+@media (max-width: 900px) {
+  .extract-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 720px) {
+  .chead {
+    padding: var(--space-4);
+  }
+  .cband {
+    padding: 0 var(--space-4) var(--space-5);
+  }
+}

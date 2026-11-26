@@ -33,8 +33,8 @@ Components take services and data as props; navigation is a callback prop (SPEC-
 **Accept:** drop zone is a keyboard-operable button; each input path calls the service; viewport can be changed before save; stale notice only on the replaced viewport; invalid snapshot shows ≤ 5 messages.
 
 ### 13.4 Contract UI · C · 0.4 h · needs 11.3, 13.2
-- [ ] `ContractScreen`: Extract (disabled without design, hint), band progress, table grouped by viewport, region outlines on the design (dashed when unresolved), Accept all / row actions, Add form, Export buttons (SPEC-CON-07, SPEC-CON-08).
-- [ ] Sample comparison panel: "AI proposed N requirements; M match the verified contract", Use AI / Keep verified (SPEC-DEMO-03).
+- [x] `ContractScreen`: Extract (disabled without design, hint), band progress, table grouped by viewport, region outlines on the design (dashed when unresolved), Accept all / row actions, Add form, Export buttons (SPEC-CON-07, SPEC-CON-08).
+- [x] Sample comparison panel: "AI proposed N requirements; M match the verified contract", Use AI / Keep verified (SPEC-DEMO-03).
 
 **Accept:** each row shows label text + icon and `EngineBadge`; hover/focus highlights its region; comparison counts.
 

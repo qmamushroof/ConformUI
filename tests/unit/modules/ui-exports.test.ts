@@ -10,7 +10,6 @@ import { describe, expect, it } from 'vitest';
 // SPEC-ARCH-11: every index.ts declares its full public API from Step 0, UI components included (stubs until lane C).
 const UI: [string, Record<string, unknown>, string[]][] = [
   ['projects', projects, ['ProjectsScreen', 'ProjectInputs', 'ImageDropZone']],
-  ['contract', contract, ['ContractScreen', 'RequirementRow', 'RequirementEditor']],
   ['run', run, ['RunScreen', 'FindingList', 'FindingDetail', 'ComparisonView', 'EngineTrace', 'RunHistory']],
   ['deep-analysis', deep, ['DeepAnalysisButton', 'DeepConfirmSheet']],
   ['demo', demo, ['TrySampleButton', 'SampleBanner', 'LoadFixedButton']],
@@ -40,6 +39,14 @@ describe('SPEC-ARCH-11, 13.2: settings UI names are implemented components', () 
       'ConsentSheet',
     ]) {
       expect(typeof (settings as Record<string, unknown>)[n], n).toBe('function');
+    }
+  });
+});
+
+describe('SPEC-ARCH-11, 13.4: contract UI names are implemented components', () => {
+  it('SPEC-ARCH-11: contract exports ContractScreen, RequirementRow, RequirementEditor as functions', () => {
+    for (const n of ['ContractScreen', 'RequirementRow', 'RequirementEditor']) {
+      expect(typeof (contract as Record<string, unknown>)[n], n).toBe('function');
     }
   });
 });
