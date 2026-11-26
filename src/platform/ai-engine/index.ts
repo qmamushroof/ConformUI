@@ -1,18 +1,21 @@
 import type { FirebaseApp } from '@fb';
 import type { AiEngine, AiTask, Clock, RuntimeConfig } from '@kernel';
 import type { Schema } from 'firebase/ai';
+import { createModelFactory } from './model-factory';
 import { createRunner } from './run';
 import { schemaForTask } from './schema-for';
+import { createDeviceService } from './status';
 
 // Public API of platform/ai-engine (SPEC §4.3.1). Bodies: lane A (task 5.x).
 
 export function createAiEngine(d: { app: FirebaseApp; config: RuntimeConfig; clock: Clock }): AiEngine {
-  // 5.5 replaces `status` and `downloadDeviceModel` and feeds the real status into the runner.
-  const status = (): Promise<never> => Promise.reject(new Error('not implemented'));
-  const runner = createRunner({ ...d, status });
+  // SPEC-AI-03: one factory, so the model built for the download is the one prompts reuse.
+  const factory = createModelFactory({ app: d.app, config: d.config });
+  const device = createDeviceService({ config: d.config, clock: d.clock, factory });
+  const runner = createRunner({ ...d, factory, status: device.status });
   return {
-    status,
-    downloadDeviceModel: () => Promise.reject(new Error('not implemented')),
+    status: device.status,
+    downloadDeviceModel: device.download,
     run: runner.run,
   };
 }
