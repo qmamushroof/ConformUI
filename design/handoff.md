@@ -3,7 +3,7 @@
 For the agents building ROADMAP phase 13 (UI). Read alongside `DESIGN.md`, which holds the principles, token tables, component specs and do/don't list. The prototype is the visual reference, not code to copy: `prototype/` is vanilla HTML/JS, and the app is React 19 + Tailwind v4.
 
 ## Tokens
-- The source is `design/tokens.json`. Regenerate with `node <do-design>/scripts/tokens.mjs design/tokens.json design --tailwind`.
+- The source is `design/tokens.json`. Regenerate the CSS token files from `design/tokens.json` (`design/tokens.css`, `design/tokens.tailwind.css`).
 - `tokens.css` holds the CSS variables, light/dark through `prefers-color-scheme` plus `[data-theme]` (the `[data-theme]` blocks are inert in release 1, S10: no manual toggle). Copy it to `src/app/styles/tokens.css`.
 - `tokens.tailwind.css` holds the `@theme` mapping; import it after `@import "tailwindcss"`.
 - SPEC-UI-03's contrast test should assert the pairs in `tokens.json` (`$pairs` + roles); 64 pairs pass AA today.

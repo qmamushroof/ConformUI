@@ -1,119 +1,119 @@
 [
   {
     "file": "shots\\verify\\404-375.png",
-    "url": "file:///C:/Users/Mushroof/source/repos/qmamushroof/ConformUI/design/prototype/404.html",
+    "url": "design/prototype/404.html",
     "width": 375,
     "scheme": "light",
     "issues": []
   },
   {
     "file": "shots\\verify\\404-1440.png",
-    "url": "file:///C:/Users/Mushroof/source/repos/qmamushroof/ConformUI/design/prototype/404.html",
+    "url": "design/prototype/404.html",
     "width": 1440,
     "scheme": "light",
     "issues": []
   },
   {
     "file": "shots\\verify\\compare-375.png",
-    "url": "file:///C:/Users/Mushroof/source/repos/qmamushroof/ConformUI/design/prototype/compare.html",
+    "url": "design/prototype/compare.html",
     "width": 375,
     "scheme": "light",
     "issues": []
   },
   {
     "file": "shots\\verify\\compare-1440.png",
-    "url": "file:///C:/Users/Mushroof/source/repos/qmamushroof/ConformUI/design/prototype/compare.html",
+    "url": "design/prototype/compare.html",
     "width": 1440,
     "scheme": "light",
     "issues": []
   },
   {
     "file": "shots\\verify\\contract-375.png",
-    "url": "file:///C:/Users/Mushroof/source/repos/qmamushroof/ConformUI/design/prototype/contract.html",
+    "url": "design/prototype/contract.html",
     "width": 375,
     "scheme": "light",
     "issues": []
   },
   {
     "file": "shots\\verify\\contract-1440.png",
-    "url": "file:///C:/Users/Mushroof/source/repos/qmamushroof/ConformUI/design/prototype/contract.html",
+    "url": "design/prototype/contract.html",
     "width": 1440,
     "scheme": "light",
     "issues": []
   },
   {
     "file": "shots\\verify\\index-375.png",
-    "url": "file:///C:/Users/Mushroof/source/repos/qmamushroof/ConformUI/design/prototype/index.html",
+    "url": "design/prototype/index.html",
     "width": 375,
     "scheme": "light",
     "issues": []
   },
   {
     "file": "shots\\verify\\index-1440.png",
-    "url": "file:///C:/Users/Mushroof/source/repos/qmamushroof/ConformUI/design/prototype/index.html",
+    "url": "design/prototype/index.html",
     "width": 1440,
     "scheme": "light",
     "issues": []
   },
   {
     "file": "shots\\verify\\onboarding-375.png",
-    "url": "file:///C:/Users/Mushroof/source/repos/qmamushroof/ConformUI/design/prototype/onboarding.html",
+    "url": "design/prototype/onboarding.html",
     "width": 375,
     "scheme": "light",
     "issues": []
   },
   {
     "file": "shots\\verify\\onboarding-1440.png",
-    "url": "file:///C:/Users/Mushroof/source/repos/qmamushroof/ConformUI/design/prototype/onboarding.html",
+    "url": "design/prototype/onboarding.html",
     "width": 1440,
     "scheme": "light",
     "issues": []
   },
   {
     "file": "shots\\verify\\project-375.png",
-    "url": "file:///C:/Users/Mushroof/source/repos/qmamushroof/ConformUI/design/prototype/project.html",
+    "url": "design/prototype/project.html",
     "width": 375,
     "scheme": "light",
     "issues": []
   },
   {
     "file": "shots\\verify\\project-1440.png",
-    "url": "file:///C:/Users/Mushroof/source/repos/qmamushroof/ConformUI/design/prototype/project.html",
+    "url": "design/prototype/project.html",
     "width": 1440,
     "scheme": "light",
     "issues": []
   },
   {
     "file": "shots\\verify\\projects-375.png",
-    "url": "file:///C:/Users/Mushroof/source/repos/qmamushroof/ConformUI/design/prototype/projects.html",
+    "url": "design/prototype/projects.html",
     "width": 375,
     "scheme": "light",
     "issues": []
   },
   {
     "file": "shots\\verify\\projects-1440.png",
-    "url": "file:///C:/Users/Mushroof/source/repos/qmamushroof/ConformUI/design/prototype/projects.html",
+    "url": "design/prototype/projects.html",
     "width": 1440,
     "scheme": "light",
     "issues": []
   },
   {
     "file": "shots\\verify\\run-375.png",
-    "url": "file:///C:/Users/Mushroof/source/repos/qmamushroof/ConformUI/design/prototype/run.html",
+    "url": "design/prototype/run.html",
     "width": 375,
     "scheme": "light",
     "issues": []
   },
   {
     "file": "shots\\verify\\run-1440.png",
-    "url": "file:///C:/Users/Mushroof/source/repos/qmamushroof/ConformUI/design/prototype/run.html",
+    "url": "design/prototype/run.html",
     "width": 1440,
     "scheme": "light",
     "issues": []
   },
   {
     "file": "shots\\verify\\settings-375.png",
-    "url": "file:///C:/Users/Mushroof/source/repos/qmamushroof/ConformUI/design/prototype/settings.html",
+    "url": "design/prototype/settings.html",
     "width": 375,
     "scheme": "light",
     "issues": [
@@ -126,7 +126,7 @@
   },
   {
     "file": "shots\\verify\\settings-1440.png",
-    "url": "file:///C:/Users/Mushroof/source/repos/qmamushroof/ConformUI/design/prototype/settings.html",
+    "url": "design/prototype/settings.html",
     "width": 1440,
     "scheme": "light",
     "issues": [
@@ -139,14 +139,14 @@
   },
   {
     "file": "shots\\verify\\snippet-375.png",
-    "url": "file:///C:/Users/Mushroof/source/repos/qmamushroof/ConformUI/design/prototype/snippet.html",
+    "url": "design/prototype/snippet.html",
     "width": 375,
     "scheme": "light",
     "issues": []
   },
   {
     "file": "shots\\verify\\snippet-1440.png",
-    "url": "file:///C:/Users/Mushroof/source/repos/qmamushroof/ConformUI/design/prototype/snippet.html",
+    "url": "design/prototype/snippet.html",
     "width": 1440,
     "scheme": "light",
     "issues": []
