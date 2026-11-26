@@ -96,6 +96,15 @@ const OUTPUT_SCHEMAS = {
   'deep-analysis': DeepOutputSchema,
 } as const;
 
+/** SPEC-AI-06: the kernel zod schema a task output is re-checked with (structural view; no zod import in platform). */
+export function outputSchemaFor(task: AiTask): {
+  safeParse(v: unknown): { success: true; data: unknown } | { success: false };
+} {
+  const schema = OUTPUT_SCHEMAS[task];
+  if (!schema) throw new Error(`outputSchemaFor: unknown task ${String(task)}`);
+  return schema;
+}
+
 /** Implementation of the public `schemaFor` (kept here so model-factory does not import the package index). */
 export function schemaForTask(task: AiTask): { cloud: Schema; device: object } {
   const schema = OUTPUT_SCHEMAS[task];
