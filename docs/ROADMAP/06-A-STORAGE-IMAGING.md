@@ -19,9 +19,9 @@ Until this merges (M2), features use the in-memory stores from 3.6. Touches only
 **Accept:** SPEC §4.6.4 storage tests with `fake-indexeddb`: round trip per store, cascade leaves no orphan blobs, corrupt record skipped, `clearAll` keeps `deepUsage`, newer version read-only, open failure (stubbed `indexedDB.open` error) → `CuiError` `STORAGE_UNAVAILABLE` with no store touched.
 
 ### 6.2 createImageCodec · A · 0.5 h · needs G0
-- [ ] `normalise`: accepted MIME and limits, decode, resample to `cssWidth`, height cap, PNG output (SPEC-MEAS-01, SPEC-MEAS-02).
-- [ ] `pixels`, `crop` (JPEG for AI, PNG for evidence, base64 without prefix), `composePair` (SPEC-MEAS-03).
-- [ ] `probe(file)`: source width, height and MIME without resampling, for `suggestViewport` (SPEC-MEAS-04, SPEC-KERNEL-12).
+- [x] `normalise`: accepted MIME and limits, decode, resample to `cssWidth`, height cap, PNG output (SPEC-MEAS-01, SPEC-MEAS-02).
+- [x] `pixels`, `crop` (JPEG for AI, PNG for evidence, base64 without prefix), `composePair` (SPEC-MEAS-03).
+- [x] `probe(file)`: source width, height and MIME without resampling, for `suggestViewport` (SPEC-MEAS-04, SPEC-KERNEL-12).
 
 **Accept:** unit tests with stubbed `createImageBitmap`/`OffscreenCanvas` for limit errors, size math and pair layout; real decode proven by E8 (14.3); SPEC-PERF-03 timed once manually in 14.4.
 
