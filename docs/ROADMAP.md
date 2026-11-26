@@ -1,6 +1,6 @@
 # Roadmap — ConformUI
 
-Build order for release 1 (PRD §11 P0). *What*: `docs/PRD.md`. *How*: `docs/SPEC.md`. This plan sequences; it never changes scope or contracts.
+Build order for release 1 (PRD §11 P0). *What*: `docs/PRD.md`. *How*: `docs/SPEC.md`. This plan sequences; it never changes scope or contracts. New dev machine: [SETUP.md](SETUP.md).
 
 | Phase | Name | Delivers | Owner | Agent-h | File |
 |---|---|---|---|---|---|
