@@ -4,18 +4,6 @@ Follow @docs/ROADMAP.md
 
 Final UI/UX must be exactly like @design/prototype/
 
-## Agentic Workflow
-
-For every task, follow in order:
-
-1. Understand the task
-2. Plan
-3. Implement the plan using a new subagent
-4. Validate e.g. build + run checks
-5. Review changes using a new separate subagent
-6. Apply the sound changes suggested by the reviewer using a new subagent & then validate again
-7. Land changes
-
 Whenever any functionality requires writing tests, write failing tests first with edgecases before development.
 
-The main session will plan, think & give orders to subagents but it will never directly implement anything itself.
+The main session will plan, think, review & give orders to subagents but it will never directly implement anything itself.
