@@ -1,0 +1,97 @@
+/* Run screen: page-level rules of design/prototype/run.html (SPEC-UI-01). Tokens only. */
+.runhead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4) var(--space-6);
+  padding: var(--space-6) var(--space-6) var(--space-5);
+}
+.runhead .stack-sm {
+  gap: var(--space-2);
+}
+.runlevel {
+  padding: 0 var(--space-6) var(--space-16);
+  max-width: 1440px;
+}
+.running {
+  padding: 0 var(--space-6);
+  max-width: 640px;
+}
+.refined {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--font-size-sm);
+  color: var(--text);
+}
+.evidence .nodesign {
+  aspect-ratio: 476 / 420;
+}
+.vpfilter button[aria-pressed] {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--layout-target);
+  padding: 0;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  background: none;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.vpfilter button[aria-pressed]:hover {
+  color: var(--text);
+}
+.vpfilter button[aria-pressed="true"] {
+  color: var(--text);
+  border-bottom-color: var(--text);
+}
+
+/* Region outlines on the crops: design solid accent, implementation dashed ink (SPEC-UI-01). */
+.shot .rg-design {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 3;
+}
+.shot .rg-impl {
+  fill: none;
+  stroke: var(--neutral-900);
+  stroke-width: 3;
+  stroke-dasharray: 8 6;
+}
+.shot rect.diffmask {
+  fill: var(--diff);
+}
+
+/* Run history rows are buttons here. */
+.runs button.rowi {
+  width: 100%;
+  border-top: 0;
+  border-right: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+}
+.runs button.rowi[aria-current="true"] {
+  background: var(--accent-subtle);
+  border-left-color: var(--accent);
+}
+
+@media (max-width: 720px) {
+  .runhead {
+    padding: var(--space-4);
+  }
+  .runlevel {
+    padding: 0 var(--space-4) var(--space-12);
+  }
+  .running {
+    padding: 0 var(--space-4);
+  }
+}

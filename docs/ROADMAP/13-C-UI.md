@@ -39,9 +39,9 @@ Components take services and data as props; navigation is a callback prop (SPEC-
 **Accept:** each row shows label text + icon and `EngineBadge`; hover/focus highlights its region; comparison counts.
 
 ### 13.5 Run UI · C · 0.9 h · needs 10.3 on `main` or its fixture Run, 13.2
-- [ ] `RunScreen` (summary bar, re-verify line, viewport tabs, actions), `FindingList` (sorted, Up/Down/Enter), `FindingDetail`, `ComparisonView` (side by side, Diff overlay `aria-pressed`, Full page, `?f=`), `EngineTrace`, `RunHistory` (SPEC-UI-01, SPEC-UI-04, PRD-F-05.4).
-- [ ] Per-stage progress list (`RunEvent` `stage`, `role="progressbar"`) (PRD-F-04.4).
-- [ ] Passing / Not checked lists with reasons; run-complete `aria-live` announcement; crop `alt` text (SPEC-UI-06).
+- [x] `RunScreen` (summary bar, re-verify line, viewport tabs, actions), `FindingList` (sorted, Up/Down/Enter), `FindingDetail`, `ComparisonView` (side by side, Diff overlay `aria-pressed`, Full page, `?f=`), `EngineTrace`, `RunHistory` (SPEC-UI-01, SPEC-UI-04, PRD-F-05.4).
+- [x] Per-stage progress list (`RunEvent` `stage`, `role="progressbar"`) (PRD-F-04.4).
+- [x] Passing / Not checked lists with reasons; run-complete `aria-live` announcement; crop `alt` text (SPEC-UI-06).
 
 **Accept:** keyboard selection test; overlay toggle state; status and severity never colour-only (icon + text); Not checked shows its reason.
 
