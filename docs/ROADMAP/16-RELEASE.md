@@ -10,8 +10,8 @@
 | **Covers** | SPEC-DEPLOY-01..04, SPEC-AI-13, SPEC-FB-08, SPEC-PWA-02, PRD-D-13, PRD-D-30, PRD-M-12, PRD §11 item 13 |
 
 ### 16.1 LICENSE and package metadata · A · 0.05 h · needs M4
-- [ ] `LICENSE` = full Apache-2.0 text, "Copyright 2026 ConformUI contributors"; `package.json` `license` (SPEC-DEPLOY-04).
-- [ ] Fill `<REPO_URL>` (PRD-D-30, given by the owner) into README and `package.json` `repository`.
+- [x] `LICENSE` = full Apache-2.0 text; `NOTICE` = "Copyright 2026 ConformUI contributors" (kept out of LICENSE so GitHub detection stays Apache-2.0); `package.json` `license` (SPEC-DEPLOY-04).
+- [x] `package.json` `repository` filled (PRD-D-30). README part lands with 16.2.
 
 **Accept:** GitHub detects Apache-2.0; `npm pkg get license` prints `"Apache-2.0"`.
 
