@@ -26,14 +26,39 @@ describe('scripts/check-dist.mjs', () => {
   it('SPEC-TEST-02, SPEC-FB-04: passes a clean build', () => {
     expect(run('check-dist.mjs', fakeDist()).status).toBe(0);
   });
-  it.each(['__CUI_FAKE__', 'FakeAiEngine', 'FIREBASE_APPCHECK_DEBUG_TOKEN'])(
-    'SPEC-TEST-02, SPEC-FB-04: fails when %s is present',
-    (marker) => {
-      const r = run('check-dist.mjs', fakeDist({ 'assets/leak.js': `self.${marker}=1` }));
-      expect(r.status).toBe(1);
-      expect(r.stderr).toContain(marker);
-    },
-  );
+  it.each(['__CUI_FAKE__', 'FakeAiEngine'])('SPEC-TEST-02, SPEC-FB-04: fails when %s is present', (marker) => {
+    const r = run('check-dist.mjs', fakeDist({ 'assets/leak.js': `self.${marker}=1` }));
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain(marker);
+  });
+  const TOKEN = 'FIREBASE_APPCHECK_DEBUG_TOKEN';
+  it.each([
+    `if(self.${TOKEN})x()`,
+    `typeof globalThis.${TOKEN}`,
+    `e.${TOKEN}===!0`,
+    `e.${TOKEN} == 1`,
+    `e.${TOKEN}!=null`,
+    `e.${TOKEN}!==void 0`,
+    `self["${TOKEN}"]===1`,
+  ])('SPEC-TEST-02, SPEC-FB-04: allows the SDK reading the debug token global: %s', (code) => {
+    expect(run('check-dist.mjs', fakeDist({ 'assets/sdk.js': code })).status).toBe(0);
+  });
+  it.each([
+    `self.${TOKEN}=1`,
+    `globalThis.${TOKEN} = "abc"`,
+    `t.${TOKEN}=e||!0`,
+    `self["${TOKEN}"]=x`,
+    `self['${TOKEN}']=x`,
+    `self["${TOKEN}"] = x`,
+    `self.${TOKEN}||=1`,
+    `self.${TOKEN}??=1`,
+    `self.${TOKEN}&&=1`,
+    `self.${TOKEN} ||= 1`,
+  ])('SPEC-TEST-02, SPEC-FB-04: fails on an assignment to the debug token global: %s', (code) => {
+    const r = run('check-dist.mjs', fakeDist({ 'assets/leak.js': code }));
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain(TOKEN);
+  });
   it('SPEC-TEST-02, SPEC-FB-04: fails when dist is missing', () => {
     expect(run('check-dist.mjs', join(tmpdir(), 'cui-no-such-dist')).status).toBe(1);
   });
