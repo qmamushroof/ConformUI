@@ -24,7 +24,7 @@
     "check:size": "node scripts/check-size.mjs",
     "check:dist": "node scripts/check-dist.mjs",
     "test:e2e": "playwright test",
-    "icons": "pwa-assets-generator",
+    "icons": "pwa-assets-generator && pwa-assets-generator --config scripts/pwa-assets.favicon.config.mjs",
     "sample:capture": "node scripts/capture-sample.mjs",
     "check:fast": "npm run lint && npm run typecheck && npm run depcruise && npm test",
     "check": "npm run check:fast && npm run build && npm run check:size && npm run check:dist && npm run test:e2e"
