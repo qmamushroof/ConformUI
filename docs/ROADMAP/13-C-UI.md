@@ -46,8 +46,8 @@ Components take services and data as props; navigation is a callback prop (SPEC-
 **Accept:** keyboard selection test; overlay toggle state; status and severity never colour-only (icon + text); Not checked shows its reason.
 
 ### 13.6 Deep and demo UI · C · 0.3 h · needs 12.2, 13.5
-- [ ] `DeepAnalysisButton` with disabled reasons; `DeepConfirmSheet` listing the preview; Send mints consent from the trusted click (SPEC-DEEP-01, SPEC-DEEP-02).
-- [ ] `TrySampleButton`, `SampleBanner` ("Sample results (pre-computed)" + "Allow cloud to judge live"), `LoadFixedButton` (SPEC-DEMO-02, SPEC-DEMO-04, SPEC-DEMO-05); "Refined by Cloud" label.
+- [x] `DeepAnalysisButton` with disabled reasons; `DeepConfirmSheet` listing the preview; Send mints consent from the trusted click (SPEC-DEEP-01, SPEC-DEEP-02).
+- [x] `TrySampleButton`, `SampleBanner` ("Sample results (pre-computed)" + "Allow cloud to judge live"), `LoadFixedButton` (SPEC-DEMO-02, SPEC-DEMO-04, SPEC-DEMO-05); "Refined by Cloud" label.
 
 **Accept:** synthetic click (`isTrusted:false`) cannot mint; Cancel focused; offline and cap reasons shown (PRD-F-06.3).
 
