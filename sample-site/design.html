@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sample landing page (design)</title>
+  <link rel="stylesheet" href="assets/site.css">
+  <style>
+    :root { --section-gap: 96px; }
+  </style>
+</head>
+<body>
+  <nav aria-label="Main">
+    <div class="logo"><span class="logo-mark"></span><span>Sample Co.</span></div>
+    <ul><li><a href="#features">Features</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#docs">Docs</a></li><li><a href="#about">About</a></li></ul>
+    <button type="button">Sign up</button>
+  </nav>
+  <main>
+    <section class="hero" aria-label="Hero">
+      <div class="hero-copy">
+        <h1>Plan your week, calmly</h1>
+        <p class="subtitle">A simple planner for small teams. Sketch the week, share it, and keep everyone on the same page.</p>
+        <a class="cta" href="#start"><span>Start free</span><svg data-icon="arrow" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9h12M10 4l5 5-5 5"/></svg></a>
+      </div>
+      <div class="hero-art">
+        <svg role="img" aria-label="Illustration of a weekly planner with colourful task cards" width="520" height="400" viewBox="0 0 520 400" xmlns="http://www.w3.org/2000/svg">
+          <rect width="520" height="400" rx="24" fill="#e8eefc"/>
+          <rect x="40" y="48" width="440" height="304" rx="16" fill="#ffffff" stroke="#c5d0ee" stroke-width="2"/>
+          <rect x="40" y="48" width="440" height="52" rx="16" fill="#2f5be8"/>
+          <circle cx="72" cy="74" r="8" fill="#ffffff"/>
+          <circle cx="98" cy="74" r="8" fill="#ffffff" opacity=".6"/>
+          <circle cx="124" cy="74" r="8" fill="#ffffff" opacity=".3"/>
+          <rect x="64" y="124" width="120" height="96" rx="10" fill="#ffd166"/>
+          <rect x="200" y="124" width="120" height="136" rx="10" fill="#06a77d"/>
+          <rect x="336" y="124" width="120" height="76" rx="10" fill="#ef476f"/>
+          <rect x="64" y="236" width="120" height="84" rx="10" fill="#118ab2"/>
+          <rect x="336" y="216" width="120" height="104" rx="10" fill="#8a5cf6"/>
+          <rect x="216" y="280" width="88" height="12" rx="6" fill="#1c2333" opacity=".25"/>
+          <rect x="216" y="302" width="64" height="12" rx="6" fill="#1c2333" opacity=".15"/>
+        </svg>
+      </div>
+    </section>
+    <section class="features" id="features" aria-label="Features">
+      <h2>Everything in one place</h2>
+      <div class="cards">
+        <article class="card">
+          <svg viewBox="0 0 32 32" fill="none" stroke="#2f5be8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 6v20M6 16h20"/></svg>
+          <h3>Quick capture</h3>
+          <p>Jot a task in seconds and drop it onto the day it belongs to.</p>
+        </article>
+        <article class="card">
+          <svg viewBox="0 0 32 32" fill="none" stroke="#2f5be8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 26a8 8 0 0116 0M12 14a4 4 0 100-8 4 4 0 000 8zM22 20a6 6 0 016 6"/></svg>
+          <h3>Shared weeks</h3>
+          <p>Everyone sees the same week, so nobody has to ask what is next.</p>
+        </article>
+        <article class="card">
+          <svg viewBox="0 0 32 32" fill="none" stroke="#2f5be8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 6a7 7 0 00-7 7v6l-3 4h20l-3-4v-6a7 7 0 00-7-7zM13 27h6"/></svg>
+          <h3>Gentle reminders</h3>
+          <p>A quiet nudge the evening before, never a noisy alarm.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <span>Sample Co. is a made-up company used for demonstration only.</span>
+    <span><label for="updates">Email for updates</label><input id="updates" type="text"></span>
+  </footer>
+</body>
+</html>
