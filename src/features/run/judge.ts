@@ -135,6 +135,7 @@ export async function judgeStage(
   let asked = false;
   let declined = false;
   let usedPrecomputed = false;
+  let tripped = 0; // number guard trips of the current call (SPEC-KERNEL-08)
   const pcSet = ctx.precomputed ? precomputedSet(ctx.precomputed, items) : undefined;
 
   const planFor = (i: JudgeItem) =>
@@ -206,6 +207,7 @@ export async function judgeStage(
         ...(req.check.kind === 'judged' && { question: req.check.question }),
       },
       viewportWidth: v.captureImage.cssWidth,
+      regions: { design: designRect, implementation: captureCrop },
       measurements: need.facts.measurements,
       image: textOnly
         ? 'none'
@@ -241,7 +243,12 @@ export async function judgeStage(
         : out.verdict === 'uncertain' || (out.verdict === 'fail' && i.need.strict && confidence !== 'high')
           ? 'needs-review'
           : 'fail';
-    const say = (text: string) => (text.trim() !== '' && guardNumbers(text, p.allowed) ? text.trim() : '');
+    const say = (text: string) => {
+      if (text.trim() === '') return '';
+      if (guardNumbers(text, p.allowed)) return text.trim();
+      tripped++;
+      return '';
+    };
     const why = say(out.explanation);
     const fix = say(out.suggestedFix);
     const lead =
@@ -324,6 +331,8 @@ export async function judgeStage(
     };
     let parsed: JudgeOutput | undefined;
     let engine: 'on-device' | 'cloud' = 'cloud';
+    let result: RequirementResult | undefined;
+    tripped = 0;
     try {
       for (let attempt = 0; attempt < 2 && !parsed; attempt++) {
         const res = await d.ai.run(attempt === 0 ? req : { ...req, user: req.user + RETRY_SUFFIX }, signal);
@@ -335,11 +344,12 @@ export async function judgeStage(
         const ok = JudgeOutputSchema.safeParse(res.json);
         if (ok.success) parsed = ok.data;
       }
+      result = parsed ? mapOutput(i, parsed, p, textOnly, engine) : notChecked(i, 'ai-invalid-output');
+      if (tripped > 0) step.note = `numberGuardTripped: ${tripped}`;
     } finally {
       if (step.model !== undefined) env.emit(step);
     }
-    if (!parsed) return notChecked(i, 'ai-invalid-output');
-    return mapOutput(i, parsed, p, textOnly, engine);
+    return result;
   }
 
   for (let n = 0; n < items.length; n++) {

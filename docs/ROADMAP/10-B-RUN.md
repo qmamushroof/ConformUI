@@ -25,7 +25,7 @@ Touches `src/features/run` (not `ui/`, which is lane C 13.5) and `tests/*/run`, 
 **Accept:** rejudge leaves Measured/Visual results unchanged and keeps the Run id; SPEC §4.8.8: consent declined → `not-checked consent-declined` with zero cloud calls (PRD-M-06); sample with device unavailable → no event, precomputed labelled, `run.precomputed`; text-only judge uses `needsImage:false`; `no-inferred-items` hint; contract locked after save; measured steps report 0 bytes.
 
 ### 10.3 Severity, Findings, sort · B · 0.3 h · needs 10.2
-- [ ] Severity by impact, Inferred cap (SPEC-RUN-05, SPEC-RUN-06); deterministic templates and evidence rules, `guardNumbers` before AI text (SPEC-RUN-07, SPEC-KERNEL-08, S23); sort (SPEC-RUN-08).
+- [x] Severity by impact, Inferred cap (SPEC-RUN-05, SPEC-RUN-06); deterministic templates and evidence rules, `guardNumbers` before AI text (SPEC-RUN-07, SPEC-KERNEL-08, S23); sort (SPEC-RUN-08).
 
 **Accept:** no Inferred Finding above Minor (PRD-M-10); missing evidence → Needs review; invented-number fixture falls back to template (PRD-M-03); sort order test.
 
