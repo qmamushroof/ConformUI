@@ -12,17 +12,17 @@
 Owns `src/app/**` except `app/styles/` and `app/copy.ts` (lane C). Feature UI arrives as components; `app` passes `EngineBadge`, `ConsentSheet`, `PrivacyCounter` to other features as render props (S13). Every user-facing string comes from `app/copy.ts` (13.1).
 
 ### 7.1 env and composition root · A · 0.5 h · needs 6.1, 6.2, 8.4
-- [ ] `app/env.ts` zod validation; e2e makes Firebase vars optional (SPEC-APP-06).
-- [ ] `compose.ts`: storage → codec → `inlineMeasureClient()` → services with a lazy `AiEngine` proxy → dynamic `import('@fb')`/`import('@ai')` after first paint; `VITE_E2E` branch with `FakeAiEngine` and static defaults; `ServicesProvider` (SPEC-APP-01, SPEC-TEST-01, S22). Run and Deep factories are Step 0 stubs until M3.
+- [x] `app/env.ts` zod validation; e2e makes Firebase vars optional (SPEC-APP-06).
+- [x] `compose.ts`: storage → codec → `inlineMeasureClient()` → services with a lazy `AiEngine` proxy → dynamic `import('@fb')`/`import('@ai')` after first paint; `VITE_E2E` branch with `FakeAiEngine` and static defaults; `ServicesProvider` (SPEC-APP-01, SPEC-TEST-01, S22). Run and Deep factories are Step 0 stubs until M3.
 
-- [ ] zod jitless (spike D1 local, 4.5): a side-effect module `app/zod-jitless.ts` calling `z.config({ jitless: true })` and imported first in `main.tsx`, before anything that imports `@kernel` (zod 4 builds object schemas, and runs its `new Function` probe, at module load). The kernel is not changed. Keeps the enforced CSP free of `'unsafe-eval'`.
+- [x] zod jitless (spike D1 local, 4.5): a side-effect module `app/zod-jitless.ts` calling `z.config({ jitless: true })` and imported first in `main.tsx`, before anything that imports `@kernel` (zod 4 builds object schemas, and runs its `new Function` probe, at module load). The kernel is not changed. Keeps the enforced CSP free of `'unsafe-eval'`.
 
 **Accept:** `composeForTest()` builds the graph; prod `dist/` has no fake (SPEC-TEST-02); size check shows `firebase/*` outside the initial chunk (SPEC-PERF-04).
 
 ### 7.2 Routes, header, error handling · A · 0.5 h · needs 7.1
-- [ ] Routes of SPEC §4.13.2, lazy except `/`; `/` → `/welcome` until onboarded.
-- [ ] Screens from lane C mount as they merge (M2, M3); until then a route renders a placeholder heading.
-- [ ] Header with logo, Engine status pill, `PrivacyCounter`, nav, Offline pill (SPEC-APP-02); per-route error boundary and rejection mapping (SPEC-APP-03); titles and theme metas (SPEC-APP-04); no third-party scripts (SPEC-APP-05).
+- [x] Routes of SPEC §4.13.2, lazy except `/`; `/` → `/welcome` until onboarded.
+- [x] Screens from lane C mount as they merge (M2, M3); until then a route renders a placeholder heading.
+- [x] Header with logo, Engine status pill, `PrivacyCounter`, nav, Offline pill (SPEC-APP-02); per-route error boundary and rejection mapping (SPEC-APP-03); titles and theme metas (SPEC-APP-04); no third-party scripts (SPEC-APP-05).
 
 **Accept:** router tests for redirect, lazy routes, not-found; error boundary shows Reload; title per route.
 
