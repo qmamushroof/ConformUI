@@ -27,9 +27,10 @@ import {
   type ViewportId,
 } from '@kernel';
 import extractPrompt from './prompts/extract-contract.v1.md?raw';
+import { withInferred } from './review';
 import type { ContractDeps, ExtractOutcome } from './types';
 
-// SPEC-CON-01 steps 1 to 8, SPEC-CON-02, SPEC-CON-09. Inferred items (step 9) belong to task 11.3.
+// SPEC-CON-01 steps 1 to 9, SPEC-CON-02, SPEC-CON-03, SPEC-CON-09.
 
 type Ctx = { settings: Settings; status: EngineStatus; projectConsent?: ConsentToken };
 type Item = ExtractOutput['requirements'][number];
@@ -172,9 +173,10 @@ export async function runExtract(
     blobs.set(dr.id, blob);
   }
 
-  // Nothing AI-made yet: the existing Contract as it is, or an empty unsaved one (rule-based items are 11.3).
-  const untouched = (): Contract =>
-    existing ?? {
+  // Nothing AI-made: the existing Contract, or an empty one, plus rule-based Inferred items (SPEC-CON-03).
+  // They are saved only when there is something new, so a Contract with all P0 viewports designed stays unsaved.
+  const blocked = async (reason: NotCheckedReason): Promise<ExtractOutcome> => {
+    const base: Contract = existing ?? {
       id: d.ids.next(),
       projectId,
       version: 1,
@@ -182,9 +184,18 @@ export async function runExtract(
       locked: false,
       requirements: [],
     };
+    const withRules = withInferred(base, project);
+    if (withRules === base) return { kind: 'blocked', reason, contract: base };
+    const saved = existing?.locked
+      ? { ...nextContractVersion(existing, d.ids, d.clock), requirements: withRules.requirements }
+      : withRules;
+    await d.store.putContract(saved);
+    await d.store.put({ ...project, activeContractId: saved.id, updatedAt: d.clock.now() });
+    return { kind: 'blocked', reason, contract: saved };
+  };
 
   const stop = plans.find((p) => p.kind !== 'call');
-  if (stop?.kind === 'blocked') return { kind: 'blocked', reason: stop.reason, contract: untouched() };
+  if (stop?.kind === 'blocked') return blocked(stop.reason);
   if (stop?.kind === 'needs-consent') {
     const sends: SendList = { images: [], text: [extractPrompt] };
     for (const dr of designs) {
@@ -254,7 +265,7 @@ export async function runExtract(
         }
       } catch (e) {
         if (!(e instanceof CuiError)) throw e;
-        if (e.code !== 'AI_BAD_OUTPUT') return { kind: 'blocked', reason: failReason(e.code), contract: untouched() };
+        if (e.code !== 'AI_BAD_OUTPUT') return blocked(failReason(e.code));
       }
       if (!parsed) {
         push({ ...step, note: `Band ${band.index} could not be read. Add requirements manually.` });
@@ -330,7 +341,11 @@ export async function runExtract(
   const base: Contract = existing
     ? nextContractVersion(existing, d.ids, d.clock)
     : { id: d.ids.next(), projectId, version: 1, createdAt: d.clock.now(), locked: false, requirements: [] };
-  const contract: Contract = { ...base, requirements: [...aiItems, ...manual], extraction: trace };
+  // Step 9: rule-based Inferred items for P0 viewports without a design (SPEC-CON-04).
+  const contract: Contract = withInferred(
+    { ...base, requirements: [...aiItems, ...manual], extraction: trace },
+    project,
+  );
   await d.store.putContract(contract);
   const next: Project = project.isSample
     ? { ...project, pendingAiContractId: contract.id }

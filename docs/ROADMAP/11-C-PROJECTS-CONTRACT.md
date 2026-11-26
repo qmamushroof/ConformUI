@@ -25,8 +25,8 @@ Services only; screens are 13.3 and 13.4. Tests use the 3.6 in-memory stores, th
 **Accept:** SPEC §4.7.6: fixture boxes → snapped rects, ids, engine labels; malformed twice → band notice, other bands kept; numbers in statements replaced; `needs-consent` path makes zero `ai.run` calls (PRD-M-06); existing Contract → new unlocked version keeping manual items; sample → `pendingAiContractId`.
 
 ### 11.3 Inferred items, review, lock · C · 0.55 h · needs 11.2
-- [ ] Text-only and no-AI path (SPEC-CON-03); rule-based Inferred generation (SPEC-CON-04, S8, S24). The AI proposer (`prompts/infer-responsive.v1.md`) stays behind `feature_ai_infer_responsive`, default `false` (SPEC §4.1.6); build it only if buffer remains after M4 (unbudgeted).
-- [ ] `accept`, `editText`, `remove`, `add`, `loadCommitted`, `useAiContract`, `loadPrecomputedExtraction` (stored as `pendingAiContractId`, `origin:'precomputed'`, SPEC-DEMO-05); lock and versioning (SPEC-CON-05, SPEC-CON-06); region display data (SPEC-CON-07); row fields (SPEC-CON-08).
+- [x] Text-only and no-AI path (SPEC-CON-03); rule-based Inferred generation (SPEC-CON-04, S8, S24). The AI proposer (`prompts/infer-responsive.v1.md`) stays behind `feature_ai_infer_responsive`, default `false` (SPEC §4.1.6); build it only if buffer remains after M4 (unbudgeted).
+- [x] `accept`, `editText`, `remove`, `add`, `loadCommitted`, `useAiContract`, `loadPrecomputedExtraction` (stored as `pendingAiContractId`, `origin:'precomputed'`, SPEC-DEMO-05); lock and versioning (SPEC-CON-05, SPEC-CON-06); region display data (SPEC-CON-07); row fields (SPEC-CON-08).
 
 **Accept:** desktop-only design → `I-M-01` layout-fits + one `visible` per primary, all Inferred (PRD-M-10); no regeneration when Inferred items exist; edit after a Run → version 2 while the Run keeps version 1; locked edit without copy → `CONTRACT_LOCKED`.
 
