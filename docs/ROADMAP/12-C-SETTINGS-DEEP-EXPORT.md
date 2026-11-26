@@ -12,8 +12,8 @@
 Services and pure functions only; UI is 13.2 and 13.6.
 
 ### 12.1 SettingsService · C · 0.25 h · needs G0
-- [ ] `read`, `setMode`, `markOnboarded`; `engine()` → `EngineView` texts and `enableSteps` (SPEC-SET-01, SPEC-SET-02, SPEC-SET-04).
-- [ ] `downloadModel` only calls `AiEngine.downloadDeviceModel` (SPEC-SET-03); consent list data (SPEC-SET-05); `clearAllData` keeps `deepUsage`, resets mode and onboarding (SPEC-SET-07); `privacy(project)` (SPEC-SET-06 data).
+- [x] `read`, `setMode`, `markOnboarded`; `engine()` → `EngineView` texts and `enableSteps` (SPEC-SET-01, SPEC-SET-02, SPEC-SET-04).
+- [x] `downloadModel` only calls `AiEngine.downloadDeviceModel` (SPEC-SET-03); consent list data (SPEC-SET-05); `clearAllData` keeps `deepUsage`, resets mode and onboarding (SPEC-SET-07); `privacy(project)` (SPEC-SET-06 data).
 
 **Accept:** `EngineView` per `EngineStatus` and reason; clear keeps the Deep count.
 
