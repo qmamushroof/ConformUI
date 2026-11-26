@@ -31,8 +31,8 @@ Touches only `src/platform/firebase`, `src/platform/ai-engine`, `remoteconfig.te
 **Accept:** mocked SDK asserts mode and params per `AiMode`; `ONLY_ON_DEVICE` never gets `inCloudParams`; mapping test with both constants and the missing-value branch.
 
 ### 5.4 Guards, retry, timeouts, errors · A · 0.4 h · needs 5.3
-- [ ] Consent and device guards (SPEC-AI-02, S1); pre-call checks (SPEC-AI-09); image MIME and max side (SPEC-AI-11).
-- [ ] zod validation by caller schema with one retry (SPEC-AI-06); timeouts (SPEC-AI-08); error map per mode (SPEC-AI-10).
+- [x] Consent and device guards (SPEC-AI-02, S1); pre-call checks (SPEC-AI-09); image MIME and max side (SPEC-AI-11).
+- [x] zod validation by caller schema with one retry (SPEC-AI-06); timeouts (SPEC-AI-08); error map per mode (SPEC-AI-10).
 
 **Accept:** SPEC §4.3.7 guard table; malformed fixture → retry → `AI_BAD_OUTPUT`; timeout via fake timers → `AI_FAILED`; error map per mode incl. `AI_NOT_ENABLED` vs `DEVICE_UNAVAILABLE`.
 

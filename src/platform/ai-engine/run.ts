@@ -1,0 +1,201 @@
+import type { FirebaseApp } from '@fb';
+import type { AiRequest, AiResponse, Clock, EngineStatus, RuntimeConfig } from '@kernel';
+import { CuiError } from '@kernel';
+import { AIError } from 'firebase/ai';
+import { bytesSentFor, createModelFactory, engineFromSource, ON_DEVICE_MODEL_NAME } from './model-factory';
+import { outputSchemaFor } from './schema-for';
+
+// SPEC-AI-02, SPEC-AI-06, SPEC-AI-08..11: guards, one validated retry, timeouts and the error map around one request.
+
+const ON_DEVICE_TIMEOUT_MS = 45_000;
+const CLOUD_TIMEOUT_MS = 60_000;
+const RETRY_SUFFIX = '\nReturn only valid JSON matching the schema.';
+const BLOCKING_FINISH = new Set(['SAFETY', 'BLOCKLIST', 'PROHIBITED_CONTENT', 'SPII', 'RECITATION']);
+
+export interface RunnerDeps {
+  app: FirebaseApp;
+  config: RuntimeConfig;
+  clock: Clock;
+  /** Device and connectivity facts (SPEC-AI-07). Only called for modes that may use the device. */
+  status: () => Promise<EngineStatus>;
+  /** Connectivity for the cloud-only path; defaults to `navigator.onLine`. */
+  online?: () => boolean;
+}
+
+interface SdkResponse {
+  text(): string;
+  inferenceSource?: string;
+  candidates?: { finishReason?: string }[];
+  promptFeedback?: { blockReason?: string };
+}
+
+/** Raised inside the attempt loop for output that failed to parse or validate; triggers the single retry. */
+class BadOutput extends Error {}
+
+function isAbortLike(e: unknown): boolean {
+  return typeof e === 'object' && e !== null && (e as { name?: string }).name === 'AbortError';
+}
+
+export function createRunner(d: RunnerDeps) {
+  const factory = createModelFactory({ app: d.app, config: d.config });
+  const isOnline = d.online ?? (() => (typeof navigator === 'undefined' ? true : navigator.onLine !== false));
+
+  /** SPEC-AI-10. Never forwards SDK text to the UI. */
+  function mapError(e: unknown, mode: AiRequest['mode']): CuiError {
+    if (e instanceof CuiError) return e;
+    if (e instanceof AIError) {
+      const status = e.customErrorData?.status;
+      if (e.code === 'api-not-enabled') {
+        return mode === 'ONLY_ON_DEVICE'
+          ? new CuiError('DEVICE_UNAVAILABLE', undefined, { cause: e })
+          : new CuiError('AI_NOT_ENABLED', undefined, { cause: e });
+      }
+      if (e.code === 'unsupported' && mode === 'ONLY_ON_DEVICE') {
+        return new CuiError('DEVICE_UNAVAILABLE', undefined, { cause: e });
+      }
+      if (status === 429) return new CuiError('QUOTA_EXCEEDED', undefined, { cause: e });
+      if (status === 401 || status === 403) return new CuiError('APPCHECK_FAILED', undefined, { cause: e });
+      if (e.code === 'fetch-error' && !isOnline()) return new CuiError('OFFLINE', undefined, { cause: e });
+    }
+    return new CuiError('AI_FAILED', undefined, { cause: e });
+  }
+
+  async function guardPreCall(req: AiRequest, hasImages: boolean): Promise<void> {
+    const cloudCapable = req.mode !== 'ONLY_ON_DEVICE';
+    // SPEC-AI-02 (a)
+    if (cloudCapable) {
+      const scope = req.consent?.scope;
+      if (!scope || (req.task === 'deep-analysis' && scope !== 'deep')) throw new CuiError('CONSENT_REQUIRED');
+    }
+    // SPEC-AI-11
+    for (const image of req.images) {
+      if ((image.mime as string) !== 'image/jpeg' && (image.mime as string) !== 'image/png') {
+        throw new CuiError('IMAGE_UNSUPPORTED');
+      }
+      if (image.base64.startsWith('data:')) throw new CuiError('IMAGE_UNSUPPORTED');
+    }
+    // SPEC-AI-09
+    if (cloudCapable && !d.config.get().cloud_enabled) throw new CuiError('CLOUD_DISABLED');
+    if (req.mode === 'ONLY_IN_CLOUD') {
+      if (!isOnline()) throw new CuiError('OFFLINE');
+      return;
+    }
+    const status = await d.status();
+    const deviceUsable = status.device === 'available' && (!hasImages || status.deviceImage === true);
+    if (req.mode === 'ONLY_ON_DEVICE') {
+      // SPEC-AI-02 (c): never start the silent waiting download.
+      if (status.device === 'downloading') throw new CuiError('DEVICE_DOWNLOADING');
+      if (status.device !== 'available') throw new CuiError('DEVICE_UNAVAILABLE');
+      if (!deviceUsable) throw new CuiError('DEVICE_NO_IMAGE');
+    } else if (!deviceUsable && !isOnline()) {
+      throw new CuiError('OFFLINE');
+    }
+  }
+
+  /** SPEC-AI-08: one SDK call with a timeout and the caller's signal; always cleans up. */
+  async function callSdk(
+    model: { generateContent(c: never, o: { signal: AbortSignal }): Promise<{ response: SdkResponse }> },
+    content: unknown,
+    timeoutMs: number,
+    external: AbortSignal | undefined,
+  ): Promise<SdkResponse> {
+    const ctl = new AbortController();
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let onAbort: (() => void) | undefined;
+    const guard = new Promise<never>((_, reject) => {
+      timer = setTimeout(() => {
+        ctl.abort();
+        reject(new CuiError('AI_FAILED', 'The AI took too long'));
+      }, timeoutMs);
+      onAbort = () => {
+        ctl.abort();
+        reject(new CuiError('AI_FAILED', 'The AI request was cancelled'));
+      };
+      external?.addEventListener('abort', onAbort, { once: true });
+    });
+    try {
+      const result = await Promise.race([model.generateContent(content as never, { signal: ctl.signal }), guard]);
+      return result.response;
+    } finally {
+      clearTimeout(timer);
+      if (onAbort) external?.removeEventListener('abort', onAbort);
+    }
+  }
+
+  function readJson(task: AiRequest['task'], response: SdkResponse): unknown {
+    // SPEC-AI-10: blocked or empty candidates.
+    const first = response.candidates?.[0];
+    if (response.promptFeedback?.blockReason || !first || BLOCKING_FINISH.has(first.finishReason ?? '')) {
+      throw new CuiError('AI_BLOCKED');
+    }
+    let text: string;
+    try {
+      text = response.text();
+    } catch (e) {
+      throw new CuiError('AI_BLOCKED', undefined, { cause: e });
+    }
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(text);
+    } catch {
+      throw new BadOutput();
+    }
+    const checked = outputSchemaFor(task).safeParse(parsed);
+    if (!checked.success) throw new BadOutput();
+    return checked.data;
+  }
+
+  async function run(req: AiRequest, signal?: AbortSignal): Promise<AiResponse> {
+    if (signal?.aborted) throw new CuiError('AI_FAILED', 'The AI request was cancelled');
+    const hasImages = req.images.length > 0;
+    await guardPreCall(req, hasImages);
+
+    const started = d.clock.now();
+    try {
+      const { model } = factory.get({
+        mode: req.mode,
+        task: req.task,
+        system: req.system,
+        promptVersion: req.promptVersion,
+        hasImages,
+      });
+      const timeoutMs = req.mode === 'ONLY_ON_DEVICE' ? ON_DEVICE_TIMEOUT_MS : CLOUD_TIMEOUT_MS;
+      const images = req.images.map((i) => ({ type: 'inlineData', inlineData: { mimeType: i.mime, data: i.base64 } }));
+      let payloadBytes = 0;
+      for (let attempt = 0; attempt < 2; attempt++) {
+        const user = attempt === 0 ? req.user : req.user + RETRY_SUFFIX;
+        const content = [{ type: 'text', text: user }, ...images];
+        payloadBytes += bytesSentFor('cloud', { system: req.system, user, images: req.images });
+        try {
+          const response = await callSdk(model as never, content, timeoutMs, signal);
+          // SPEC-AI-04, SPEC-AI-02 (b): throws AI_FAILED for a missing source or an ONLY_ON_DEVICE cloud result.
+          const engine = engineFromSource(response.inferenceSource, req.mode);
+          if (req.mode === 'ONLY_ON_DEVICE' && engine !== 'on-device') throw new CuiError('AI_FAILED');
+          const json = readJson(req.task, response);
+          return {
+            json,
+            engine,
+            model: engine === 'on-device' ? ON_DEVICE_MODEL_NAME : factory.get(specOf(req, hasImages)).modelName,
+            durationMs: d.clock.now() - started,
+            bytesSent: engine === 'cloud' ? payloadBytes : 0,
+            requestedMode: req.mode,
+          };
+        } catch (e) {
+          const retryable = e instanceof BadOutput || (e instanceof AIError && e.code === 'parse-failed');
+          if (!retryable || signal?.aborted) throw e;
+          if (attempt === 1) throw new CuiError('AI_BAD_OUTPUT', undefined, { cause: e });
+        }
+      }
+      throw new CuiError('AI_BAD_OUTPUT');
+    } catch (e) {
+      if (isAbortLike(e)) throw new CuiError('AI_FAILED', undefined, { cause: e });
+      throw mapError(e, req.mode);
+    }
+  }
+
+  return { run };
+}
+
+function specOf(req: AiRequest, hasImages: boolean) {
+  return { mode: req.mode, task: req.task, system: req.system, promptVersion: req.promptVersion, hasImages };
+}
