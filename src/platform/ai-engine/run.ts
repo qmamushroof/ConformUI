@@ -18,6 +18,8 @@ export interface RunnerDeps {
   clock: Clock;
   /** Device and connectivity facts (SPEC-AI-07). Only called for modes that may use the device. */
   status: () => Promise<EngineStatus>;
+  /** The shared model factory (SPEC-AI-03); the runner builds its own when omitted. */
+  factory?: ReturnType<typeof createModelFactory>;
   /** Connectivity for the cloud-only path; defaults to `navigator.onLine`. */
   online?: () => boolean;
 }
@@ -37,7 +39,7 @@ function isAbortLike(e: unknown): boolean {
 }
 
 export function createRunner(d: RunnerDeps) {
-  const factory = createModelFactory({ app: d.app, config: d.config });
+  const factory = d.factory ?? createModelFactory({ app: d.app, config: d.config });
   const isOnline = d.online ?? (() => (typeof navigator === 'undefined' ? true : navigator.onLine !== false));
 
   /** SPEC-AI-10. Never forwards SDK text to the UI. */

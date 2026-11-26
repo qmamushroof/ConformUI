@@ -19,9 +19,9 @@ Live spikes run on the demo machine (2.8) from a throwaway branch `spike/hybrid`
 **Accept:** generated files committed; record present.
 
 ### 4.2 A1: on-device image availability and flag · A · 0.2 h · needs 5.1, 2.5, 2.8
-- [ ] With the flag on and off: log `LanguageModel.availability({ expectedInputs: [{ type: 'image' }] })` (value or throw).
-- [ ] Run one `ONLY_ON_DEVICE` image prompt through the hybrid model.
-- [ ] Record at the SPEC-AI-07 code site; amend SPEC-AI-07 / SPEC-SET-02 if the signal or flag set differs.
+- [x] With the flag on and off: log `LanguageModel.availability({ expectedInputs: [{ type: 'image' }] })` (value or throw).
+- [x] Run one `ONLY_ON_DEVICE` image prompt through the hybrid model.
+- [x] Record at the SPEC-AI-07 code site; amend SPEC-AI-07 / SPEC-SET-02 if the signal or flag set differs.
 
 **Fallback:** no reliable signal → `deviceImage: 'unknown'`, always show `enableSteps` on desktop Chrome, and Judged checks run text-only from the DOM snapshot (SPEC §4.8.2 step 3).
 **Accept:** record present; status mapping test in 5.5 uses the observed values.

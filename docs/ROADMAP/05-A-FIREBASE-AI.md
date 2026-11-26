@@ -37,8 +37,8 @@ Touches only `src/platform/firebase`, `src/platform/ai-engine`, `remoteconfig.te
 **Accept:** SPEC §4.3.7 guard table; malformed fixture → retry → `AI_BAD_OUTPUT`; timeout via fake timers → `AI_FAILED`; error map per mode incl. `AI_NOT_ENABLED` vs `DEVICE_UNAVAILABLE`.
 
 ### 5.5 status() and downloadDeviceModel() · A · 0.2 h · needs 5.3, 4.2 answer if available
-- [ ] Status detection and mapping (SPEC-AI-07) with the A1 answer from 4.2.
-- [ ] `downloadDeviceModel(onProgress)` builds the `ONLY_ON_DEVICE` instance reused for prompts (SPEC-AI-03).
+- [x] Status detection and mapping (SPEC-AI-07) with the A1 answer from 4.2.
+- [x] `downloadDeviceModel(onProgress)` builds the `ONLY_ON_DEVICE` instance reused for prompts (SPEC-AI-03).
 
 **Accept:** status table test with stubbed `LanguageModel` (every `device` value and `reason`); download reuses the cached instance.
 
