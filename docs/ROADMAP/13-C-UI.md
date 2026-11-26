@@ -20,8 +20,8 @@ Components take services and data as props; navigation is a callback prop (SPEC-
 **Accept:** contrast test green and fails when a token drops below its ratio; one component test per `ErrorCode` copy.
 
 ### 13.2 Settings UI and shared badges · C · 0.4 h · needs 12.1, 13.1
-- [ ] `EngineBadge` (SPEC-SET-09), `PrivacyCounter` (SPEC-SET-06), `EnginePanel` with progressbar and copyable enable steps, `ConsentSheet` (Cancel default focus, focus trap, Esc, passes the click event up).
-- [ ] `SettingsScreen` (mode radios, consent list with Revoke, Clear all data confirm) and `OnboardingScreen` (SPEC-SET-08); cut boundary per SPEC-SET-10.
+- [x] `EngineBadge` (SPEC-SET-09), `PrivacyCounter` (SPEC-SET-06), `EnginePanel` with progressbar and copyable enable steps, `ConsentSheet` (Cancel default focus, focus trap, Esc, passes the click event up).
+- [x] `SettingsScreen` (mode radios, consent list with Revoke, Clear all data confirm) and `OnboardingScreen` (SPEC-SET-08); cut boundary per SPEC-SET-10.
 
 **Accept:** badge text + icon + `aria-label` per engine and origin (PRD-M-04); progressbar values; counter states; sheet focus behaviour.
 
