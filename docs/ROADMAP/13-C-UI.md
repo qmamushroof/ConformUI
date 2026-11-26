@@ -26,9 +26,9 @@ Components take services and data as props; navigation is a callback prop (SPEC-
 **Accept:** badge text + icon + `aria-label` per engine and origin (PRD-M-04); progressbar values; counter states; sheet focus behaviour.
 
 ### 13.3 Projects, Project page, snippet UI · C · 0.4 h · needs 11.1, 13.1
-- [ ] `ProjectsScreen` (cards, empty state), `ProjectInputs` with stepper and per-viewport columns, `ImageDropZone` (button, picker, drop, paste; formats and limits printed) (SPEC §5.1, SPEC-PROJ-01, SPEC-PROJ-02).
-- [ ] Viewport select prefilled from `suggestViewport`, changeable before save (SPEC-PROJ-03, PRD-F-02.3); stale notice "Captures changed: Re-verify" per viewport (derived: latest Run `captureIds` ≠ current capture) (SPEC-PROJ-04).
-- [ ] `SnippetPanel` (code block, Copy, 3 steps, privacy line) and `SnapshotPasteField` (errors, "Use anyway") (PRD-F-13.1, SPEC-SNIP-08).
+- [x] `ProjectsScreen` (cards, empty state), `ProjectInputs` with stepper and per-viewport columns, `ImageDropZone` (button, picker, drop, paste; formats and limits printed) (SPEC §5.1, SPEC-PROJ-01, SPEC-PROJ-02).
+- [x] Viewport select prefilled from `suggestViewport`, changeable before save (SPEC-PROJ-03, PRD-F-02.3); stale notice "Captures changed: Re-verify" per viewport (derived: latest Run `captureIds` ≠ current capture) (SPEC-PROJ-04).
+- [x] `SnippetPanel` (code block, Copy, 3 steps, privacy line) and `SnapshotPasteField` (errors, "Use anyway") (PRD-F-13.1, SPEC-SNIP-08).
 
 **Accept:** drop zone is a keyboard-operable button; each input path calls the service; viewport can be changed before save; stale notice only on the replaced viewport; invalid snapshot shows ≤ 5 messages.
 

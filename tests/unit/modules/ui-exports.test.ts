@@ -9,11 +9,9 @@ import { describe, expect, it } from 'vitest';
 
 // SPEC-ARCH-11: every index.ts declares its full public API from Step 0, UI components included (stubs until lane C).
 const UI: [string, Record<string, unknown>, string[]][] = [
-  ['projects', projects, ['ProjectsScreen', 'ProjectInputs', 'ImageDropZone']],
   ['run', run, ['RunScreen', 'FindingList', 'FindingDetail', 'ComparisonView', 'EngineTrace', 'RunHistory']],
   ['deep-analysis', deep, ['DeepAnalysisButton', 'DeepConfirmSheet']],
   ['demo', demo, ['TrySampleButton', 'SampleBanner', 'LoadFixedButton']],
-  ['dom-snippet', snippet, ['SnippetPanel', 'SnapshotPasteField']],
 ];
 
 describe('SPEC-ARCH-11: UI component names are declared in each module index', () => {
@@ -47,6 +45,20 @@ describe('SPEC-ARCH-11, 13.4: contract UI names are implemented components', () 
   it('SPEC-ARCH-11: contract exports ContractScreen, RequirementRow, RequirementEditor as functions', () => {
     for (const n of ['ContractScreen', 'RequirementRow', 'RequirementEditor']) {
       expect(typeof (contract as Record<string, unknown>)[n], n).toBe('function');
+    }
+  });
+});
+
+describe('SPEC-ARCH-11, 13.3: projects and dom-snippet UI names are implemented components', () => {
+  it('SPEC-ARCH-11: projects exports ProjectsScreen, ProjectInputs, ImageDropZone, ProjectHead as functions', () => {
+    for (const n of ['ProjectsScreen', 'ProjectInputs', 'ImageDropZone', 'ProjectHead', 'StateNotice']) {
+      expect(typeof (projects as Record<string, unknown>)[n], n).toBe('function');
+    }
+  });
+
+  it('SPEC-ARCH-11: dom-snippet exports SnippetPanel and SnapshotPasteField as functions', () => {
+    for (const n of ['SnippetPanel', 'SnapshotPasteField']) {
+      expect(typeof (snippet as Record<string, unknown>)[n], n).toBe('function');
     }
   });
 });
