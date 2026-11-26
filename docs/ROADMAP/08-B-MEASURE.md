@@ -18,7 +18,7 @@ Pure TypeScript, no DOM types, runs in Node (SPEC-ARCH-04, SPEC-ARCH-06 (e)). To
 **Accept:** decodes a committed PNG to an `RgbaImage` with expected size.
 
 ### 8.2 Background, ink, snapping, location · B · 0.6 h · needs 8.1, 9.4
-- [ ] Background and ink (SPEC-MEAS-06); `snapRegion` (SPEC-MEAS-07); `locateOnCapture` (SPEC-MEAS-08).
+- [x] Background and ink (SPEC-MEAS-06); `snapRegion` (SPEC-MEAS-07); `locateOnCapture` (SPEC-MEAS-08).
 
 **Accept:** snapping on fixtures is deterministic; locate finds a shifted crop with the tie rules; the 2 px check against the verified Contract lands in 9.5.
 
