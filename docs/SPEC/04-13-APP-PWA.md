@@ -37,7 +37,7 @@
 
 `SPEC-PWA-01` (PRD-D-31): two owner sources, nothing else. Icons rendered at **48 px and above** derive from `docs/brand/logo.svg`, copied unchanged to `public/icon.svg`; icons **below 48 px** derive from `docs/brand/favicon.svg` (same mark, 16 px grid, 1 px stroke), copied unchanged to `public/favicon.svg`. `pwa-assets.config.ts` (`@vite-pwa/assets-generator`, `npm run icons`): from `icon.svg` → 192/512 `any`, apple-touch 180, and 512 `maskable` with `maskable: { padding: 0.2, resizeOptions: { background: '#FFFFFF' } }`; from `favicon.svg` → `favicon.ico` with 16 and 32 px (verified 2026-11-26: the generator emits one size per `.ico`, so `favicon.ico` is 32 px only; the `favicon.svg` link covers 16 px; the favicon runs from its own config `scripts/pwa-assets.favicon.config.mjs` chained in `npm run icons`, because one config applies one preset to all images). Maskable safe zone: in `logo.svg` the mark spans 11–53 of 64 (paths 12–52, stroke 2), half-extent 21/64; padding 0.2 scales it to ≤ 0.8, so its corners sit at 21 × 0.8 × √2 ≈ 23.8/64 ≈ 37 % from centre, inside the 40 %-radius safe circle. The in-app header uses `icon.svg` inline with stroke mapped to token `accent`.
 
-`SPEC-PWA-02`: install criteria per Chrome (manifest, icons, HTTPS, service worker); `beforeinstallprompt` captured → "Install app" button in header/settings; README documents install on desktop Chrome and Android (PRD-F-12.1, PRD-M-12).
+`SPEC-PWA-02`: install criteria per Chrome (manifest, icons, HTTPS, service worker); `beforeinstallprompt` captured → "Install app" button in header/settings; README documents install on desktop Chrome; Android install is not device-verified (PRD-D-32) (PRD-F-12.1, PRD-M-12).
 
 ## 4.13.4 Service worker (`src/app/sw.ts`, Workbox)
 

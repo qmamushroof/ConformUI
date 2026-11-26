@@ -33,7 +33,7 @@ One Firebase project (production + preview channels). `app/env.ts` validates wit
 1. Create the Firebase project; enable **AI Logic** with the **Gemini Developer API** (PRD-D-26); keep AI monitoring off (`SPEC-SEC-05`).
 2. Register the Web app; create a score-based reCAPTCHA Enterprise Web key for the Hosting domains; register it in App Check; enforce App Check for AI Logic; register dev debug tokens before first run (`SPEC-FB-05`). Add each Hosting preview-channel host (`<project>--<channel>-<hash>.web.app`) to the reCAPTCHA key domains and API-key referrers before testing on it.
 3. Publish Remote Config manually from `remoteconfig.template.json` (console import, or `npx firebase deploy --only remoteconfig`) (`SPEC-FB-08`).
-4. Budget alert, AI Logic quota, API-key referrer restriction (`SPEC-SEC-09`).
+4. API-key referrer restriction (`SPEC-SEC-09`). On the Spark plan the default AI Logic per-user quota is kept and no budget alert applies; set both if upgraded to Blaze.
 5. Fill `<HOSTED_URL>` in README after the first deploy.
 
 ## 8.4 CI (GitHub Actions, `SPEC-DEPLOY-03`)

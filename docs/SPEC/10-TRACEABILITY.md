@@ -57,7 +57,7 @@ PRD column uses short form; read as `PRD-<id>`.
 
 | # | Item | Spike step |
 |---|---|---|
-| A1 | Multimodal flag detection and current flag requirements | In Chrome stable and Chrome ≥ 139 with/without `#prompt-api-for-gemini-nano-multimodal-input`: log `LanguageModel.availability({expectedInputs:[{type:'image'}]})` (value or throw); run one `ONLY_ON_DEVICE` image prompt; adjust `SPEC-AI-07`/`SPEC-SET-02`. |
+| A1 | Multimodal flag detection and current flag requirements | In Chrome stable and Chrome ≥ 139 with/without `#prompt-api-multimodal-input`: log `LanguageModel.availability({expectedInputs:[{type:'image'}]})` (value or throw); run one `ONLY_ON_DEVICE` image prompt; adjust `SPEC-AI-07`/`SPEC-SET-02`. |
 | A2 | On-device image token cost; multiple images per prompt | Send one 1024 px JPEG band + prompt, then two images; record success, latency and any token-limit error; set `SPEC-AI-11` max side (down to 768 if needed). |
 | A3 | Model identity ("Gemini Nano 4") | Record `chrome://on-device-internals` model info on the demo machine; README states what Chrome reports. |
 | A4 | Cloud model ids `gemini-3.5-flash-lite`, `gemini-3.8-flash` available for the Gemini Developer API in AI Logic | Console model list + one `ONLY_IN_CLOUD` call each; update Remote Config defaults if not. |
