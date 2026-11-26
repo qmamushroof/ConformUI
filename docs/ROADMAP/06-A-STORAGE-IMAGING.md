@@ -12,9 +12,9 @@
 Until this merges (M2), features use the in-memory stores from 3.6. Touches only `src/platform/storage`, `src/platform/imaging` and their tests.
 
 ### 6.1 openStorage · A · 0.75 h · needs G0
-- [ ] DB `conformui` v1, stores and indexes, upgrade switch, newer-DB read-only (SPEC-STORE-01).
-- [ ] `ProjectStore`, `BlobStore`, `SettingsStore` implementations; one-transaction cascade `remove`; `clearAll` keeps `deepUsage` (SPEC-STORE-02).
-- [ ] zod-validated reads, invalid record skipped and counted (SPEC-STORE-03); `STORAGE_UNAVAILABLE` (open fails) and `STORAGE_FAILED` mapping and one-time `persist()` (SPEC-STORE-04); no network (SPEC-STORE-05).
+- [x] DB `conformui` v1, stores and indexes, upgrade switch, newer-DB read-only (SPEC-STORE-01).
+- [x] `ProjectStore`, `BlobStore`, `SettingsStore` implementations; one-transaction cascade `remove`; `clearAll` keeps `deepUsage` (SPEC-STORE-02).
+- [x] zod-validated reads, invalid record skipped and counted (SPEC-STORE-03); `STORAGE_UNAVAILABLE` (open fails) and `STORAGE_FAILED` mapping and one-time `persist()` (SPEC-STORE-04); no network (SPEC-STORE-05).
 
 **Accept:** SPEC §4.6.4 storage tests with `fake-indexeddb`: round trip per store, cascade leaves no orphan blobs, corrupt record skipped, `clearAll` keeps `deepUsage`, newer version read-only, open failure (stubbed `indexedDB.open` error) → `CuiError` `STORAGE_UNAVAILABLE` with no store touched.
 
