@@ -23,9 +23,9 @@ Touches `src/features/dom-snippet` and `src/features/demo` (not their `ui/`), `s
 **Accept:** fixtures in `tests/fixtures/snapshots/`: invalid JSON (line), wrong version, oversized, width mismatch, ≤ 5 messages.
 
 ### 9.3 Sample site · B · 0.55 h · needs G0
-- [ ] `sample-site/design.html`, `flawed/index.html`, `fixed/index.html`, `assets/` (OFL font with its licence file, inline SVG art). Unbranded: nav placeholder "Sample Co." (S28, PRD-D-28). Original copy and artwork only.
-- [ ] Planted defects with the exact values of the SPEC-DEMO-01 table; fixed page leaves defect 6 unfixed; passing items present (logo, footer, mobile CTA visible).
-- [ ] A text input inside the flawed page for the E7 privacy test.
+- [x] `sample-site/design.html`, `flawed/index.html`, `fixed/index.html`, `assets/` (OFL font with its licence file, inline SVG art). Unbranded: nav placeholder "Sample Co." (S28, PRD-D-28). Original copy and artwork only.
+- [x] Planted defects with the exact values of the SPEC-DEMO-01 table; fixed page leaves defect 6 unfixed; passing items present (logo, footer, mobile CTA visible).
+- [x] A text input inside the flawed page for the E7 privacy test.
 
 **Accept:** values asserted on the captured snapshots in 9.4.
 
