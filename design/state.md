@@ -1,4 +1,4 @@
-# do-design state
+# Design state
 phase: done
 depth:
 mode: full
@@ -10,7 +10,7 @@ brief: ConformUI — installable PWA for design acceptance testing of AI-built s
 stack: none scaffolded; SPEC plans React 19 + Vite 8 + Tailwind v4 (@theme tokens), inline SVG icons, no UI kit
 target: static (design/prototype/), structured to port to React/Tailwind
 shots: playwright
-prefs: none (no ~/.claude/do-design/preferences.md, no .do-design/rules.md)
+prefs: none
 domains: devtools / QA
 platforms: web (PWA), desktop-first + mobile reviewer (Android share target)
 
