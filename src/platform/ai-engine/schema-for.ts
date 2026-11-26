@@ -5,7 +5,9 @@ import { Schema } from 'firebase/ai';
 // SPEC-AI-05: one mapper. zod -> JSON Schema (draft-7, output side) -> normalised once -> device schema as is,
 // cloud Firebase `Schema` built from the same normalised tree. Length limits (maxLength) stay on the device schema
 // only; zod re-checks every limit after the call, so it remains the authority.
-// SPEC-AI-05 verified (pending spike 4.3, A6): on-device acceptance of each task's JSON Schema.
+// SPEC-AI-05 verified 2026-11-26: Chrome 158 / Gemma 4 on-device accepted all four task device JSON Schemas as `responseConstraint`
+// (extract-contract 997 chars with image, infer-responsive 465, judge 348, deep-analysis 514); outputs parsed and passed the kernel zod
+// schemas. No flattening needed. Explanations can be cut at the schema maxLength, which zod then re-checks.
 
 type Json = { [k: string]: unknown };
 

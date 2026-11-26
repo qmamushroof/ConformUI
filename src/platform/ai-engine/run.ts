@@ -59,6 +59,8 @@ export function createRunner(d: RunnerDeps) {
       if (status === 401 || status === 403) return new CuiError('APPCHECK_FAILED', undefined, { cause: e });
       if (e.code === 'fetch-error' && !isOnline()) return new CuiError('OFFLINE', undefined, { cause: e });
     }
+    // SPEC-AI-10 verified 2026-11-26 (spike A4): both default cloud ids answered ONLY_IN_CLOUD (gemini-3.5-flash-lite 2.3-7 s, gemini-3.8-flash 21 s).
+    // One transient HTTP 500 "high demand" was seen; it falls to AI_FAILED, which SPEC-AI-08 treats as retryable. No change.
     return new CuiError('AI_FAILED', undefined, { cause: e });
   }
 

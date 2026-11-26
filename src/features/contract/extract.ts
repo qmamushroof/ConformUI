@@ -35,7 +35,9 @@ type Ctx = { settings: Settings; status: EngineStatus; projectConsent?: ConsentT
 type Item = ExtractOutput['requirements'][number];
 
 export const EXTRACT_PROMPT_VERSION = 'extract-contract.v1';
-const ON_DEVICE_MAX_SIDE = 1024; // SPEC-AI-11
+// SPEC-AI-11 verified 2026-11-26: on-device (Gemma 4, Chrome 158) took one 1024x512 JPEG q0.85 band in ~6.6 s and two such images in one
+// prompt in ~13.8 s, with no token-limit error. Keep 1024; no 768 fallback.
+const ON_DEVICE_MAX_SIDE = 1024;
 const CLOUD_MAX_SIDE = 1536;
 const MAX_PER_BAND = 8;
 const DEDUPE_IOU = 0.6;

@@ -15,6 +15,8 @@ Owns `src/app/**` except `app/styles/` and `app/copy.ts` (lane C). Feature UI ar
 - [ ] `app/env.ts` zod validation; e2e makes Firebase vars optional (SPEC-APP-06).
 - [ ] `compose.ts`: storage → codec → `inlineMeasureClient()` → services with a lazy `AiEngine` proxy → dynamic `import('@fb')`/`import('@ai')` after first paint; `VITE_E2E` branch with `FakeAiEngine` and static defaults; `ServicesProvider` (SPEC-APP-01, SPEC-TEST-01, S22). Run and Deep factories are Step 0 stubs until M3.
 
+- [ ] zod jitless (spike D1 local, 4.5): a side-effect module `app/zod-jitless.ts` calling `z.config({ jitless: true })` and imported first in `main.tsx`, before anything that imports `@kernel` (zod 4 builds object schemas, and runs its `new Function` probe, at module load). The kernel is not changed. Keeps the enforced CSP free of `'unsafe-eval'`.
+
 **Accept:** `composeForTest()` builds the graph; prod `dist/` has no fake (SPEC-TEST-02); size check shows `firebase/*` outside the initial chunk (SPEC-PERF-04).
 
 ### 7.2 Routes, header, error handling · A · 0.5 h · needs 7.1
