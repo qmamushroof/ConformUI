@@ -1,8 +1,8 @@
-import { ProjectsScreen, StateNotice } from '@projects';
 import { type ComponentType, type FC, lazy, type ReactNode, Suspense, useEffect, useState } from 'react';
-import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router';
-import { stateCopy } from './copy';
+import { Navigate, Route, Routes, useLocation } from 'react-router';
+import { NotFound } from './not-found';
 import { Placeholder, RouteBoundary } from './route-boundary';
+import ProjectsRoute from './screens/projects';
 import { useServices } from './services';
 import { Shell, type ShellProps } from './shell';
 import type { RouteKey } from './titles';
@@ -29,6 +29,7 @@ export interface AppRoutesProps extends ShellProps {
   screens?: Partial<ScreenOverrides>;
 }
 
+const Projects_ = ProjectsRoute;
 const Welcome = lazy(() => import('./screens/welcome'));
 const Snippet = lazy(() => import('./screens/snippet'));
 const Settings = lazy(() => import('./screens/settings'));
@@ -69,17 +70,8 @@ const Home: FC<{ Projects: Screen }> = ({ Projects }) => {
   return <Projects />;
 };
 
-const NotFound: FC = () => {
-  const navigate = useNavigate();
-  return (
-    <main id="main" tabIndex={-1} className="page">
-      <StateNotice notice={stateCopy.NOT_FOUND} heading onAction={() => navigate('/')} />
-    </main>
-  );
-};
-
 export const AppRoutes: FC<AppRoutesProps> = ({ appVersion, onReload = reloadPage, screens = {}, ...shell }) => {
-  const Projects = screens.projects ?? (ProjectsScreen as Screen);
+  const Projects = screens.projects ?? Projects_;
   const guard = (route: RouteKey, node: ReactNode) => (
     <Guarded route={route} onReload={onReload}>
       {node}
