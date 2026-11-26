@@ -2,6 +2,7 @@ import type { MeasureApi, MeasureClient } from '@kernel';
 import { align } from './align';
 import { colourMeasurement, deltaE, dominantColour } from './colour';
 import { inkRatio, presenceMissing, regionDiff } from './diff';
+import { matchElements, overflowFacts, overlaps } from './dom';
 import { gapBetween, geometryMeasurement, pct } from './geometry';
 import { locateOnCapture } from './locate';
 import { snapRegion } from './snap';
@@ -16,15 +17,9 @@ export const measureApi: MeasureApi = {
   inkRatio,
   dominantColour,
   deltaE,
-  matchElements: () => {
-    throw new Error('not implemented');
-  },
-  overflowFacts: () => {
-    throw new Error('not implemented');
-  },
-  overlaps: () => {
-    throw new Error('not implemented');
-  },
+  matchElements,
+  overflowFacts,
+  overlaps,
   pct,
 };
 
@@ -33,5 +28,10 @@ export { colourMeasurement, gapBetween, geometryMeasurement, presenceMissing };
 
 /** Async wrapper over `measureApi`; used by `app` in release 1 (S22). */
 export function inlineMeasureClient(): MeasureClient {
-  throw new Error('not implemented');
+  const client: Record<string, (...a: unknown[]) => Promise<unknown>> = {};
+  for (const key of Object.keys(measureApi) as (keyof MeasureApi)[]) {
+    const fn = measureApi[key] as (...a: unknown[]) => unknown;
+    client[key] = async (...a) => fn(...a);
+  }
+  return client as unknown as MeasureClient;
 }

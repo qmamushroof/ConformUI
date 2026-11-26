@@ -28,8 +28,8 @@ Pure TypeScript, no DOM types, runs in Node (SPEC-ARCH-04, SPEC-ARCH-06 (e)). To
 **Accept:** SPEC §4.4.7: identical → 0, AA-only < 0.01, defect 1 missing on flawed and present on fixed; every `Measurement` has both source tags (PRD-M-03).
 
 ### 8.4 DOM facts, client, purity · B · 0.45 h · needs 8.3
-- [ ] `matchElements` (SPEC-MEAS-14), `overflowFacts`, `overlaps` (SPEC-MEAS-13).
-- [ ] `measureApi` and `inlineMeasureClient()` (SPEC-MEAS-15, S22); no randomness, time or locale (SPEC-MEAS-16).
+- [x] `matchElements` (SPEC-MEAS-14), `overflowFacts`, `overlaps` (SPEC-MEAS-13).
+- [x] `measureApi` and `inlineMeasureClient()` (SPEC-MEAS-15, S22); no randomness, time or locale (SPEC-MEAS-16).
 
 **Accept:** flawed mobile `horizontalPx = 64` and nav/h1 overlap; fixed 0 and none; two runs deep-equal (PRD-M-09); architecture test (e) green.
 
