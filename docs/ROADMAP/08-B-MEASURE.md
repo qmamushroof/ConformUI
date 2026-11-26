@@ -23,7 +23,7 @@ Pure TypeScript, no DOM types, runs in Node (SPEC-ARCH-04, SPEC-ARCH-06 (e)). To
 **Accept:** snapping on fixtures is deterministic; locate finds a shifted crop with the tie rules; the 2 px check against the verified Contract lands in 9.5.
 
 ### 8.3 Align, diff, presence, colour, geometry · B · 0.45 h · needs 8.2
-- [ ] `align` (SPEC-MEAS-05); `regionDiff` with `includeAA:false` (SPEC-MEAS-09); presence ink test (SPEC-MEAS-10); `dominantColour`, `deltaE` (SPEC-MEAS-11); geometry, `pct`, source tags (SPEC-MEAS-12).
+- [x] `align` (SPEC-MEAS-05); `regionDiff` with `includeAA:false` (SPEC-MEAS-09); presence ink test (SPEC-MEAS-10); `dominantColour`, `deltaE` (SPEC-MEAS-11); geometry, `pct`, source tags (SPEC-MEAS-12).
 
 **Accept:** SPEC §4.4.7: identical → 0, AA-only < 0.01, defect 1 missing on flawed and present on fixed; every `Measurement` has both source tags (PRD-M-03).
 
