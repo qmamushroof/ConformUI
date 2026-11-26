@@ -1,44 +1,22 @@
 import type {
-  AiEngine,
-  BlobStore,
-  Clock,
   ConsentToken,
   Contract,
   EngineStatus,
-  Ids,
-  ImageCodec,
   ManualRequirementDraft,
-  MeasureClient,
-  ModePlan,
-  NotCheckedReason,
-  ProjectStore,
   Rect,
   Requirement,
-  RuntimeConfig,
-  SendList,
   Settings,
   TraceStep,
 } from '@kernel';
 
 // Public API of features/contract (SPEC §4.7.1). Bodies: lane C (task 11.x). UI components: lane C (./ui).
 
+import { runExtract } from './extract';
+import type { ContractDeps, ExtractOutcome } from './types';
+
 export * from './ui';
 
-export interface ContractDeps {
-  ai: AiEngine;
-  config: RuntimeConfig;
-  store: ProjectStore;
-  blobs: BlobStore;
-  codec: ImageCodec;
-  clock: Clock;
-  ids: Ids;
-  measure: MeasureClient; // kernel type; app passes inlineMeasureClient()
-}
-
-export type ExtractOutcome =
-  | { kind: 'done'; contract: Contract }
-  | { kind: 'needs-consent'; plan: ModePlan; sends: SendList }
-  | { kind: 'blocked'; reason: NotCheckedReason; contract: Contract /*rule-based items only*/ };
+export type { ContractDeps, ExtractOutcome };
 
 export interface ContractService {
   extract(
@@ -57,6 +35,24 @@ export interface ContractService {
   loadPrecomputedExtraction(projectId: string, reqs: Requirement[]): Promise<Contract>; // stored as pendingAiContractId, origin 'precomputed' (S29)
 }
 
-export function createContractService(_d: ContractDeps): ContractService {
-  throw new Error('not implemented');
+const notYet = (): never => {
+  throw new Error('not implemented'); // task 11.3
+};
+
+export function createContractService(d: ContractDeps): ContractService {
+  return {
+    extract: (projectId, ctx, onProgress) => runExtract(d, projectId, ctx, onProgress),
+    async active(projectId) {
+      const id = (await d.store.get(projectId))?.activeContractId;
+      return id ? d.store.getContract(id) : undefined;
+    },
+    accept: notYet,
+    editText: notYet,
+    remove: notYet,
+    add: notYet,
+    setRegion: notYet,
+    loadCommitted: notYet,
+    useAiContract: notYet,
+    loadPrecomputedExtraction: notYet,
+  };
 }

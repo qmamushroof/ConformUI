@@ -19,8 +19,8 @@ Services only; screens are 13.3 and 13.4. Tests use the 3.6 in-memory stores, th
 **Accept:** SPEC §4.6.4 service tests: replace marks only that viewport stale; grant without token rejected; usage accumulates; viewport suggestion table.
 
 ### 11.2 Contract extraction · C · 0.75 h · needs 11.1
-- [ ] `extract` steps 1–9 of SPEC-CON-01: plan per design, `needs-consent` returns `SendList` with zero calls, bands, sequential calls, box mapping, snapping, `CheckSpec` mapping, dedupe, ids, trace, per-band failure notice.
-- [ ] Output versioning and sample pending contract (SPEC-CON-09); `prompts/extract-contract.v1.md` per SPEC-CON-02 with the data wrapper (SPEC-SEC-07).
+- [x] `extract` steps 1–8 (step 9, Inferred generation, is 11.3) of SPEC-CON-01: plan per design, `needs-consent` returns `SendList` with zero calls, bands, sequential calls, box mapping, snapping, `CheckSpec` mapping, dedupe, ids, trace, per-band failure notice.
+- [x] Output versioning and sample pending contract (SPEC-CON-09); `prompts/extract-contract.v1.md` per SPEC-CON-02 with the data wrapper (SPEC-SEC-07).
 
 **Accept:** SPEC §4.7.6: fixture boxes → snapped rects, ids, engine labels; malformed twice → band notice, other bands kept; numbers in statements replaced; `needs-consent` path makes zero `ai.run` calls (PRD-M-06); existing Contract → new unlocked version keeping manual items; sample → `pendingAiContractId`.
 
