@@ -34,9 +34,9 @@ Owns `src/app/**` except `app/styles/` and `app/copy.ts` (lane C). Feature UI ar
 **Accept:** component test with fakes: zero `ai.run` cloud-mode calls before Allow/Send (PRD-M-06); Findings reached in 2 clicks from Projects on the sample, with device `available+image` and `unavailable` (PRD-M-13, S25); revoke then extract asks again; every Cloud step adds its bytes to the Project's `cloudUsage` and Measured/On-device steps add nothing; `everSentToCloud` flips once; both sample fallbacks labelled "Sample results (pre-computed)"; rejudge keeps the Run id.
 
 ### 7.4 Manifest, icons, service worker · A · 0.5 h · needs 4.1
-- [ ] Manifest fields of SPEC §4.13.3 (no `share_target`, P1); icons from `npm run icons` committed (SPEC-PWA-01).
-- [ ] `sw.ts`: precache incl. lazy chunks, sample assets and the 5 Latin `.woff2` font files (`globPatterns` with `woff2`, no `woff`), `NavigationRoute`, no cross-origin caching (SPEC-PWA-03, SPEC-PWA-04, SPEC-DEMO-06).
-- [ ] Install button from `beforeinstallprompt` (SPEC-PWA-02); update toast via `workbox-window` (SPEC-PWA-05).
+- [x] Manifest fields of SPEC §4.13.3 (no `share_target`, P1); icons from `npm run icons` committed (SPEC-PWA-01).
+- [x] `sw.ts`: precache incl. lazy chunks, sample assets and the 5 Latin `.woff2` font files (`globPatterns` with `woff2`, no `woff`), `NavigationRoute`, no cross-origin caching (SPEC-PWA-03, SPEC-PWA-04, SPEC-DEMO-06).
+- [x] Install button from `beforeinstallprompt` (SPEC-PWA-02); update toast via `workbox-window` (SPEC-PWA-05).
 
 **Accept:** manifest field test; route/denylist config test; no cross-origin strategy; precache manifest lists exactly 5 `.woff2` font files and no `.woff`; update toast test with a stubbed `waiting` event.
 
