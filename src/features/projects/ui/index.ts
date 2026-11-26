@@ -26,3 +26,7 @@ export interface ImageDropZoneProps {
 export const ImageDropZone: FC<ImageDropZoneProps> = () => {
   throw new Error('not implemented');
 };
+
+// StateNotice: one notice for every empty and error state (SPEC-UI-05). Added in 13.1; shared with the other features through `app`.
+export type { NoticeCopy, StateNoticeProps } from './state-notice';
+export { StateNotice } from './state-notice';

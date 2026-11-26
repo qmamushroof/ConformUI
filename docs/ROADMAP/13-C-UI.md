@@ -12,10 +12,10 @@
 Components take services and data as props; navigation is a callback prop (SPEC-ARCH-07). No free-text chat input anywhere (PRD-P-08). Component tests in `tests/component/`.
 
 ### 13.1 Tokens, copy, StateNotice · C · 0.4 h · needs G0
-- [ ] `app/styles/tokens.css` + `app/styles/tokens.tailwind.css` (`@theme`) copied from the files generated from `design/tokens.json` per SPEC-UI-02 (S30); light/dark by `prefers-color-scheme` (S10); IBM Plex imported only as `@fontsource/ibm-plex-sans/latin-{400,500,600}.css` and `@fontsource/ibm-plex-mono/latin-{400,500}.css` (SPEC-PWA-03).
-- [ ] `tests/unit/contrast.test.ts` (SPEC-UI-03); grep test: no hex literal in `src/**/*.{ts,tsx,css}` except `app/styles/tokens.css` and `app/styles/tokens.tailwind.css`.
-- [ ] `app/copy.ts`: every string of SPEC §5.4, privacy statement (PRD §6); `StateNotice` keyed by `ErrorCode`/reason (SPEC-UI-05); no em dash in any string (SPEC-UI-07).
-- [ ] `copy.ts` also holds the SPEC-APP-02/03/06 and SPEC-PWA-05 strings (header pills, error screen, "Configuration error", update toast, not found); A imports them.
+- [x] `app/styles/tokens.css` + `app/styles/tokens.tailwind.css` (`@theme`) copied from the files generated from `design/tokens.json` per SPEC-UI-02 (S30); light/dark by `prefers-color-scheme` (S10); IBM Plex imported only as `@fontsource/ibm-plex-sans/latin-{400,500,600}.css` and `@fontsource/ibm-plex-mono/latin-{400,500}.css` (SPEC-PWA-03).
+- [x] `tests/unit/contrast.test.ts` (SPEC-UI-03); grep test: no hex literal in `src/**/*.{ts,tsx,css}` except `app/styles/tokens.css` and `app/styles/tokens.tailwind.css`.
+- [x] `app/copy.ts`: every string of SPEC §5.4, privacy statement (PRD §6); `StateNotice` keyed by `ErrorCode`/reason (SPEC-UI-05); no em dash in any string (SPEC-UI-07).
+- [x] `copy.ts` also holds the SPEC-APP-02/03/06 and SPEC-PWA-05 strings (header pills, error screen, "Configuration error", update toast, not found); A imports them.
 
 **Accept:** contrast test green and fails when a token drops below its ratio; one component test per `ErrorCode` copy.
 
