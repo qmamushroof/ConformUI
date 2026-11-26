@@ -30,7 +30,7 @@ Touches `src/features/dom-snippet` and `src/features/demo` (not their `ui/`), `s
 **Accept:** values asserted on the captured snapshots in 9.4.
 
 ### 9.4 Capture script and committed outputs · B · 0.25 h · needs 9.1, 9.3
-- [ ] `scripts/capture-sample.mjs` per SPEC-DEMO-07; run it; commit outputs to `src/features/demo/sample/` with the SHA-256 list.
+- [x] `scripts/capture-sample.mjs` per SPEC-DEMO-07; run it; commit outputs to `src/features/demo/sample/` with the SHA-256 list.
 
 **Accept:** SPEC §4.5.6 values: 390 px flawed `overflow.horizontalPx = 64`, nav link count 3; 1440 px CTA box width 132; size budgets pass (SPEC-DEMO-06).
 
