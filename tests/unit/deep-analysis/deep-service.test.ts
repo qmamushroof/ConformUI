@@ -620,3 +620,62 @@ describe('applyPrecomputed (SPEC-DEMO-05, SPEC-DEEP-06)', () => {
     expect(out.results).toHaveLength(r.results.length);
   });
 });
+
+describe('applyPrecomputed seed ids (SPEC-DEEP-06, SPEC-DEMO-05)', () => {
+  const item = (findingId: string) => ({
+    findingId,
+    status: 'needs-review' as const,
+    confidence: 'high' as const,
+    explanation: 'Seed.',
+    suggestedFix: 'Seed fix.',
+  });
+  const origin = (r: Run, id: string) => r.results.find((x) => x.requirementId === id)?.origin;
+
+  it('keeps an exact live id', async () => {
+    const r = await seed();
+    expect(origin(await service.applyPrecomputed(r, { items: [item(DESKTOP)] }), 'R-01')).toBe('precomputed');
+  });
+
+  it('rewrites a requirement:viewport suffix to the live id', async () => {
+    const r = await seed();
+    const out = await service.applyPrecomputed(r, { items: [item('R-01:desktop'), item('R-02:mobile')] });
+    expect(origin(out, 'R-01')).toBe('precomputed');
+    expect(origin(out, 'R-02')).toBe('precomputed');
+    expect(origin(out, 'R-04')).toBe('ai');
+  });
+
+  it('drops an ambiguous suffix and an unknown id', async () => {
+    const r = await seed({
+      findings: [
+        mkFinding('run-1:R-01:desktop', 'R-01', { confidence: 'low' }),
+        mkFinding('run-2:R-01:desktop', 'R-01', { confidence: 'low' }),
+      ],
+    });
+    const out = await service.applyPrecomputed(r, {
+      items: [item('R-01:desktop'), item('R-99:desktop'), item(':desktop')],
+    });
+    expect(out.results.every((x) => x.origin === 'ai')).toBe(true);
+    expect(out.precomputed).toBe(true);
+  });
+
+  it('does not match a partial suffix', async () => {
+    const r = await seed();
+    const out = await service.applyPrecomputed(r, { items: [item('1:R-01:desktop'), item('01:desktop')] });
+    expect(origin(out, 'R-01')).toBe('ai');
+  });
+
+  it('merges the real sample seed deep.json', async () => {
+    const seedJson = JSON.parse(
+      readFileSync(join(process.cwd(), 'src/features/demo/sample/precomputed/deep.json'), 'utf8'),
+    );
+    const r = await seed({
+      findings: [
+        mkFinding('run-1:R-07:desktop', 'R-07', { status: 'needs-review', confidence: 'medium' }),
+        mkFinding('run-1:R-06:desktop', 'R-06', { confidence: 'medium' }),
+      ],
+    });
+    const out = await service.applyPrecomputed(r, seedJson);
+    expect(out.results.filter((x) => x.origin === 'precomputed').length).toBeGreaterThan(0);
+    expect(origin(out, 'R-07')).toBe('precomputed');
+  });
+});
