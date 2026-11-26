@@ -38,7 +38,7 @@ One Firebase project (production + preview channels). `app/env.ts` validates wit
 
 ## 8.4 CI (GitHub Actions, `SPEC-DEPLOY-03`)
 
-One workflow, `.github/workflows/ci.yml`, on pull requests and pushes to `main`: Node 26 → `npm ci` → `biome ci` → `tsc -b` → `depcruise` + architecture tests → `vitest run` → `vite build` + size check → `npx playwright install --with-deps chromium` → e2e build + Playwright → `npm audit --omit=dev --audit-level=high`; Playwright report uploaded on failure. Required check on `main`: `ci`. CI needs no secrets (E2E uses `FakeAiEngine`, `SPEC-APP-01`). No deploy workflow, no Lighthouse CI in release 1 (S18): deploy is the manual command in §8.1, documented in README. Dependabot weekly (npm, github-actions).
+One workflow, `.github/workflows/ci.yml`, on pull requests and pushes to `main`: Node 26 → `npm ci` → `biome ci` → `tsc -b` → `depcruise` + architecture tests → `vitest run` → `vite build` + size check → `npx playwright install --with-deps chromium` → e2e build + Playwright → `npm audit --omit=dev --audit-level=high`; Playwright report uploaded on failure. Required check on `main`: `ci`. CI needs no secrets (E2E uses `FakeAiEngine`, `SPEC-APP-01`). No deploy workflow, no Lighthouse CI in release 1 (S18): deploy is the manual command in §8.1, documented in README. Dependabot weekly (npm, github-actions). TypeScript major updates are ignored (S3).
 
 ## 8.5 License, repo, README (`SPEC-DEPLOY-04`, PRD-D-13, PRD-D-30)
 

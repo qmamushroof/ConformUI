@@ -4,6 +4,10 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    # TypeScript stays on 6.x: 7.x drops the JS compiler API dependency-cruiser needs (SPEC S3).
+    ignore:
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
