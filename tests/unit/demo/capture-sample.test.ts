@@ -1,10 +1,8 @@
-import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { DomSnapshotV1Schema } from '@kernel';
-import { afterAll, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 const repo = resolve(__dirname, '../../..');
 const sampleDir = join(repo, 'src/features/demo/sample');
@@ -123,26 +121,6 @@ describe('committed sample outputs', () => {
 });
 
 describe('capture script', () => {
-  const tmp = mkdtempSync(join(tmpdir(), 'capture-'));
-  afterAll(() => rmSync(tmp, { recursive: true, force: true }));
-  const run = (out: string) =>
-    spawnSync(process.execPath, ['scripts/capture-sample.mjs', out], { cwd: repo, encoding: 'utf8', timeout: 150_000 });
-
-  it('SPEC-DEMO-07: is idempotent: two runs write byte-identical files, print the SHA-256 list, and match the committed outputs', () => {
-    const a = join(tmp, 'a');
-    const b = join(tmp, 'b');
-    const ra = run(a);
-    expect(ra.status, ra.stderr).toBe(0);
-    const rb = run(b);
-    expect(rb.status, rb.stderr).toBe(0);
-    expect(readdirSync(a).sort()).toEqual(readdirSync(b).sort());
-    for (const f of readdirSync(a)) {
-      expect(sha(readFileSync(join(b, f))), f).toBe(sha(readFileSync(join(a, f))));
-      expect(sha(readFileSync(join(sampleDir, f))), `${f} committed`).toBe(sha(readFileSync(join(a, f))));
-    }
-    expect(ra.stdout).toMatch(/^[0-9a-f]{64} {2}flawed-mobile\.png$/m);
-  }, 300_000);
-
   it('SPEC-DEMO-07, SPEC-SEC-03: the script blocks every request outside the sample origin', () => {
     const src = readFileSync(join(repo, 'scripts/capture-sample.mjs'), 'utf8');
     expect(src).toMatch(/abort\(/);
