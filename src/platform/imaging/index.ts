@@ -55,7 +55,7 @@ function context(w: number, h: number): { canvas: OffscreenCanvas; ctx: Offscree
 }
 
 function paintWhite(ctx: OffscreenCanvasRenderingContext2D, w: number, h: number): void {
-  ctx.fillStyle = '#fff';
+  ctx.fillStyle = 'white';
   ctx.fillRect(0, 0, w, h);
 }
 
