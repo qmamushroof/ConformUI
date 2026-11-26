@@ -12,26 +12,26 @@
 Touches `src/features/run` (not `ui/`, which is lane C 13.5) and `tests/*/run`, `tests/unit/demo/`.
 
 ### 10.1 Check handlers · B · 0.7 h · needs 8.4, 9.5 (own branch)
-- [ ] One handler per `CheckSpec.kind` × `checkType` row of SPEC-RUN-03, DOM and no-DOM paths, registry keyed by kind (SPEC-ARCH-08).
-- [ ] Region issues → `needs-review` / `not-checked misaligned`, never a guessed number (SPEC-RUN-04, S21).
+- [x] One handler per `CheckSpec.kind` × `checkType` row of SPEC-RUN-03, DOM and no-DOM paths, registry keyed by kind (SPEC-ARCH-08).
+- [x] Region issues → `needs-review` / `not-checked misaligned`, never a guessed number (SPEC-RUN-04, S21).
 
 **Accept:** one test per table row with and without a DOM snapshot; unresolved region → Needs review.
 
 ### 10.2 Run procedure · B · 0.6 h · needs 10.1
-- [ ] `start` steps 1–4 of SPEC-RUN-01, incl. text-only judge and the per-Run `needs-consent` event; `prompts/judge.v1.md` (untrusted-data wrapper, SPEC-SEC-07).
-- [ ] One Run per Project, Abort keeps partial results (SPEC-RUN-02); trace steps (SPEC-RUN-12); sample precomputed path from the `start` ctx `precomputed` (SPEC-RUN-13, S25, S29).
-- [ ] `rejudge(runId, ctx, on)`: re-runs only the Judged stage with project consent, replaces precomputed items, same Run id, new revision (SPEC §4.8.1, SPEC-RUN-13).
+- [x] `start` steps 1–4 of SPEC-RUN-01, incl. text-only judge and the per-Run `needs-consent` event; `prompts/judge.v1.md` (untrusted-data wrapper, SPEC-SEC-07).
+- [x] One Run per Project, Abort keeps partial results (SPEC-RUN-02); trace steps (SPEC-RUN-12); sample precomputed path from the `start` ctx `precomputed` (SPEC-RUN-13, S25, S29).
+- [x] `rejudge(runId, ctx, on)`: re-runs only the Judged stage with project consent, replaces precomputed items, same Run id, new revision (SPEC §4.8.1, SPEC-RUN-13).
 
 **Accept:** rejudge leaves Measured/Visual results unchanged and keeps the Run id; SPEC §4.8.8: consent declined → `not-checked consent-declined` with zero cloud calls (PRD-M-06); sample with device unavailable → no event, precomputed labelled, `run.precomputed`; text-only judge uses `needsImage:false`; `no-inferred-items` hint; contract locked after save; measured steps report 0 bytes.
 
 ### 10.3 Severity, Findings, sort · B · 0.3 h · needs 10.2
-- [ ] Severity by impact, Inferred cap (SPEC-RUN-05, SPEC-RUN-06); deterministic templates and evidence rules, `guardNumbers` before AI text (SPEC-RUN-07, SPEC-KERNEL-08, S23); sort (SPEC-RUN-08).
+- [x] Severity by impact, Inferred cap (SPEC-RUN-05, SPEC-RUN-06); deterministic templates and evidence rules, `guardNumbers` before AI text (SPEC-RUN-07, SPEC-KERNEL-08, S23); sort (SPEC-RUN-08).
 
 **Accept:** no Inferred Finding above Minor (PRD-M-10); missing evidence → Needs review; invented-number fixture falls back to template (PRD-M-03); sort order test.
 
 ### 10.4 Re-verify, history, sample acceptance · B · 0.25 h · needs 10.3
-- [ ] `compareRuns`, summary line, `history` (SPEC-RUN-09..11).
-- [ ] `tests/unit/demo/sample-acceptance.test.ts` per SPEC-TEST-03 (node codec, `fake-indexeddb` or in-memory stores, fake engine returning precomputed Judged outputs).
+- [x] `compareRuns`, summary line, `history` (SPEC-RUN-09..11).
+- [x] `tests/unit/demo/sample-acceptance.test.ts` per SPEC-TEST-03 (node codec, `fake-indexeddb` or in-memory stores, fake engine returning precomputed Judged outputs).
 
 **Accept:** PRD-M-01, PRD-M-02, PRD-M-03, PRD-M-09, PRD-M-10 asserted on the committed sample; the Fix prompt (`fixPrompt` from 12.3, on `main` since M1) lists exactly the `fail` and `needs-review` Findings, the latter "verify first" (S20).
 
