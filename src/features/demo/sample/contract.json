@@ -13,7 +13,10 @@
       "checkType": "visual",
       "statement": "The hero shows an illustration at the right of the headline",
       "condition": "An illustration of about 520 x 400 px is visible at the right of the hero at 1440 px.",
-      "check": { "kind": "presence", "match": { "tag": "svg", "within": { "tag": "section", "text": "Hero" } } },
+      "check": {
+        "kind": "presence",
+        "match": { "tag": "svg", "within": { "tag": "section", "text": "Plan your week" } }
+      },
       "region": { "rect": { "x": 800, "y": 136, "w": 520, "h": 400 }, "source": "sample" },
       "accepted": true,
       "origin": "sample"
@@ -81,7 +84,7 @@
       "condition": "The vertical gap from the hero to the features heading is within tolerance of 96 px.",
       "check": {
         "kind": "spacing",
-        "a": { "tag": "section", "text": "Hero" },
+        "a": { "tag": "section", "text": "Plan your week" },
         "b": { "tag": "h2", "text": "Everything in one place" },
         "axis": "y",
         "aRect": { "x": 120, "y": 136, "w": 1200, "h": 400 },

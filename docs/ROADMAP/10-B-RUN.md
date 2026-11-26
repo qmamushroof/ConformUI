@@ -18,9 +18,9 @@ Touches `src/features/run` (not `ui/`, which is lane C 13.5) and `tests/*/run`, 
 **Accept:** one test per table row with and without a DOM snapshot; unresolved region → Needs review.
 
 ### 10.2 Run procedure · B · 0.6 h · needs 10.1
-- [ ] `start` steps 1–4 of SPEC-RUN-01, incl. text-only judge and the per-Run `needs-consent` event; `prompts/judge.v1.md` (untrusted-data wrapper, SPEC-SEC-07).
-- [ ] One Run per Project, Abort keeps partial results (SPEC-RUN-02); trace steps (SPEC-RUN-12); sample precomputed path from the `start` ctx `precomputed` (SPEC-RUN-13, S25, S29).
-- [ ] `rejudge(runId, ctx, on)`: re-runs only the Judged stage with project consent, replaces precomputed items, same Run id, new revision (SPEC §4.8.1, SPEC-RUN-13).
+- [x] `start` steps 1–4 of SPEC-RUN-01, incl. text-only judge and the per-Run `needs-consent` event; `prompts/judge.v1.md` (untrusted-data wrapper, SPEC-SEC-07).
+- [x] One Run per Project, Abort keeps partial results (SPEC-RUN-02); trace steps (SPEC-RUN-12); sample precomputed path from the `start` ctx `precomputed` (SPEC-RUN-13, S25, S29).
+- [x] `rejudge(runId, ctx, on)`: re-runs only the Judged stage with project consent, replaces precomputed items, same Run id, new revision (SPEC §4.8.1, SPEC-RUN-13).
 
 **Accept:** rejudge leaves Measured/Visual results unchanged and keeps the Run id; SPEC §4.8.8: consent declined → `not-checked consent-declined` with zero cloud calls (PRD-M-06); sample with device unavailable → no event, precomputed labelled, `run.precomputed`; text-only judge uses `needsImage:false`; `no-inferred-items` hint; contract locked after save; measured steps report 0 bytes.
 

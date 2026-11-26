@@ -1,16 +1,33 @@
 import type {
+  AiEngine,
   Alignment,
+  BlobStore,
+  Change,
+  Clock,
   Confidence,
+  ConsentToken,
   DomSnapshot,
+  EngineStatus,
+  Finding,
+  Ids,
+  ImageCodec,
   ImageRef,
   MeasureClient,
   Measurement,
   NotCheckedReason,
+  PrecomputedJudged,
+  ProjectStore,
   Rect,
   RgbaImage,
+  Run,
+  RunSummary,
+  RuntimeConfig,
+  SendList,
+  Settings,
   Severity,
   Status,
   Thresholds,
+  TraceStep,
   ViewportId,
 } from '@kernel';
 
@@ -64,3 +81,52 @@ export interface JudgeNeed {
 }
 
 export type HandlerResult = ResultOutcome | JudgeNeed;
+
+// Public API types (SPEC §4.8.1), declared here so the Judged stage can use them without importing the index.
+
+export interface RunDeps {
+  ai: AiEngine;
+  config: RuntimeConfig;
+  store: ProjectStore;
+  blobs: BlobStore;
+  codec: ImageCodec;
+  measure: MeasureClient;
+  clock: Clock;
+  ids: Ids;
+}
+
+export type RunEvent =
+  | { kind: 'stage'; step: TraceStep }
+  | { kind: 'needs-consent'; sends: SendList; resume(c: ConsentToken | null): void };
+
+export interface RunService {
+  /** Also used by Re-verify (PRD-F-07.1). */
+  start(
+    projectId: string,
+    ctx: {
+      settings: Settings;
+      status: EngineStatus;
+      projectConsent?: ConsentToken;
+      precomputed?: PrecomputedJudged; // sample only, passed by app per Run, §4.11
+    },
+    on: (e: RunEvent) => void,
+    signal?: AbortSignal,
+  ): Promise<Run>;
+  /** Re-runs only the Judged stage; same Run id (SPEC-RUN-13). */
+  rejudge(
+    runId: string,
+    ctx: { settings: Settings; status: EngineStatus; projectConsent: ConsentToken },
+    on: (e: RunEvent) => void,
+  ): Promise<Run>;
+  history(projectId: string): Promise<RunSummary[]>; // PRD-F-07.3
+  get(runId: string): Promise<Run | undefined>;
+  findings(run: Run): Finding[]; // sorted, SPEC-RUN-08
+  summary(run: Run): {
+    pass: number;
+    fail: number;
+    review: number;
+    notChecked: number;
+    changes?: Record<Change, number>;
+    line: string;
+  };
+}
