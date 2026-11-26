@@ -12,8 +12,8 @@
 Touches `src/features/dom-snippet` and `src/features/demo` (not their `ui/`), `sample-site/`, `scripts/capture-sample.mjs`. UI parts (`SnippetPanel`, `SnapshotPasteField`, `TrySampleButton`, `SampleBanner`, `LoadFixedButton`) are lane C (13.3, 13.6).
 
 ### 9.1 snippet.js · B · 0.5 h · needs G0
-- [ ] Plain ES2020 IIFE: element selection (SPEC-SNIP-02), selectors (SPEC-SNIP-03), names and text (SPEC-SNIP-04), overflow flags (SPEC-SNIP-05), output and size cap (SPEC-SNIP-06), privacy rules (SPEC-SNIP-07).
-- [ ] Export `SNIPPET_VERSION`, `snippetSource` (`?raw`).
+- [x] Plain ES2020 IIFE: element selection (SPEC-SNIP-02), selectors (SPEC-SNIP-03), names and text (SPEC-SNIP-04), overflow flags (SPEC-SNIP-05), output and size cap (SPEC-SNIP-06), privacy rules (SPEC-SNIP-07).
+- [x] Export `SNIPPET_VERSION`, `snippetSource` (`?raw`).
 
 **Accept:** static test scans `snippet.js` for every banned token of SPEC-SNIP-07; runtime proof is E7 (14.2).
 
