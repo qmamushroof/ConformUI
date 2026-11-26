@@ -42,6 +42,6 @@ One workflow, `.github/workflows/ci.yml`, on pull requests and pushes to `main`:
 
 ## 8.5 License, repo, README (`SPEC-DEPLOY-04`, PRD-D-13, PRD-D-30)
 
-- Repo: `<REPO_URL>` (PRD-D-30) (public). `LICENSE` = Apache-2.0 full text, "Copyright 2026 ConformUI contributors"; `package.json` `"license": "Apache-2.0"`, `"repository"` = repo URL.
+- Repo: `<REPO_URL>` (PRD-D-30) (public). `LICENSE` = unmodified Apache-2.0 full text (keeps GitHub license detection); `NOTICE` = "Copyright 2026 ConformUI contributors"; `package.json` `"license": "Apache-2.0"`, `"repository"` = repo URL.
 - README sections: what it does; **how Firebase AI Logic is used** (hybrid modes table per feature `SPEC-AI-13`, `inferenceSource` badge, structured output with zod, consent-safe mode mapping, App Check, Remote Config keys); the three engines; features and value; screenshots; Quick start (`npm ci`, `.env.local`, `npm run dev`); enabling on-device in Chrome (flag steps, Download model); tested browsers; Deploy (§8.1 command); Verify checklist (§7.1 manual smoke) with recorded results (PRD-M-07, PRD-M-08, PRD-M-14); demo video link; honest limits (on-device = desktop Chrome only; Android uses cloud; on-device limits; model version chosen by Chrome); privacy statement; license.
 - `.gitignore`: `node_modules`, `dist`, `.env*` (except `.env.example`), `playwright-report`, `test-results`, `.firebase`.
