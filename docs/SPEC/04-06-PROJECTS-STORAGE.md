@@ -50,12 +50,12 @@ export function openStorage(): Promise<{ projects: ProjectStore; blobs: BlobStor
 | `runs` | `keyPath: 'id'`; indexes `byProject`, `byProjectCreatedAt` (`[projectId, createdAt]`) |
 | `blobs` | `keyPath: 'id'`; value `{ id, blob: Blob }` |
 | `settings` | out-of-line key `'main'`; value `Settings` |
-| Migrations | `upgrade(db, oldVersion)` switch; new versions append cases. DB newer than code → read-only + "Update the app". |
+| Migrations | `upgrade(db, oldVersion)` switch; new versions append cases. DB newer than code → read-only + "Update the app": reads work, every write rejects `STORAGE_FAILED`. |
 
 | ID | Rule |
 |---|---|
 | `SPEC-STORE-02` | `remove(projectId)` deletes the project, its contracts, runs and every blob they reference in **one** readwrite transaction over all stores (PRD-F-01.1). `clearAll()` clears all stores except `settings.deepUsage` (cap not resettable, PRD-D-27). |
-| `SPEC-STORE-03` | Every read is zod-validated; an invalid record is skipped and counted ("1 item could not be read"), never crashes a list. |
+| `SPEC-STORE-03` | Every read is zod-validated; an invalid record is skipped and counted ("1 item could not be read"), never crashes a list. The count is a runtime-only `skippedCount()` on the returned `projects` store (not on the `ProjectStore` port). Writes are validated too (invalid → `STORAGE_FAILED`); invalid settings read as defaults. |
 | `SPEC-STORE-04` | `openStorage()` failing to open the database (IndexedDB blocked, private mode, upgrade error) maps to `STORAGE_UNAVAILABLE` (§5.4; nothing is deleted). Other failures map to `STORAGE_FAILED`; a Run still renders in memory with a notice "Not saved". `navigator.storage.persist()` requested once after the first Project is created. |
 | `SPEC-STORE-05` | Nothing in this module touches the network; storage holds user content only on this device (PRD-P-11). |
 
