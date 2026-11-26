@@ -147,7 +147,7 @@
         "@demo",
         "@settings"
       ],
-      "npm": ["react", "react-dom", "react-router", "workbox-window", "workbox-*"],
+      "npm": ["react", "react-dom", "react-router", "workbox-window", "workbox-*", "zod"],
       "ui": false,
       "prompts": false
     }

@@ -57,7 +57,7 @@ tests/architecture/modules.json (single module table, §3.5)  tests/architecture
 | `features/export` | `@export` | kernel | none |
 | `features/demo` | `@demo` | kernel | react |
 | `features/settings` | `@settings` | kernel | react |
-| `app` | — | every module | react, react-router, workbox-window, workbox-* (sw) |
+| `app` | — | every module | react, react-router, workbox-window, workbox-* (sw), zod (env validation, jitless config) |
 
 `SPEC-ARCH-02`: features never import `platform/*`; they receive ports (kernel interfaces) from the composition root `app/compose.ts`. Feature-to-feature flow (Run → Deep Analysis → Export) is wired in `app` routes through kernel types, never by feature imports. `measure` is a pure library shared by `contract` and `run`; it has no UI and no I/O. Only `app/compose.ts` imports `@fb`/`@ai`, and only via dynamic `import()` (`SPEC-PERF-04`).
 
