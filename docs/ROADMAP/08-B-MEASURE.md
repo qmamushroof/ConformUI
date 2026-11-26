@@ -12,8 +12,8 @@
 Pure TypeScript, no DOM types, runs in Node (SPEC-ARCH-04, SPEC-ARCH-06 (e)). Touches only `src/features/measure`, `tests/unit/measure/`, `tests/helpers/node-codec.ts`, `tests/fixtures/images/`.
 
 ### 8.1 Node test codec and image fixtures · B · 0.25 h · needs G0
-- [ ] `tests/helpers/node-codec.ts`: kernel `ImageCodec` over `pngjs` (`pixels`, `crop`, `composePair`; `normalise` for already-normalised PNGs) for Node tests (SPEC §7.4).
-- [ ] `tests/fixtures/images/*`: AA-only difference, missing element, tall page, WebP, oversized (SPEC §7.3).
+- [x] `tests/helpers/node-codec.ts`: kernel `ImageCodec` over `pngjs` (`pixels`, `crop`, `composePair`; `normalise` for already-normalised PNGs) for Node tests (SPEC §7.4).
+- [x] `tests/fixtures/images/*`: AA-only difference, missing element, tall page, WebP, oversized (SPEC §7.3).
 
 **Accept:** decodes a committed PNG to an `RgbaImage` with expected size.
 
