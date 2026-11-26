@@ -14,11 +14,6 @@ const UI: [string, Record<string, unknown>, string[]][] = [
   ['run', run, ['RunScreen', 'FindingList', 'FindingDetail', 'ComparisonView', 'EngineTrace', 'RunHistory']],
   ['deep-analysis', deep, ['DeepAnalysisButton', 'DeepConfirmSheet']],
   ['demo', demo, ['TrySampleButton', 'SampleBanner', 'LoadFixedButton']],
-  [
-    'settings',
-    settings,
-    ['SettingsScreen', 'EnginePanel', 'EngineBadge', 'PrivacyCounter', 'OnboardingScreen', 'ConsentSheet'],
-  ],
   ['dom-snippet', snippet, ['SnippetPanel', 'SnapshotPasteField']],
 ];
 
@@ -32,4 +27,19 @@ describe('SPEC-ARCH-11: UI component names are declared in each module index', (
       }
     });
   }
+});
+
+describe('SPEC-ARCH-11, 13.2: settings UI names are implemented components', () => {
+  it('SPEC-ARCH-11: settings exports its six components as functions', () => {
+    for (const n of [
+      'SettingsScreen',
+      'EnginePanel',
+      'EngineBadge',
+      'PrivacyCounter',
+      'OnboardingScreen',
+      'ConsentSheet',
+    ]) {
+      expect(typeof (settings as Record<string, unknown>)[n], n).toBe('function');
+    }
+  });
 });

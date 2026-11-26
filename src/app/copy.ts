@@ -39,11 +39,11 @@ export const copy = {
   },
   /** PRD §6 privacy statement, plain language (SPEC-SET-08). */
   privacy: {
-    stored: 'Projects, images, Contracts and Runs, on this device only. Delete one Project or everything.',
-    sent: "Nothing, unless you run Deep Analysis or allow cloud for a Project. Then the listed images, Contract and measurements go to Google's Gemini through Firebase.",
+    stored: 'Projects, images, contracts and runs, on this device only. Delete one project or everything.',
+    sent: "Nothing, unless you run Deep Analysis or allow cloud for a project. Then the listed images, contract and measurements go to Google's Gemini through Firebase. You see the list and its size before anything leaves.",
     domSnippet:
-      'Runs only on a page you open; it reads that page and copies JSON to your clipboard. It sends nothing anywhere.',
-    appCheck: 'Cloud requests carry an attestation token to prevent abuse; it contains no project content.',
+      'Runs only on a page you open. It reads that page and copies JSON to your clipboard. It sends nothing anywhere.',
+    appCheck: 'Cloud requests carry an attestation token to prevent abuse. It contains no project content.',
     analytics: 'None.',
   },
 } as const;

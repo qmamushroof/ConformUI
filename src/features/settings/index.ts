@@ -11,33 +11,11 @@ import {
 
 // Public API of features/settings (SPEC §4.12.1). Bodies: lane C (task 12.x). UI components: lane C (./ui).
 
+import { engineTexts } from './engine-text';
+import type { EngineView, SettingsService } from './types';
+
+export type { EngineView, PrivacyView, SettingsService } from './types';
 export * from './ui';
-
-export interface EngineView {
-  device: EngineStatus['device'];
-  headline: string;
-  detail: string;
-  canDownload: boolean;
-  imageOnDevice: boolean | 'unknown';
-  enableSteps?: string[];
-  online: boolean;
-  cloud: 'enabled' | 'disabled';
-  mode: Settings['mode'];
-}
-
-export type PrivacyView =
-  | { kind: 'nothing-sent'; text: 'Nothing has left this device' }
-  | { kind: 'sent'; requests: number; bytes: number; text: string };
-
-export interface SettingsService {
-  read(): Promise<Settings>;
-  setMode(m: Settings['mode']): Promise<void>;
-  markOnboarded(): Promise<void>;
-  engine(): Promise<EngineView>;
-  downloadModel(onProgress: (p01: number) => void): Promise<EngineView>; // click handler only
-  clearAllData(): Promise<void>; // confirm happens in UI
-  privacy(project?: Project): PrivacyView;
-}
 
 /** Projects that allowed the cloud, for the Settings consent list with Revoke (SPEC-SET-05). */
 export function consentList(projects: Project[]): { projectId: string; name: string; grantedAt: number }[] {
@@ -47,83 +25,6 @@ export function consentList(projects: Project[]): { projectId: string; name: str
 }
 
 const MODES: Settings['mode'][] = ['auto', 'cloud-only', 'on-device-only'];
-
-// SPEC-SET-02: copy-paste steps; a page cannot open chrome:// links, so the user copies them.
-const ENABLE_STEPS = [
-  'Open chrome://flags/#prompt-api-multimodal-input',
-  'Open chrome://flags/#gemma4-for-built-in-ai',
-  'Set both to Enabled',
-  'Relaunch Chrome',
-  'Come back and press Download model',
-];
-
-const percent = (p: number | undefined) =>
-  Math.round(Math.min(1, Math.max(0, Number.isFinite(p) ? (p as number) : 0)) * 100);
-
-type Texts = Pick<EngineView, 'headline' | 'detail' | 'canDownload' | 'enableSteps'>;
-
-function unavailable(reason: EngineStatus['reason']): Texts {
-  switch (reason) {
-    case 'not-desktop-chrome':
-      return {
-        headline: 'On-device AI needs desktop Chrome. ConformUI uses the cloud here, after you allow it per project.',
-        detail: 'Cloud use is asked for each project.',
-        canDownload: false,
-      };
-    case 'chrome-too-old':
-      return {
-        headline: 'Update Chrome to 139 or later',
-        detail: 'Older versions have no on-device model.',
-        canDownload: false,
-      };
-    case 'no-prompt-api':
-    case 'image-flag-off':
-      return {
-        headline: 'On-device AI is switched off in Chrome',
-        detail: 'Turn on the Chrome flags below, relaunch, then download the model.',
-        canDownload: false,
-        enableSteps: [...ENABLE_STEPS],
-      };
-    case 'hardware':
-      return {
-        headline: "Chrome reports this device can't run the model",
-        detail: 'Use the cloud, after you allow it per project.',
-        canDownload: false,
-      };
-    default:
-      return {
-        headline: 'On-device AI is not available here',
-        detail: 'Use the cloud, after you allow it per project.',
-        canDownload: false,
-      };
-  }
-}
-
-function texts(s: EngineStatus): Texts {
-  switch (s.device) {
-    case 'available':
-      return {
-        headline: 'On-device model ready. First pass stays on this device.',
-        detail:
-          s.deviceImage === 'unknown' ? 'Image input: not checked' : `Image input: ${s.deviceImage ? 'on' : 'off'}`,
-        canDownload: false,
-      };
-    case 'downloadable':
-      return {
-        headline: 'On-device model not downloaded',
-        detail: 'Download it once to keep the first pass on this device.',
-        canDownload: true,
-      };
-    case 'downloading':
-      return {
-        headline: `Downloading ${percent(s.downloadProgress)}%`,
-        detail: 'You can use the cloud meanwhile, with your consent',
-        canDownload: false,
-      };
-    case 'unavailable':
-      return unavailable(s.reason);
-  }
-}
 
 const kb = (bytes: number) => String(Math.max(0.1, Math.round((bytes / 1024) * 10) / 10));
 
@@ -136,7 +37,9 @@ export function createSettingsService(d: {
   const { store, ai, projects } = d;
   const view = async (s: EngineStatus): Promise<EngineView> => ({
     device: s.device,
-    ...texts(s),
+    reason: s.reason,
+    downloadProgress: s.downloadProgress,
+    ...engineTexts(s),
     imageOnDevice: s.deviceImage,
     online: s.online,
     cloud: s.cloud,
