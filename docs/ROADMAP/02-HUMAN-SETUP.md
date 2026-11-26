@@ -2,6 +2,8 @@
 
 **[◀ 1. Plan and Budget](01-PLAN-BUDGET.md)** · [Roadmap index](../ROADMAP.md) · **[3. Step 0: Kernel Freeze ▶](03-KERNEL-FREEZE.md)**
 
+New machine or new cloud project? See [SETUP.md](../SETUP.md).
+
 | | |
 |---|---|
 | **Depends on** | Nothing; runs beside Day 1. 2.5 needs 5.1; 2.10 needs 3.7 |
