@@ -12,9 +12,9 @@
 Touches only `src/platform/firebase`, `src/platform/ai-engine`, `remoteconfig.template.json` and their tests. All SDK calls are mocked in unit tests (`vi.mock('firebase/ai')`); real calls happen only in 4.x and 14.4.
 
 ### 5.1 initFirebase and Remote Config · A · 0.5 h · needs G0
-- [ ] `initFirebase(env)`: init order, reCAPTCHA Enterprise provider, dev-only debug branch (SPEC-FB-01, SPEC-FB-03, SPEC-FB-04).
-- [ ] Remote Config defaults from kernel `DEFAULT_RUNTIME_VALUES`, background `fetchAndActivate` that never blocks (SPEC-FB-02), `RuntimeConfig.get()` parsed key by key (SPEC-FB-06, SPEC-FB-07).
-- [ ] `remoteconfig.template.json` (SPEC-FB-08).
+- [x] `initFirebase(env)`: init order, reCAPTCHA Enterprise provider, dev-only debug branch (SPEC-FB-01, SPEC-FB-03, SPEC-FB-04).
+- [x] Remote Config defaults from kernel `DEFAULT_RUNTIME_VALUES`, background `fetchAndActivate` that never blocks (SPEC-FB-02), `RuntimeConfig.get()` parsed key by key (SPEC-FB-06, SPEC-FB-07).
+- [x] `remoteconfig.template.json` (SPEC-FB-08).
 
 **Accept:** SPEC §4.2.4 tests (FB-04 dist grep, FB-07 invalid values → defaults, FB-08 template parity); init-order test with mocked SDK.
 
