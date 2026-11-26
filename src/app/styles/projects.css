@@ -1,0 +1,234 @@
+/* Projects, Project inputs and Snippet screens (task 13.3). Tokens only; ported from the prototype's page styles. */
+
+/* Projects: card with a menu outside the link. The link fills the card, the menu sits in its top-right corner. */
+.pcard {
+  position: relative;
+  display: grid;
+}
+.pcard .card {
+  align-content: start;
+  padding-right: calc(var(--space-5) + var(--layout-target));
+}
+.pcard .menu-wrap {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+}
+.card .title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+.counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+}
+.skel-card {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+.skel-line {
+  height: 12px;
+}
+.menu [aria-disabled="true"] {
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+.foot-note {
+  margin-top: var(--space-8);
+}
+
+/* Loop line: horizontal numbered step sequence, text only. */
+.loopline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+}
+.loopline li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.loopline li + li::before {
+  content: "→";
+  color: var(--text-subtle);
+}
+.loopline .n {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  font-size: var(--font-size-xs);
+  color: var(--text);
+}
+
+/* Project page: facts, per-viewport columns, slots. */
+.facts {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: var(--space-4) 0;
+  margin-bottom: var(--space-10);
+}
+.facts dd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--space-2);
+}
+.vp {
+  display: grid;
+  gap: var(--space-6);
+  align-content: start;
+  min-width: 0;
+}
+.vp-h {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.slot {
+  display: grid;
+  gap: var(--space-2);
+}
+.slot > .label {
+  color: var(--text-muted);
+}
+.thumb .shot {
+  max-height: 120px;
+  object-fit: cover;
+}
+.thumb .name {
+  overflow-wrap: anywhere;
+}
+.snapline {
+  display: grid;
+  gap: var(--space-1);
+}
+.snapline .btn-row {
+  gap: var(--space-1) var(--space-3);
+}
+.tlink {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--layout-target);
+}
+.vp .btn-row > .btn-ghost:first-child,
+.slot > div > .btn-ghost {
+  margin-left: calc(-1 * var(--space-4));
+}
+.snapline p .st {
+  display: inline;
+}
+.none {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+}
+.runs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--border);
+}
+.runs .rowi {
+  border-bottom: 1px solid var(--border);
+  padding-left: var(--space-2);
+}
+.problems {
+  margin: 0;
+  padding-left: var(--space-4);
+  font-size: var(--font-size-sm);
+}
+.problems .mono {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 720px) {
+  .facts .kv {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .facts .kv dd {
+    margin-bottom: var(--space-3);
+  }
+}
+
+/* Snippet: numbered steps, plain muted numeral. */
+.stack-lg > *,
+.stack > * {
+  min-width: 0;
+}
+.howto {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-5);
+  counter-reset: howto;
+  max-width: var(--layout-prose);
+}
+.howto > li {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  gap: var(--space-1) var(--space-3);
+  counter-increment: howto;
+}
+.howto > li::before {
+  content: counter(howto) ".";
+  color: var(--text-muted);
+  font-size: var(--font-size-md);
+  line-height: var(--leading-snug);
+}
+.howto > li > * {
+  grid-column: 2;
+}
+.howto > li > .h3 {
+  grid-row: 1;
+}
+.code pre {
+  max-height: 480px;
+}
+.code-head {
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.code-head .name {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+}
+.privacy {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.privacy .ok {
+  color: var(--success);
+}
+.reads {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-6);
+}
+.reads ul {
+  margin: 0;
+  padding-left: var(--space-4);
+  font-size: var(--font-size-sm);
+  display: grid;
+  gap: var(--space-1);
+}
+@media (max-width: 640px) {
+  .reads {
+    grid-template-columns: 1fr;
+  }
+}

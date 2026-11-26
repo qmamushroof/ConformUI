@@ -29,28 +29,9 @@ export interface ProjectsDeps {
   ids: Ids;
 }
 
-export interface ProjectSummary {
-  id: string;
-  name: string;
-  viewports: ViewportId[];
-  lastRun?: { at: number; pass: number; fail: number; review: number };
-  isSample: boolean;
-}
+export type { ProjectSummary, ProjectsService } from './types';
 
-export interface ProjectsService {
-  list(): Promise<ProjectSummary[]>; // PRD-F-01.2
-  create(name: string): Promise<Project>;
-  get(id: string): Promise<Project | undefined>;
-  remove(id: string): Promise<void>; // cascade (PRD-F-01.1)
-  rename(id: string, name: string): Promise<void>; // [P1] PRD-F-01.3
-  addDesign(projectId: string, file: Blob, viewport: ViewportId): Promise<DesignRef>;
-  addCapture(projectId: string, file: Blob, viewport: ViewportId, dom?: DomSnapshot): Promise<Capture>; // replaces same viewport
-  attachSnapshot(projectId: string, captureId: string, dom: DomSnapshot): Promise<Capture>;
-  suggestViewport(file: Blob): Promise<ViewportId>; // SPEC-MEAS-04
-  grantCloudConsent(projectId: string, token: ConsentToken): Promise<void>;
-  revokeCloudConsent(projectId: string): Promise<void>;
-  recordCloudUsage(projectId: string, bytes: number): Promise<void>;
-}
+import type { ProjectSummary, ProjectsService } from './types';
 
 const MAX_NAME = 80;
 
@@ -114,12 +95,16 @@ export function createProjectsService(d: ProjectsDeps): ProjectsService {
     async list() {
       const out: ProjectSummary[] = [];
       for (const p of await store.list()) {
-        const latest = (await store.listRuns(p.id))[0];
+        const runs = await store.listRuns(p.id);
+        const latest = runs[0];
         const count = (s: string) => latest?.results.filter((r) => r.status === s).length ?? 0;
         out.push({
           id: p.id,
           name: p.name,
           viewports: [...new Set([...p.designs, ...p.captures].map((x) => x.viewport))],
+          createdAt: p.createdAt,
+          runCount: runs.length,
+          hasContract: Boolean(p.activeContractId),
           lastRun: latest && {
             at: latest.createdAt,
             pass: count('pass'),
