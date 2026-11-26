@@ -18,9 +18,9 @@ Services and pure functions only; UI is 13.2 and 13.6.
 **Accept:** `EngineView` per `EngineStatus` and reason; clear keeps the Deep count.
 
 ### 12.2 DeepService · C · 0.55 h · needs 12.1
-- [ ] `availability` reasons (SPEC-DEEP-03, SPEC-DEEP-04); `preview` lists images, bytes, counts, model, cap (SPEC-DEEP-02).
-- [ ] `run`: one `ONLY_IN_CLOUD` request built only from the preview, deep-scope token required (SPEC-DEEP-05); merge rules (SPEC-DEEP-06); failures leave the Run unchanged (SPEC-DEEP-07); `prompts/deep-analysis.v1.md` (SPEC-DEEP-08); count increments on send.
-- [ ] `applyPrecomputed(run, deep)`: same SPEC-DEEP-06 merge with `origin:'precomputed'`, no request, no count (SPEC-DEMO-05).
+- [x] `availability` reasons (SPEC-DEEP-03, SPEC-DEEP-04); `preview` lists images, bytes, counts, model, cap (SPEC-DEEP-02).
+- [x] `run`: one `ONLY_IN_CLOUD` request built only from the preview, deep-scope token required (SPEC-DEEP-05); merge rules (SPEC-DEEP-06); failures leave the Run unchanged (SPEC-DEEP-07); `prompts/deep-analysis.v1.md` (SPEC-DEEP-08); count increments on send.
+- [x] `applyPrecomputed(run, deep)`: same SPEC-DEEP-06 merge with `origin:'precomputed'`, no request, no count (SPEC-DEMO-05).
 
 **Accept:** request images and bytes equal the preview list; `pass` removes a Finding; measured numbers and Inferred cap unchanged; unknown ids ignored; trace gains a `deep` Cloud step; cap boundary test; `applyPrecomputed` makes zero `ai.run` calls and labels every merged item pre-computed.
 
