@@ -17,8 +17,8 @@
 
 ### 16.2 README · A · 0.4 h · needs 14.4, 15.3
 - [ ] Every section of SPEC-DEPLOY-04, in that order: what it does; **how Firebase AI Logic is used** (`InferenceMode` per feature table, SPEC-AI-13; `inferenceSource` badge; zod-validated structured output; consent-safe mode mapping; App Check; Remote Config keys); the three engines; features and value; screenshots; Quick start; Setup (SPEC §8.3 steps 1–5); enabling on-device in Chrome; tested browsers; Deploy (manual command); Verify checklist with the 14.4 results and 15.3 scores; demo video link; honest limits; privacy statement; license.
-- [ ] Limits line if any 9.5 seed ships: "The sample's pre-computed results are hand-authored" (SPEC §4.11.2).
-- [ ] Link the code that calls AI Logic (`src/platform/ai-engine/`), the Chrome model info from 4.4, and the hosted URL (replaces `<HOSTED_URL>`, PRD-D-30).
+- [x] Limits line if any 9.5 seed ships: "The sample's pre-computed results are hand-authored" (SPEC §4.11.2).
+- [x] Link the code that calls AI Logic (`src/platform/ai-engine/`), the Chrome model info from 4.4, and the hosted URL (replaces `<HOSTED_URL>`, PRD-D-30).
 
 **Accept:** README contains `ONLY_ON_DEVICE`, `PREFER_ON_DEVICE`, `ONLY_IN_CLOUD`; no `<HOSTED_URL>` left; no `<REPO_URL>` placeholder left in README/`package.json`; grep finds no build-tool or personal-detail mention (PRD-D-15), ignoring the repo URL the owner set in README and `package.json`.
 

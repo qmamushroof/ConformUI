@@ -7,7 +7,7 @@
 | Name | **ConformUI** |
 | One-line pitch | Design acceptance testing for AI-built websites: turn a design into a checkable contract, verify the implementation against it with measured evidence, and hand the failures back to your coding agent. |
 | Question it answers | "Does this implementation satisfy the design it was meant to implement?" — not "did this page change?" (visual regression). |
-| Form | Installable web app (PWA), no backend, no account. Open source, Apache-2.0, repo at `<REPO_URL>` (PRD-D-30), hosted demo at `<HOSTED_URL>`. |
+| Form | Installable web app (PWA), no backend, no account. Open source, Apache-2.0, repo at https://github.com/qmamushroof/ConformUI (PRD-D-30), hosted demo at https://conformui.web.app. |
 | Category | Design-conformance QA tool. **Not a chatbot** and not a general visual-testing platform. |
 | Hybrid idea | Private first pass on the device (the design stays on the machine unless you choose cloud); cloud only for deeper analysis on request or when the device cannot; every number comes from a deterministic engine, never from a model. The engine that answered is always shown. |
 
