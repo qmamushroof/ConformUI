@@ -26,6 +26,21 @@ describe('scripts/check-dist.mjs', () => {
   it('SPEC-TEST-02, SPEC-FB-04: passes a clean build', () => {
     expect(run('check-dist.mjs', fakeDist()).status).toBe(0);
   });
+  it('fails when the built CSS carries a Tailwind variable or a universal margin reset (it un-centres every dialog)', () => {
+    const tw = run(
+      'check-dist.mjs',
+      fakeDist({ 'assets/index.css': ':root{--tw-ring-inset:var(--tw-empty,/*!*/ /*!*/)}' }),
+    );
+    expect(tw.status).toBe(1);
+    expect(tw.stderr).toContain('--tw-');
+    const preflight = '*,:after,:before,::backdrop{box-sizing:border-box;border:0 solid;margin:0;padding:0}';
+    const reset = run('check-dist.mjs', fakeDist({ 'assets/index.css': preflight }));
+    expect(reset.status).toBe(1);
+    expect(reset.stderr).toContain('universal reset');
+    expect(run('check-dist.mjs', fakeDist({ 'assets/index.css': '*{margin:0}' })).status).toBe(1);
+    const ok = '*,:after,:before{box-sizing:border-box}body{margin:0}dialog.sheet{padding:0;margin:auto 0 0}';
+    expect(run('check-dist.mjs', fakeDist({ 'assets/index.css': ok })).status).toBe(0);
+  });
   it('fails when the React core is defined in two chunks (two React copies break every route)', () => {
     const core = 'function y(){}y.prototype.isReactComponent={}';
     const r = run('check-dist.mjs', fakeDist({ 'assets/jsx-runtime.js': core, 'assets/services.js': core }));

@@ -46,15 +46,6 @@ describe('SPEC-UI-02, S30: tokens match the prototype', () => {
     const names = Object.keys(lightVars(app));
     expect(names.filter((n) => /major|minor|review|[a-z]-bg$/.test(n))).toEqual([]);
   });
-
-  it('SPEC-UI-02: tokens.tailwind.css maps the same theme as the generator output', () => {
-    const lines = (s: string) =>
-      s
-        .split('\n')
-        .filter((l) => l.trim().startsWith('--') || l.includes('@theme') || l.includes('@custom-variant'))
-        .map(normalise);
-    expect(lines(read('src/app/styles/tokens.tailwind.css'))).toEqual(lines(read('design/tokens.tailwind.css')));
-  });
 });
 
 describe('SPEC-PWA-03: fonts and import order', () => {
@@ -94,16 +85,15 @@ describe('SPEC-PWA-03: fonts and import order', () => {
     expect(v['--font-mono']).toMatch(/^"IBM Plex Mono"/);
   });
 
-  it('SPEC-UI-02: fonts.css and tokens.css come after tailwindcss, tokens.tailwind.css last of the three', () => {
-    expect(imports.indexOf('tailwindcss')).toBeGreaterThanOrEqual(0);
-    expect(imports.indexOf('./fonts.css')).toBeGreaterThan(imports.indexOf('tailwindcss'));
-    expect(imports.indexOf('./tokens.css')).toBeGreaterThan(imports.indexOf('tailwindcss'));
-    expect(imports.indexOf('./tokens.tailwind.css')).toBeGreaterThan(imports.indexOf('./tokens.css'));
+  it('SPEC-UI-02: no Tailwind import (its preflight reset un-centres modal dialogs); fonts.css before tokens.css', () => {
+    expect(imports.some((i) => /tailwind/.test(i))).toBe(false);
+    expect(imports.indexOf('./fonts.css')).toBeGreaterThanOrEqual(0);
+    expect(imports.indexOf('./tokens.css')).toBeGreaterThan(imports.indexOf('./fonts.css'));
   });
 });
 
 describe('SPEC-UI-02: no hex literal outside the token files', () => {
-  const allowed = new Set(['src/app/styles/tokens.css', 'src/app/styles/tokens.tailwind.css']);
+  const allowed = new Set(['src/app/styles/tokens.css']);
   const walk = (dir: string): string[] =>
     readdirSync(dir).flatMap((n) => {
       const p = join(dir, n);
