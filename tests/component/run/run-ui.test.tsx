@@ -10,7 +10,8 @@ import {
   type RunScreenProps,
 } from '@run';
 import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import type { ReactElement } from 'react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 afterEach(cleanup);
 
@@ -710,5 +711,122 @@ describe('SPEC-UI-06, PRD-F-05.4: RunScreen', () => {
       expect(text, f).not.toMatch(/#[0-9a-fA-F]{6}\b/);
       expect(text, f).not.toMatch(/dangerouslySetInnerHTML/);
     }
+  });
+});
+
+describe('ComparisonView: Full page fits the pane width and scrolls vertically in sync', () => {
+  const PANE_W = 400;
+  const PANE_H = 200;
+  const proto = HTMLElement.prototype;
+  const saved = ['clientWidth', 'clientHeight', 'scrollHeight'].map(
+    (k) => [k, Object.getOwnPropertyDescriptor(proto, k)] as const,
+  );
+  const scrolls = (c: HTMLElement) => Array.from(c.querySelectorAll<HTMLElement>('.shot-scroll'));
+  const tall = (el: HTMLElement) => {
+    const vb = el.querySelector('svg')?.getAttribute('viewBox')?.split(' ').map(Number) ?? [0, 0, 1, 1];
+    return ((vb[3] ?? 1) * PANE_W) / (vb[2] ?? 1);
+  };
+
+  beforeEach(() => {
+    Object.defineProperty(proto, 'clientWidth', { configurable: true, get: () => PANE_W });
+    Object.defineProperty(proto, 'clientHeight', { configurable: true, get: () => PANE_H });
+    Object.defineProperty(proto, 'scrollHeight', {
+      configurable: true,
+      get(this: HTMLElement) {
+        return this.classList.contains('shot-scroll') ? tall(this) : 0;
+      },
+    });
+  });
+  afterEach(() => {
+    for (const [k, d] of saved) {
+      if (d) Object.defineProperty(proto, k, d);
+      else delete (proto as unknown as Record<string, unknown>)[k];
+    }
+  });
+
+  const open = (ui: ReactElement) => {
+    const r = render(ui);
+    fireEvent.click(screen.getByRole('button', { name: /Full page/ }));
+    return r;
+  };
+
+  it('scales each image to the pane width: no fixed pixel width, no horizontal scrolling', () => {
+    const { container } = open(<ComparisonView finding={F2} design={img(1440, 1077)} capture={img(1440, 1045)} />);
+    for (const pane of scrolls(container)) {
+      expect(pane.style.overflowX).toBe('hidden');
+      const svg = pane.querySelector('svg') as SVGElement;
+      expect(svg.style.width).toBe('100%');
+      expect(svg.style.maxWidth).not.toBe('none');
+      expect(svg.getAttribute('viewBox')?.startsWith('0 0 1440')).toBe(true);
+    }
+  });
+
+  it('keeps the region outline at its true position in the scaled image and scrolls it to the centre', () => {
+    const { container } = open(<ComparisonView finding={F2} design={img(1440, 1077)} capture={img(1440, 1045)} />);
+    const [d, i] = scrolls(container);
+    expect(d?.querySelector('rect.rg-design')?.getAttribute('y')).toBe('400');
+    expect(i?.querySelector('rect.rg-impl')?.getAttribute('y')).toBe('400');
+    const scale = PANE_W / 1440;
+    const centre = 428 * scale - PANE_H / 2; // region centre y = 400 + 56 / 2
+    expect(d?.scrollTop).toBeCloseTo(Math.max(0, centre), 0);
+    expect(i?.scrollTop).toBeCloseTo(Math.max(0, centre), 0);
+  });
+
+  it('scrolling one pane scrolls the other proportionally, also when the image heights differ', () => {
+    const { container } = open(<ComparisonView finding={F2} design={img(1440, 1077)} capture={img(1440, 1045)} />);
+    const [d, i] = scrolls(container) as [HTMLElement, HTMLElement];
+    const dMax = tall(d) - PANE_H;
+    const iMax = tall(i) - PANE_H;
+    d.scrollTop = dMax / 2;
+    fireEvent.scroll(d);
+    expect(i.scrollTop).toBeCloseTo(iMax / 2, 3);
+    i.scrollTop = iMax;
+    fireEvent.scroll(i);
+    expect(d.scrollTop).toBeCloseTo(dMax, 3);
+  });
+
+  it('without a capture (or without a crop) it still renders one pane and does not throw on scroll', () => {
+    const { container } = open(<ComparisonView finding={F2} design={img(1440, 1077)} />);
+    expect(scrolls(container)).toHaveLength(1);
+    const [d] = scrolls(container) as [HTMLElement];
+    fireEvent.scroll(d);
+    const noCrop = finding('R-D-09', { evidence: { measurements: [] } });
+    cleanup();
+    const r2 = open(<ComparisonView finding={noCrop} design={img(1440, 1077)} capture={img(1440, 1045)} />);
+    for (const pane of scrolls(r2.container)) expect(pane.scrollTop).toBe(0);
+  });
+});
+
+describe('ComparisonView: a presence failure explains the empty implementation crop', () => {
+  it('shows "Nothing drawn here" under the Implementation crop only for a presence requirement', () => {
+    const f = finding('R-D-03', { statement: 'Nothing is drawn where the design shows content: x' });
+    const { rerender } = render(<ComparisonView finding={f} design={img()} capture={img()} nothingDrawn />);
+    expect(screen.getByText('Nothing drawn here')).toBeTruthy();
+    rerender(<ComparisonView finding={f} design={img()} capture={img()} />);
+    expect(screen.queryByText('Nothing drawn here')).toBeNull();
+  });
+
+  it('FindingDetail passes it for a presence requirement only, and not without a capture', () => {
+    const f = finding('R-D-03');
+    const { rerender } = render(
+      <FindingDetail
+        finding={f}
+        requirement={req('R-D-03', { check: { kind: 'presence', match: { text: 'x' } } })}
+        design={img()}
+        capture={img()}
+      />,
+    );
+    expect(screen.getByText('Nothing drawn here')).toBeTruthy();
+    rerender(
+      <FindingDetail
+        finding={f}
+        requirement={req('R-D-03', { check: { kind: 'dominant-text', match: { tag: 'h1' } } })}
+        design={img()}
+        capture={img()}
+      />,
+    );
+    expect(screen.queryByText('Nothing drawn here')).toBeNull();
+    rerender(<FindingDetail finding={f} requirement={req('R-D-03')} design={img()} />);
+    expect(screen.queryByText('Nothing drawn here')).toBeNull();
   });
 });

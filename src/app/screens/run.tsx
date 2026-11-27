@@ -364,6 +364,8 @@ const RunRoute: FC = () => {
         <ReverifySheet
           project={p}
           contract={contract}
+          run={run}
+          runNumber={number ?? 1}
           urls={urls}
           onChanged={refresh}
           onClose={closeReverify}
@@ -381,16 +383,20 @@ const RunRoute: FC = () => {
 const ReverifySheet: FC<{
   project: Project;
   contract: Contract | undefined;
+  run: Run;
+  runNumber: number;
   urls: Record<string, string>;
   onChanged(): void;
   onClose(): void;
   onGo(): void;
-}> = ({ project, contract, urls, onChanged, onClose, onGo }) => {
+}> = ({ project, contract, run, runNumber, urls, onChanged, onClose, onGo }) => {
   const sv = useServices();
   const cancel = useRef<HTMLButtonElement>(null);
   const [busy, setBusy] = useState(false);
   const [problem, setProblem] = useState<string>();
   const accepted = contract?.requirements.filter((r) => r.accepted).length ?? 0;
+  // Nothing new to check while every capture is one the base Run already used.
+  const unchanged = project.captures.length > 0 && project.captures.every((c) => run.captureIds.includes(c.id));
 
   const replace = async (vp: ViewportId, file: File) => {
     setProblem(undefined);
@@ -467,17 +473,28 @@ const ReverifySheet: FC<{
           <p className="title">{problem}</p>
         </div>
       ) : null}
+      {unchanged ? (
+        <p className="small" id="rv-unchanged">
+          {copy.flows.reverify.unchanged(runNumber)}
+        </p>
+      ) : null}
       <p className="small muted">{copy.flows.reverify.sampleHint}</p>
       {project.isSample ? (
         <div>
-          <LoadFixedButton busy={busy} onLoad={() => void loadFixed()} />
+          <LoadFixedButton busy={busy} primary={unchanged} onLoad={() => void loadFixed()} />
         </div>
       ) : null}
       <div className="sheet-foot">
         <button className="btn" type="button" ref={cancel} onClick={onClose}>
           Cancel
         </button>
-        <button className="btn btn-primary" type="button" onClick={onGo}>
+        <button
+          className={unchanged ? 'btn' : 'btn btn-primary'}
+          type="button"
+          aria-disabled={unchanged || undefined}
+          aria-describedby={unchanged ? 'rv-unchanged' : undefined}
+          onClick={unchanged ? undefined : onGo}
+        >
           <Glyph d={REFRESH} small />
           {copy.flows.reverify.go}
         </button>

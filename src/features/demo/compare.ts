@@ -43,3 +43,24 @@ export function compareWithVerified(
   const missing = verified.filter((_, i) => !taken.has(i)).map((v) => v.id);
   return { matched, missing, extra };
 }
+
+export interface ComparedItem {
+  id: string;
+  statement: string;
+}
+
+/**
+ * `compareWithVerified` with statements attached, each looked up in the list its id belongs to: `missing` ids are
+ * verified ids, `extra` ids are AI ids, and the two lists can use the same ids (SPEC-DEMO-03).
+ */
+export function describeComparison(
+  ai: Requirement[],
+  verified: Requirement[],
+): { matched: string[]; missing: ComparedItem[]; extra: ComparedItem[] } {
+  const c = compareWithVerified(ai, verified);
+  const item = (list: Requirement[]) => (id: string) => ({
+    id,
+    statement: list.find((r) => r.id === id)?.statement ?? '',
+  });
+  return { matched: c.matched, missing: c.missing.map(item(verified)), extra: c.extra.map(item(ai)) };
+}

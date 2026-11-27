@@ -378,7 +378,11 @@ describe('SPEC-DEMO-03: review draft and sample comparison', () => {
     const onKeep = vi.fn();
     mount({
       pending: pending(),
-      comparison: { matched: ['R-01', 'R-02'], missing: ['R-09'], extra: ['R-03'] },
+      comparison: {
+        matched: ['R-01', 'R-02'],
+        missing: [{ id: 'R-09', statement: 'The page ends with a footer' }],
+        extra: [{ id: 'R-03', statement: 'Extra statement' }],
+      },
       onUseAi: onUse,
       onKeepVerified: onKeep,
     });
@@ -393,10 +397,49 @@ describe('SPEC-DEMO-03: review draft and sample comparison', () => {
     expect(onKeep).toHaveBeenCalledTimes(1);
   });
 
+  it('SPEC-DEMO-03: each side shows its own statement even when AI and verified ids collide; no statement shows the id alone; empty lists say None', () => {
+    mount({
+      pending: contract([req('R-08', { accepted: false, statement: 'AI card width' })], { id: 'ctr_ai' }),
+      comparison: {
+        matched: [],
+        missing: [
+          { id: 'R-08', statement: 'The page ends with a footer' },
+          { id: 'I-M-02', statement: '' },
+        ],
+        extra: [{ id: 'R-08', statement: 'AI card width' }],
+      },
+    });
+    const rows = screen.getAllByRole('row');
+    const missed = rows.find((r) => within(r).queryByText('Missed by AI')) as HTMLElement;
+    const extra = rows.find((r) => within(r).queryByText('Extra from AI')) as HTMLElement;
+    const matched = rows.find((r) => within(r).queryByText('Matched')) as HTMLElement;
+    expect(within(missed).getByText('The page ends with a footer', { exact: false })).toBeTruthy();
+    expect(within(missed).queryByText('AI card width', { exact: false })).toBeNull();
+    expect(within(missed).getByText('I-M-02')).toBeTruthy();
+    expect(within(missed).getAllByText(/^(R-08|I-M-02)$/)).toHaveLength(2);
+    expect(within(extra).getByText('AI card width', { exact: false })).toBeTruthy();
+    expect(within(extra).queryByText('The page ends with a footer', { exact: false })).toBeNull();
+    // Each item sits in its own block, not run together.
+    expect(within(missed).getByText('I-M-02').parentElement).not.toBe(within(missed).getByText('R-08').parentElement);
+    expect(within(matched).getByText('None')).toBeTruthy();
+  });
+
+  it('SPEC-DEMO-03: an all-matched comparison lists None for missed and extra', () => {
+    mount({
+      pending: contract([req('R-01', { accepted: false })], { id: 'ctr_ai' }),
+      comparison: { matched: ['R-01'], missing: [], extra: [] },
+    });
+    expect(screen.getAllByText('None')).toHaveLength(2);
+  });
+
   it('SPEC-DEMO-03: zero matches and singular wording stay correct', () => {
     mount({
       pending: contract([req('R-01', { accepted: false })], { id: 'ctr_ai' }),
-      comparison: { matched: [], missing: ['R-02'], extra: ['R-01'] },
+      comparison: {
+        matched: [],
+        missing: [{ id: 'R-02', statement: 'Verified two' }],
+        extra: [{ id: 'R-01', statement: 'AI one' }],
+      },
     });
     expect(
       screen.getByRole('heading', { name: 'AI proposed 1 requirement; 0 match the verified contract' }),

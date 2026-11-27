@@ -320,7 +320,7 @@ describe('spacing (SPEC-RUN-03, SPEC-MEAS-12)', () => {
 });
 
 describe('dominant-text (SPEC-RUN-03)', () => {
-  const r = req({ kind: 'dominant-text', match: { tag: 'h1' } });
+  const r = req({ kind: 'dominant-text', match: { tag: 'h1' } }, { primary: false });
   const fs = (n: number): DomElement['style'] => ({ ...domElement().style, fontSize: n });
 
   it('SPEC-RUN-03: the match is at least as large as every other text element: pass at High', async () => {
@@ -353,6 +353,42 @@ describe('dominant-text (SPEC-RUN-03)', () => {
       cap: 'medium',
       severity: 'major',
     });
+  });
+
+  it('statement names the element in words, never its raw selector (selector stays in facts and fix)', async () => {
+    const sel = 'body > main:nth-of-type(1) > section:nth-of-type(1) > div:nth-of-type(1) > h1:nth-of-type(1)';
+    const v = ctx({
+      dom: dom(
+        el({
+          i: 0,
+          tag: 'h1',
+          kind: 'heading',
+          level: 1,
+          text: 'Plan your week, calmly',
+          selector: sel,
+          style: fs(28),
+        }),
+        el({ i: 1, tag: 'p', kind: 'text', text: 'Sub', style: fs(32) }),
+      ),
+    });
+    const out = await result(r, v);
+    expect(out.statement).not.toContain('nth-of-type');
+    expect(out.statement).not.toContain('`');
+    expect(out.statement).toMatch(/^The headline "Plan your week, calmly" is 28 px/);
+    expect(out.facts.selector).toBe(sel);
+    expect(out.fix).toContain(sel);
+  });
+
+  it('falls back to the tag when the element has no text or name', async () => {
+    const v = ctx({
+      dom: dom(
+        el({ i: 0, tag: 'h1', kind: 'heading', text: '', selector: 'a > b:nth-of-type(2)', style: fs(28) }),
+        el({ i: 1, tag: 'p', kind: 'text', text: 'Sub', style: fs(32) }),
+      ),
+    });
+    const out = await result(r, v);
+    expect(out.statement).not.toContain('nth-of-type');
+    expect(out.statement).toMatch(/^The <h1> is 28 px/);
   });
 });
 

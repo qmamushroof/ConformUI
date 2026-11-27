@@ -279,6 +279,9 @@ describe('7.3 Deep Analysis and Re-verify', () => {
       const [p] = await services.store.list();
       expect(p?.captures.every((c) => c.dom?.page.url.includes('/fixed'))).toBe(true);
     });
+    await waitFor(() =>
+      expect(within(dialog).getByRole('button', { name: 'Run Re-verify' }).getAttribute('aria-disabled')).toBeNull(),
+    );
     fireEvent.click(within(dialog).getByRole('button', { name: 'Run Re-verify' }));
     await screen.findByRole('heading', { level: 1, name: 'Run 2' }, { timeout: 90_000 });
     const [p] = await services.store.list();
@@ -286,6 +289,45 @@ describe('7.3 Deep Analysis and Re-verify', () => {
     expect(runs).toHaveLength(2);
     expect(Object.values(runs[1]?.changes ?? {})).toContain('resolved');
     expect(Object.values(runs[1]?.changes ?? {})).toContain('remaining');
+  });
+
+  it('Re-verify is blocked with a reason while every capture is the one the Run already checked; Load fixed implementation unblocks it', async () => {
+    await mount({ status: AVAILABLE }, '/?sample=1');
+    await sampleToFindings();
+    click('Re-verify');
+    const dialog = await screen.findByRole('dialog');
+    const go = within(dialog).getByRole('button', { name: 'Run Re-verify' });
+    expect(go.getAttribute('aria-disabled')).toBe('true');
+    const reason = 'Add new captures first. These are the captures Run 1 already checked.';
+    expect(within(dialog).getByText(reason)).toBeTruthy();
+    expect(go.getAttribute('aria-describedby')).toBe(within(dialog).getByText(reason).id);
+    // Activating it does nothing.
+    fireEvent.click(go);
+    expect(loc()).not.toMatch(/run\/new/);
+    expect(within(dialog).getByRole('button', { name: 'Load fixed implementation' }).className).toContain(
+      'btn-primary',
+    );
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Load fixed implementation' }));
+    await waitFor(() =>
+      expect(within(dialog).getByRole('button', { name: 'Run Re-verify' }).getAttribute('aria-disabled')).toBeNull(),
+    );
+    expect(within(dialog).queryByText(reason)).toBeNull();
+  });
+
+  it('Re-verify is allowed when only one viewport capture was replaced', async () => {
+    await mount({ status: AVAILABLE }, '/?sample=1');
+    await sampleToFindings();
+    click('Re-verify');
+    const dialog = await screen.findByRole('dialog');
+    const fixed = assets.fixed.desktop;
+    const input = within(dialog)
+      .getAllByLabelText(/Replace .* capture/)[0]
+      ?.querySelector('input');
+    expect(input).toBeTruthy();
+    fireEvent.change(input as HTMLInputElement, { target: { files: [fixed.image] } });
+    await waitFor(() =>
+      expect(within(dialog).getByRole('button', { name: 'Run Re-verify' }).getAttribute('aria-disabled')).toBeNull(),
+    );
   });
 });
 
@@ -299,3 +341,13 @@ async function mountAt(services: Awaited<ReturnType<typeof mount>>['services'], 
     </ServicesProvider>,
   );
 }
+
+describe('welcome copy', () => {
+  it('the sample line states the requirement count of the real sample contract, not a fixed number', async () => {
+    await mount({ status: AVAILABLE }, '/welcome');
+    const n = assets.contract.requirements.length;
+    expect(n).toBeGreaterThan(0);
+    await screen.findByText(new RegExp(`a ${n}-requirement contract, ready to run`));
+    expect(screen.queryByText(/19-requirement/)).toBeNull();
+  });
+});

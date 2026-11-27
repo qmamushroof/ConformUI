@@ -5,10 +5,18 @@ import { Icon } from './icon';
 export interface LoadFixedButtonProps {
   onLoad(): void;
   busy?: boolean;
+  /** Primary styling while it is the obvious next step. */
+  primary?: boolean;
 }
 
-export const LoadFixedButton: FC<LoadFixedButtonProps> = ({ onLoad, busy }) => (
-  <button className="btn" type="button" aria-busy={busy || undefined} disabled={busy} onClick={onLoad}>
+export const LoadFixedButton: FC<LoadFixedButtonProps> = ({ onLoad, busy, primary }) => (
+  <button
+    className={primary ? 'btn btn-primary' : 'btn'}
+    type="button"
+    aria-busy={busy || undefined}
+    disabled={busy}
+    onClick={onLoad}
+  >
     <Icon name="refresh" small />
     Load fixed implementation
   </button>
