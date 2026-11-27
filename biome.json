@@ -11,12 +11,10 @@
       "!src/features/dom-snippet/snippet.js",
       "!package-lock.json",
       "!tests/architecture/fixtures",
-      "!src/app/styles/tokens.css",
-      "!src/app/styles/tokens.tailwind.css"
+      "!src/app/styles/tokens.css"
     ]
   },
   "formatter": { "enabled": true, "indentStyle": "space", "indentWidth": 2, "lineWidth": 120 },
-  "css": { "parser": { "tailwindDirectives": true } },
   "javascript": { "formatter": { "quoteStyle": "single" } },
   "linter": {
     "enabled": true,

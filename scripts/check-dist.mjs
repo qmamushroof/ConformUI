@@ -30,6 +30,17 @@ for (const file of walk(dist)) {
   if (TOKEN_ASSIGN.test(text)) hits.push(`${relative(dist, file)}: ${TOKEN_LABEL}`);
 }
 
+// No Tailwind preflight: its `*{margin:0}` reset un-centres every modal dialog (UA `dialog:modal{margin:auto}`).
+for (const file of walk(dist).filter((f) => f.endsWith('.css'))) {
+  const css = readFileSync(file, 'utf8');
+  if (css.includes('--tw-')) hits.push(`${relative(dist, file)}: Tailwind variable --tw-`);
+  for (const m of css.matchAll(/([^{}]*)\{([^{}]*)\}/g)) {
+    const universal = (m[1] ?? '').split(',').some((s) => /^\s*\*\s*$/.test(s) || /^\s*::?backdrop\s*$/.test(s));
+    if (universal && /(^|;)\s*margin\s*:\s*0\s*(;|$)/.test(m[2] ?? ''))
+      hits.push(`${relative(dist, file)}: universal reset (margin:0 on *)`);
+  }
+}
+
 // One React copy: its core (marked by `isReactComponent={}`) must live in exactly one chunk, and react-dom must import it.
 const REACT_CORE = 'isReactComponent={}';
 const assets = join(dist, 'assets');
