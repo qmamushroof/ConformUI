@@ -1,0 +1,30 @@
+{
+ "cues": [
+  {
+   "t": 5.75,
+   "rect": [
+    666,
+    991,
+    618,
+    61
+   ],
+   "scale": 1.8,
+   "hold": 1.5,
+   "box": true,
+   "what": "downloaded"
+  },
+  {
+   "t": 9.1,
+   "rect": [
+    1191,
+    1,
+    124,
+    66
+   ],
+   "scale": 2.2,
+   "hold": 1.8,
+   "box": true,
+   "what": "install app"
+  }
+ ]
+}

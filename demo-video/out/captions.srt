@@ -1,0 +1,134 @@
+1
+00:00:00,200 --> 00:00:03,712
+A coding agent built this page from a
+design.
+
+2
+00:00:03,712 --> 00:00:04,882
+It looks right.
+
+3
+00:00:04,882 --> 00:00:07,926
+But "looks right" is not a requirement.
+
+4
+00:00:07,926 --> 00:00:12,687
+And "fix what looks wrong" gives the agent
+nothing to act on.
+
+5
+00:00:15,200 --> 00:00:20,469
+ConformUI turns the design into a
+contract: a list of requirements you can
+
+6
+00:00:20,469 --> 00:00:20,896
+check.
+
+7
+00:00:20,896 --> 00:00:23,745
+Gemma 4 reads the design on this device.
+
+8
+00:00:23,745 --> 00:00:26,450
+The network is off, so nothing leaves.
+
+9
+00:00:26,450 --> 00:00:31,007
+Mobile expectations are inferred, so they
+are labelled advisory.
+
+10
+00:00:45,200 --> 00:00:50,337
+Every number comes from a deterministic
+engine, not a model.
+
+11
+00:00:50,337 --> 00:00:52,649
+The CTA is 132 pixels wide.
+
+12
+00:00:52,649 --> 00:00:54,362
+The design says 220.
+
+13
+00:00:54,362 --> 00:00:57,615
+The engine trace shows what ran where.
+
+14
+00:00:57,615 --> 00:01:00,955
+And still, nothing has left the device.
+
+15
+00:01:20,200 --> 00:01:22,306
+Some judgements are harder.
+
+16
+00:01:22,306 --> 00:01:24,647
+For those, I choose the cloud.
+
+17
+00:01:24,647 --> 00:01:30,030
+Before anything leaves, I see exactly what
+is sent and how big it is.
+
+18
+00:01:30,030 --> 00:01:35,179
+The result is labelled Cloud, so it never
+pretends to be measured.
+
+19
+00:01:45,200 --> 00:01:49,991
+The fix prompt gives the agent measured
+instructions it can verify.
+
+20
+00:01:49,991 --> 00:01:51,850
+Not "make it look better".
+
+21
+00:01:51,850 --> 00:01:54,281
+"Make the button 220 pixels wide."
+
+22
+00:02:10,200 --> 00:02:13,297
+Re-verify checks the same contract again.
+
+23
+00:02:13,297 --> 00:02:14,958
+6 issues are resolved.
+
+24
+00:02:14,958 --> 00:02:18,886
+1 spacing issue remains, and it comes with
+evidence.
+
+25
+00:02:18,886 --> 00:02:22,436
+So the agent's "done" is now a measured
+"done".
+
+26
+00:02:35,200 --> 00:02:37,909
+Reports export as Markdown or JSON.
+
+27
+00:02:37,909 --> 00:02:43,714
+Where on-device AI is not available, the
+first pass runs in the cloud, only
+
+28
+00:02:43,714 --> 00:02:46,578
+after consent, and the badge says so.
+
+29
+00:02:50,200 --> 00:02:52,892
+Design intent as a contract.
+
+30
+00:02:52,892 --> 00:02:55,007
+Measured, not guessed.
+
+31
+00:02:55,007 --> 00:02:56,834
+Private by default.

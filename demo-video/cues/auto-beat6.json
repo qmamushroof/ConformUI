@@ -1,0 +1,30 @@
+{
+ "cues": [
+  {
+   "t": 0.59,
+   "rect": [
+    70,
+    320,
+    900,
+    80
+   ],
+   "scale": 1.9,
+   "hold": 2.5,
+   "box": true,
+   "what": "summary resolved/remaining"
+  },
+  {
+   "t": 7.06,
+   "rect": [
+    575,
+    613,
+    1220,
+    432
+   ],
+   "scale": 1,
+   "hold": 3,
+   "box": false,
+   "what": "diff hold"
+  }
+ ]
+}

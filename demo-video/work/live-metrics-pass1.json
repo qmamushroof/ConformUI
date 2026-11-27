@@ -1,0 +1,46 @@
+{
+  "notes": [
+    "settings clear failed: locator.click: Timeout 30000ms exceeded."
+  ],
+  "responses": [
+    "403 https://content-firebaseappcheck.googleapis.com/v1/projects/conformui/apps/1:851717546732:web:6837e465b3ff24d5abbbc9:exchangeRecaptchaEnterpriseToken?key=AIzaSy",
+    "403 https://content-firebaseappcheck.googleapis.com/v1/projects/conformui/apps/1:851717546732:web:6837e465b3ff24d5abbbc9:exchangeRecaptchaEnterpriseToken?key=AIzaSy"
+  ],
+  "buildScripts": "recaptcha__en.js,index-DBUgsgfy.js,registerSW.js,enterprise.js?render=explicit",
+  "availability": "available",
+  "headerStart": "Skip to content | ConformUI | Projects | Snippet | Settings | Install app | On-device ready | Nothing has left this device | Projects |  | 2 projects, stored on this device |  | Try the sample | New project | Sample landing page",
+  "extractSeconds": 180.893,
+  "extractText": "Skip to content\nConformUI\nProjects\nSnippet\nSettings\nInstall app\nOn-device ready\nNothing from this project has left this device\nProjects\n/\nSample landing page\nSample\n/\nContract\nDesign\n(done)\nContract\n(done)\nCaptures\n(done)\n4\nRun, next\n5\nFix\n6\nRe-verify\nAI contract (draft)\n9 requirements, 0 accepted\nNot active: runs use the verified contract v1\nExtract contract\nAdd requirement\n\nSample results (pre-computed): 9 requirements. Review them, then accept.\n\nThe model took too long to answer, so nothing was sent. Try again to give it more time. These are the sample’s stored extraction results, labelled Pre-computed. The verified contract stays active until you choose below.\n\nAccept all\nTry again\nAI proposed 9 requirements; 7 match the verified contract\n\nA match has the same category and a region overlap (IoU) of 0.5 or more.\n\nUse AI contract\nKeep verified contract\nAI contract compared with the verified sample contract\nResult\tCount\tRequirements\nMatched\t7\tR-01 R-02 R-03 R-04 R-05 R-06 R-07\nMissed by AI\t3\t\nR-08 The page ends with a footer\nI-M-01 Expected the mobile page to fit the screen without overlap (inferred)\nI-M-02 Expected the primary action to stay visible on mobile (inferred)\n\nExtra from AI\t2\t\nR-08 The feature cards are 334 px wide\nI-M-01 Expected on Mobile (inferred): layout fits, with no horizontal scroll, overlap or clipped text\nRequirements 9\nPre-computed extraction\nDesktop 1440 · 8\nThe hero has an illustration on the right\nR-01\nPresence\nVisual\nPre-computed\nNot reviewed\nThe Start free button is 220 px wide\nR-02\nSize\nMeasured\nPre-computed\nNot reviewed\nThe headline is the largest text\nR-03\nTypography\nMeasured\nPre-computed\nNot reviewed\nThe navigation has four links\nR-04\nText\nMeasured\nPre-computed\nNot reviewed\nThe logo is shown in the navigation\nR-05\nPresence\nMeasured\nPre-computed\nNot reviewed\nThe hero and features are about 96 px apart\nR-06\nSpacing\nMeasured\nPre-computed\nNot reviewed\nThe button colour matches the design\nR-07\nColour\nJudged\nPre-computed\nNot reviewed\nThe feature cards are 334 px wide\nR-08\nSize\nMeasured\nPre-computed\nNot reviewed\nMobile 390 · 1, inferred from Desktop (no Mobile design)\nExpected on Mobile (inferred): layout fits, with no horizontal scroll, overlap or clipped text\nI-M-01\nResponsive\nMeasured\nInferred\nRule (Measured)\nNot reviewed\nDesign, Desktop\n1440 × 1077\nNot accepted: not verified until accepted\nThe hero has an illustration on the right\nR-01\nDesktop 1440\nPresence\nExplicit\nVisual\nPre-computed\nPasses when\n\nAn illustration is visible at the right of the hero.\n\nRegion\nSnapped to element bounds, design image\nBounds\n519 × 399 px at 800, 137\nChecked by\nImage comparison on this device\nAccept\nEdit\nDelete",
+  "aiPanel": "",
+  "aiVsVerified": "AI proposed 9 requirements; 7 match the verified contract",
+  "matchedRows": "Matched\t7\tR-01 R-02 R-03 R-04 R-05 R-06 R-07\nMissed by AI\t3\t\nR-08 The page ends with a footer\nI-M-01 Expected the mobile page to fit the screen without overlap (inferred)\nI-M-02 Expected the primary action to ",
+  "acceptAllText": [
+    "9 requirements, 9 accepted"
+  ],
+  "runSeconds": 135.746,
+  "run1Text": "Skip to content\nConformUI\nProjects\nSnippet\nSettings\nInstall app\nOn-device ready\nNothing from this project has left this device\nProjects\n/\nSample landing page\nSample\n/\nRun\nDesign\n(done)\nContract\n(done)\nCaptures\n(done)\n4\nRun, next\n5\nFix\n6\nRe-verify\nRun\nChecking 10 requirements\nMeasured checks, Desktop\n1 ms\nVisual checks, Desktop\n190 ms\nMeasured checks, Mobile\n1 ms\nChecking requirements\nRunning\n\nMeasured and visual checks run on this device. Nothing is sent.\n\nStop\nChecking 10 requirements",
+  "run1Summary": "",
+  "run1Trace": "",
+  "run1R07": [],
+  "deepEnabled": false,
+  "deepAttempts": [],
+  "deepDisabledReason": "",
+  "appCheck403": true,
+  "reverifyText": "",
+  "reverifySummary": "",
+  "reverifyTrace": "",
+  "reverifyR07": [],
+  "offlineHeader": "Skip to content | ConformUI | Projects | Snippet | Settings | Offline | Install app | On-device ready | Nothing has left this device | Projects |  | 3 projects, stored on this device",
+  "offlineExtractSeconds": 136.53,
+  "offlineExtract": [
+    "AI extracted 18 requirements, On-device. Review them, then accept.",
+    "AI proposed 18 requirements; 0 match the verified contract"
+  ],
+  "offlineRunSummary": "6 fail 4 pass 0 not checked Deep Analysis  Deep Analysis needs a c",
+  "offlineRunTrace": "Engine trace | 0 B sent off this device | Step\tEngine\tDuration\tSent off this device | Measured checks, Desktop\t | Measured\t1 ms\t0 B | Visual checks, Desktop\t | Measured\t260 ms\t0 B | Measured checks, Mobile\t | Measured\t1 ms\t0 B | Judged check R-07, Desktop\t | On-device\t11 s\t0 B | Run complete: 6 fail",
+  "offlineWorks": true,
+  "failedResponses": [
+    "403 https://content-firebaseappcheck.googleapis.com/v1/projects/conformui/apps/1:851717546732:web:6837e465b3ff24d5abbbc9:exchangeRecaptchaEnterpriseToken?key=AIzaSy",
+    "403 https://content-firebaseappcheck.googleapis.com/v1/projects/conformui/apps/1:851717546732:web:6837e465b3ff24d5abbbc9:exchangeRecaptchaEnterpriseToken?key=AIzaSy"
+  ]
+}

@@ -1,0 +1,13 @@
+<!doctype html><meta charset="utf-8"><style>
+*{box-sizing:border-box}body{margin:0;background:#1e1e24;color:#d4d4d8;font:15px/1.5 Consolas,"Cascadia Mono",monospace;height:100vh;display:flex;flex-direction:column}
+.bar{height:36px;background:#2a2a32;display:flex;align-items:center;padding:0 14px;color:#9a9aa6;font:13px "Segoe UI",sans-serif;gap:18px}
+.main{flex:1;display:flex;min-height:0}.tree{width:210px;background:#232329;padding:12px;font:13px "Segoe UI",sans-serif;color:#9a9aa6}
+.tree div{padding:3px 6px}.tree .on{background:#34343e;color:#fff}
+.code{flex:1.1;padding:14px;overflow:hidden;white-space:pre;font-size:13px;color:#b8b8c4;border-right:1px solid #33333c}
+.agent{flex:1;display:flex;flex-direction:column;background:#1a1a20;min-width:0}.agent h4{margin:0;padding:10px 14px;font:600 13px "Segoe UI",sans-serif;background:#2a2a32;color:#c8c8d2}
+.agent pre{flex:1;margin:0;padding:14px;white-space:pre-wrap;word-break:break-word;font-size:13px;line-height:1.45;color:#e4e4ea;overflow:hidden}
+.in{padding:10px 14px;border-top:1px solid #33333c;color:#7c7c88;font:13px "Segoe UI",sans-serif}
+</style><div class="bar"><span>Editor</span><span>page.html</span><span>styles.css</span></div>
+<div class="main"><div class="tree"><div>project</div><div class="on">&nbsp;&nbsp;page.html</div><div>&nbsp;&nbsp;styles.css</div></div>
+<div class="code">__CODE__</div>
+<div class="agent"><h4>Coding agent</h4><pre>__PROMPT__</pre><div class="in">Message the agent</div></div></div>

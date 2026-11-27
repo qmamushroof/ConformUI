@@ -1,0 +1,131 @@
+Skip to content
+ConformUI
+Projects
+Snippet
+Settings
+Install app
+On-device ready
+Nothing from this project has left this device
+Projects
+/
+Sample landing page
+Sample
+/
+Run 2
+Design
+(done)
+Contract
+(done)
+Captures
+(done)
+Run
+(done)
+Fix
+(done)
+6
+Re-verify, next
+Run 2
+27 Nov 2026, 15:57
+Contract v1, locked
+Desktop 1440 and Mobile 390
+8738550a…34df
+5
+resolved
+1
+remaining
+0
+new
+0
+regressed
+Deep Analysis
+
+Nothing needs a deeper look.
+
+Re-verify
+Copy fix prompt
+Findings
+All
+6
+Desktop
+5
+Mobile
+1
+The vertical gap is 64 px vs 96 px in the design (−33.3%), measured from DOM snapshot.
+−33%
+Remaining
+Desktop
+Measured
+The primary call-to-action button is 220 px wide
+Resolved
+Desktop
+The headline is the dominant text on the page
+Resolved
+Desktop
+The navigation contains four links
+Resolved
+Desktop
+The hero shows an illustration at the right of the headline
+Resolved
+Desktop
+Expected the mobile page to fit the screen without overlap (inferred)
+Resolved
+Mobile
+Inferred
+Passing
+9
+Not checked
+0
+Fail
+Minor
+The vertical gap is 64 px vs 96 px in the design (−33.3%), measured from DOM snapshot.
+R-06
+Spacing
+Explicit
+Measured
+High confidence
+Evidence
+Diff overlay
+Full page
+Design
+1440 × 1077
+Implementation
+1440 × 1045
+
+Diff overlay off. No difference figure was measured for this region.
+
+Measurements
+Property	Design	Implementation	Difference	Source
+vertical gap	96 px	64 px	−32 px	design image + DOM snapshot
+Selector
+#features > h2:nth-of-type(1)
+Suggested fix
+
+Set the space between `body > main:nth-of-type(1) > section:nth-of-type(1)` and `#features > h2:nth-of-type(1)` to 96 px.
+
+Passes when
+
+The vertical gap from the hero to the features heading is within tolerance of 96 px.
+
+Engine trace
+0 B sent off this device
+Step	Engine	Duration	Sent off this device
+Measured checks, Desktop	
+Measured	36 ms	0 B
+Visual checks, Desktop	
+Measured	1.6 s	0 B
+Measured checks, Mobile	
+Measured	1 ms	0 B
+Judged check R-07, Desktop	
+On-device	10.9 s	0 B
+Runs
+Run 2
+1 fail
+27 Nov 2026, 15:57
+1 fail, 9 pass
+Contract v1
+Run 1
+6 fail
+27 Nov 2026, 15:52
+6 fail, 4 pass
+Contract v1
+Re-verify complete: 5 resolved, 1 remaining

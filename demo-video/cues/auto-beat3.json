@@ -1,0 +1,82 @@
+{
+ "cues": [
+  {
+   "t": 0.91,
+   "rect": [
+    60,
+    640,
+    1800,
+    160
+   ],
+   "scale": 1.5,
+   "hold": 2.2,
+   "box": false,
+   "what": "console output"
+  },
+  {
+   "t": 16.11,
+   "rect": [
+    84,
+    634,
+    404,
+    146
+   ],
+   "scale": 1.6,
+   "hold": 1.8,
+   "box": true,
+   "what": "finding /Primary CTA is 132 px/"
+  },
+  {
+   "t": 19.71,
+   "rect": [
+    84,
+    435,
+    388,
+    217
+   ],
+   "scale": 1.6,
+   "hold": 1.8,
+   "box": true,
+   "what": "finding /Nothing is drawn where the design shows content/"
+  },
+  {
+   "t": 23.31,
+   "rect": [
+    84,
+    763,
+    407,
+    169
+   ],
+   "scale": 1.6,
+   "hold": 1.8,
+   "box": true,
+   "what": "finding /The headline/"
+  },
+  {
+   "t": 26.92,
+   "rect": [
+    84,
+    419,
+    397,
+    240
+   ],
+   "scale": 1.6,
+   "hold": 1.8,
+   "box": true,
+   "what": "finding /horizontal overflow/"
+  },
+  {
+   "t": 30.05,
+   "rect": [
+    85,
+    606,
+    1750,
+    398
+   ],
+   "scale": 1.3,
+   "hold": 2.5,
+   "box": true,
+   "what": "engine trace"
+  }
+ ]
+}

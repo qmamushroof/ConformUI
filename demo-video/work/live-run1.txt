@@ -1,0 +1,125 @@
+Skip to content
+ConformUI
+Projects
+Snippet
+Settings
+Install app
+On-device ready
+Nothing from this project has left this device
+Projects
+/
+Sample landing page
+Sample
+/
+Run 1
+Design
+(done)
+Contract
+(done)
+Captures
+(done)
+Run
+(done)
+5
+Fix, next
+6
+Re-verify
+Run 1
+27 Nov 2026, 15:52
+Contract v1, locked
+Desktop 1440 and Mobile 390
+112f43c7…b7d4
+6
+fail
+4
+pass
+0
+not checked
+Deep Analysis
+Re-verify
+Copy fix prompt
+Findings
+All
+6
+Desktop
+5
+Mobile
+1
+Nothing is drawn where the design shows content: The hero shows an illustration at the right of the headline (ink 76.1% in the design vs 0.3% in the implementation), measured from images.
+−75.9%
+Critical
+Desktop
+Measured
+Primary CTA is 132 px wide vs 220 px in the design (−40.0%), measured from DOM snapshot.
+−40%
+Major
+Desktop
+Measured
+The headline "Plan your week, calmly" is 28 px, smaller than other text at 32 px, so it is not the dominant text; measured from DOM snapshot.
+−4 px
+Major
+Desktop
+Measured
+The navigation contains four links: found 3 visible matching elements, expected 4, measured from DOM snapshot.
+−1
+Major
+Desktop
+Measured
+The vertical gap is 64 px vs 96 px in the design (−33.3%), measured from DOM snapshot.
+−33%
+Minor
+Desktop
+Measured
+Expected the mobile page to fit the screen without overlap (inferred). The page does not fit its viewport: 64 px of horizontal overflow; 15 overlapping pairs (Main over Plan your week, calmly A simple planner…, and more), measured from DOM snapshot.
++64 px
+Minor
+Mobile
+Inferred
+Measured
+Passing
+4
+Not checked
+0
+Fail
+Critical
+Nothing is drawn where the design shows content: The hero shows an illustration at the right of the headline (ink 76.1% in the design vs 0.3% in the implementation), measured from images.
+R-01
+Presence
+Explicit
+Measured
+Medium confidence
+Evidence
+Diff overlay
+Full page
+Design
+1440 × 1077
+Implementation
+1440 × 1045
+
+Nothing drawn here
+
+Diff overlay off. No difference figure was measured for this region.
+
+Measurements
+Property	Design	Implementation	Difference	Source
+Ink coverage	76.1%	0.3%	−75.9%	design image + capture image
+Suggested fix
+
+Add the missing element at the position shown in the design.
+
+Passes when
+
+An illustration of about 520 x 400 px is visible at the right of the hero at 1440 px.
+
+Engine trace
+0 B sent off this device
+Step	Engine	Duration	Sent off this device
+Measured checks, Desktop	
+Measured	1 ms	0 B
+Visual checks, Desktop	
+Measured	157 ms	0 B
+Measured checks, Mobile	
+Measured	1 ms	0 B
+Judged check R-07, Desktop	
+On-device	9.6 s	0 B
+Run complete: 6 fail

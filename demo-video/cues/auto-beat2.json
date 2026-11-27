@@ -1,0 +1,95 @@
+{
+ "cues": [
+  {
+   "t": 2.91,
+   "rect": [
+    380,
+    120,
+    1160,
+    600
+   ],
+   "scale": 1.25,
+   "hold": 1.6,
+   "box": false,
+   "what": "broker state"
+  },
+  {
+   "t": 7.98,
+   "rect": [
+    1650,
+    4,
+    247,
+    61
+   ],
+   "scale": 1.8,
+   "hold": 1.5,
+   "box": true,
+   "what": "counter idle"
+  },
+  {
+   "t": 10.98,
+   "rect": [
+    1177,
+    0,
+    141,
+    70
+   ],
+   "scale": 2,
+   "hold": 1.5,
+   "box": true,
+   "what": "offline pill"
+  },
+  {
+   "t": 20.81,
+   "rect": [
+    136,
+    337,
+    1692,
+    65
+   ],
+   "scale": 1.7,
+   "hold": 2,
+   "box": true,
+   "what": "engine badge on-device"
+  },
+  {
+   "t": 23.11,
+   "rect": [
+    73,
+    518,
+    607,
+    62
+   ],
+   "scale": 1.6,
+   "hold": 2.2,
+   "box": true,
+   "what": "AI vs verified"
+  },
+  {
+   "t": 27.31,
+   "rect": [
+    341,
+    499,
+    169,
+    125
+   ],
+   "scale": 1.8,
+   "hold": 1.8,
+   "box": true,
+   "what": "inferred item"
+  },
+  {
+   "t": 29.45,
+   "rect": [
+    1517,
+    4,
+    381,
+    61
+   ],
+   "scale": 1.8,
+   "hold": 1.5,
+   "box": true,
+   "what": "counter"
+  }
+ ]
+}
