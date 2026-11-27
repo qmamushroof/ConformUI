@@ -111,7 +111,7 @@ describe('routes', () => {
     await mount({ path: '/nope', screens });
     expect(await screen.findByRole('heading', { level: 1, name: "This page doesn't exist." })).toBeTruthy();
     expect(screen.getByRole('banner')).toBeTruthy();
-    expect(screen.getByText(/Nothing is stored at/).textContent).toContain('/nope');
+    expect(screen.getByText(/There.s no page at/).textContent).toContain('/nope');
     expect(document.title).toBe('Not found · ConformUI');
     fireEvent.click(screen.getByRole('button', { name: 'Back to Projects' }));
     expect(await screen.findByRole('heading', { level: 1, name: 'Projects screen' })).toBeTruthy();
@@ -356,5 +356,44 @@ describe('header', () => {
     fireEvent.click(btn);
     expect(btn.getAttribute('aria-expanded')).toBe('true');
     expect(document.getElementById(btn.getAttribute('aria-controls') ?? '')?.classList.contains('open')).toBe(true);
+  });
+});
+
+describe('route aliases and not-found copy', () => {
+  const aliasScreens = { ...screens, project: Named('Project') };
+  it.each(['/projects', '/project', '/p', '/home', '/contract', '/run', '/p/'])(
+    'hand-typed %s lands on Projects',
+    async (path) => {
+      await mount({ path, screens: aliasScreens });
+      expect(await screen.findByRole('heading', { level: 1, name: 'Projects screen' })).toBeTruthy();
+      expect(screen.getByTestId('loc').textContent).toBe('/');
+    },
+  );
+
+  it('/p/:id/run without a run id lands on the project', async () => {
+    await mount({ path: '/p/abc/run', screens: aliasScreens });
+    expect(await screen.findByRole('heading', { level: 1, name: 'Project screen' })).toBeTruthy();
+    expect(screen.getByTestId('loc').textContent).toBe('/p/abc');
+  });
+
+  it('/project/:id lands on /p/:id', async () => {
+    await mount({ path: '/project/abc', screens: aliasScreens });
+    expect(await screen.findByRole('heading', { level: 1, name: 'Project screen' })).toBeTruthy();
+    expect(screen.getByTestId('loc').textContent).toBe('/p/abc');
+  });
+
+  it('an unknown path says there is no page there, without blaming a deleted project', async () => {
+    await mount({ path: '/nope', screens: aliasScreens });
+    await screen.findByRole('heading', { level: 1, name: "This page doesn't exist." });
+    expect(screen.getByText(/There.s no page at/).textContent).toContain('/nope');
+    expect(screen.queryByText(/deleted on this device/)).toBeNull();
+    expect(screen.getByRole('button', { name: 'Back to Projects' })).toBeTruthy();
+  });
+
+  it('an unknown run or project path keeps the deleted-on-this-device explanation', async () => {
+    await mount({ path: '/p/abc/run/zzz/extra', screens: aliasScreens });
+    await screen.findByRole('heading', { level: 1, name: "This page doesn't exist." });
+    expect(screen.getByText(/Nothing is stored at/).textContent).toContain('/p/abc/run/zzz/extra');
+    expect(screen.getByText(/deleted on this device/)).toBeTruthy();
   });
 });

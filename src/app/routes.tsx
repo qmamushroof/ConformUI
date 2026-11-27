@@ -1,5 +1,5 @@
 import { type ComponentType, type FC, lazy, type ReactNode, Suspense, useEffect, useState } from 'react';
-import { Navigate, Route, Routes, useLocation } from 'react-router';
+import { Navigate, Route, Routes, useLocation, useParams } from 'react-router';
 import { NotFound } from './not-found';
 import { RouteBoundary } from './route-boundary';
 import ProjectsRoute from './screens/projects';
@@ -40,6 +40,11 @@ const Contract = lazy(() => import('./screens/contract'));
 const Run = lazy(() => import('./screens/run'));
 
 const Loading: FC = () => <main id="main" tabIndex={-1} className="page" aria-busy="true" />;
+
+/** `/project/:id` is a natural guess for `/p/:id`. */
+const ProjectAlias: FC = () => <Navigate to={`/p/${useParams().id ?? ''}`} replace />;
+
+const RunAlias: FC = () => <Navigate to={`/p/${useParams().projectId ?? ''}`} replace />;
 
 const reloadPage = () => window.location.reload();
 
@@ -96,6 +101,11 @@ export const AppRoutes: FC<AppRoutesProps> = ({ appVersion, onReload = reloadPag
         <Route path="p/:projectId" element={guard('project', <Project_ />)} />
         <Route path="p/:projectId/contract" element={guard('contract', <Contract_ />)} />
         <Route path="p/:projectId/run/:runId" element={guard('run', <Run_ />)} />
+        {['projects', 'project', 'p', 'home', 'contract', 'run'].map((path) => (
+          <Route key={path} path={path} element={<Navigate to="/" replace />} />
+        ))}
+        <Route path="project/:id" element={<ProjectAlias />} />
+        <Route path="p/:projectId/run" element={<RunAlias />} />
         <Route path="snippet" element={guard('snippet', <Snippet_ />)} />
         <Route
           path="settings"

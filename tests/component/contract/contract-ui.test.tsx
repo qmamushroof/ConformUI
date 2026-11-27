@@ -485,7 +485,9 @@ describe('SPEC-DEMO-03: review draft and sample comparison', () => {
     const { svc } = mount({ pending: pending() });
     expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('AI contract (draft)');
     expect(screen.getByText('Not active: runs use the verified contract v1')).toBeTruthy();
-    expect(screen.getByText(/AI extracted 3 requirements, On-device\. Review them, then accept\./)).toBeTruthy();
+    expect(
+      screen.getByText(/AI extracted 3 requirements, On-device · Gemini Nano 4. Review them, then accept\./),
+    ).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: /Accept all/ }));
     await waitFor(() => expect(svc.accept).toHaveBeenCalledWith('ctr_ai', 'all'));
   });

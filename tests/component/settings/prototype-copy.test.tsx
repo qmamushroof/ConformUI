@@ -20,13 +20,15 @@ describe('SPEC-SET-01: engine panel text equals the prototype', () => {
   it('SPEC-SET-01: ready', () => {
     panel({});
     expect(screen.getByText('On-device model ready: first pass stays on this device')).toBeTruthy();
-    expect(screen.getByText(/^Gemma 4 in Chrome on this computer\. Contract extraction/)).toBeTruthy();
+    expect(screen.getByText(/^Gemini Nano 4 \(Gemma 4\) in Chrome on this computer\. Contract extraction/)).toBeTruthy();
     expect(image()).toBe('On');
   });
 
   it('SPEC-SET-01: downloadable shows detail and "On, after download"', () => {
     panel({ device: 'downloadable', deviceImage: 'unknown' });
-    expect(screen.getByText('Chrome can run Gemma 4 on this computer once the model is downloaded.')).toBeTruthy();
+    expect(
+      screen.getByText('Chrome can run Gemini Nano 4 (Gemma 4) on this computer once the model is downloaded.'),
+    ).toBeTruthy();
     expect(image()).toBe('On, after download');
   });
 
@@ -34,7 +36,7 @@ describe('SPEC-SET-01: engine panel text equals the prototype', () => {
     panel({ device: 'downloading', downloadProgress: 0.42, deviceImage: 'unknown' });
     expect(
       screen.getByText(
-        'Chrome is downloading Gemma 4. You can keep working; the download continues in the background.',
+        'Chrome is downloading Gemini Nano 4 (Gemma 4). You can keep working; the download continues in the background.',
       ),
     ).toBeTruthy();
     expect(image()).toBe('On, after download');

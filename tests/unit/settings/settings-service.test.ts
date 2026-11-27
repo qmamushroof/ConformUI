@@ -96,7 +96,7 @@ describe('engine() text per status', () => {
     const v = await svc.engine();
     expect(v.device).toBe('available');
     expect(v.headline).toBe('On-device model ready: first pass stays on this device');
-    expect(v.detail).toMatch(/^Gemma 4 in Chrome on this computer\./);
+    expect(v.detail).toMatch(/^Gemini Nano 4 \(Gemma 4\) in Chrome on this computer\./);
     expect(v.canDownload).toBe(false);
     expect(v.enableSteps).toBeUndefined();
     expect(v.imageOnDevice).toBe(true);
@@ -125,7 +125,7 @@ describe('engine() text per status', () => {
     const v = await svc.engine();
     expect(v.headline).toBe('Downloading 43%');
     expect(v.detail).toBe(
-      'Chrome is downloading Gemma 4. You can keep working; the download continues in the background.',
+      'Chrome is downloading Gemini Nano 4 (Gemma 4). You can keep working; the download continues in the background.',
     );
     expect(v.canDownload).toBe(false);
     make(status({ device: 'downloading' }));

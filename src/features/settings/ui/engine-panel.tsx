@@ -142,7 +142,7 @@ export const EnginePanel: FC<EnginePanelProps> = ({ status, mode, onDownload, er
       {downloading ? (
         <div className="stack-sm">
           <div className="row-between small">
-            <span>Gemma 4</span>
+            <span>Gemini Nano 4 (Gemma 4)</span>
             <span className="muted">{pct}%</span>
           </div>
           <div

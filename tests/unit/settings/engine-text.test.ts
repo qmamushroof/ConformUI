@@ -16,7 +16,7 @@ describe('SPEC-SET-01: engine text matches the prototype', () => {
     const t = engineTexts(s());
     expect(t.headline).toBe('On-device model ready: first pass stays on this device');
     expect(t.detail).toBe(
-      'Gemma 4 in Chrome on this computer. Contract extraction and judged checks run here unless you choose otherwise.',
+      'Gemini Nano 4 (Gemma 4) in Chrome on this computer. Contract extraction and judged checks run here unless you choose otherwise.',
     );
     expect(t.enableSteps).toBeUndefined();
   });
@@ -30,7 +30,7 @@ describe('SPEC-SET-01: engine text matches the prototype', () => {
   it('SPEC-SET-01: downloadable', () => {
     const t = engineTexts(s({ device: 'downloadable' }));
     expect(t.headline).toBe('On-device model not downloaded');
-    expect(t.detail).toBe('Chrome can run Gemma 4 on this computer once the model is downloaded.');
+    expect(t.detail).toBe('Chrome can run Gemini Nano 4 (Gemma 4) on this computer once the model is downloaded.');
     expect(t.canDownload).toBe(true);
   });
 
@@ -38,7 +38,7 @@ describe('SPEC-SET-01: engine text matches the prototype', () => {
     const t = engineTexts(s({ device: 'downloading', downloadProgress: 0.42 }));
     expect(t.headline).toBe('Downloading 42%');
     expect(t.detail).toBe(
-      'Chrome is downloading Gemma 4. You can keep working; the download continues in the background.',
+      'Chrome is downloading Gemini Nano 4 (Gemma 4). You can keep working; the download continues in the background.',
     );
   });
 

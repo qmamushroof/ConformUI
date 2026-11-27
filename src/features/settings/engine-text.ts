@@ -64,19 +64,20 @@ export function engineTexts(s: EngineStatus): EngineTexts {
       return {
         headline: 'On-device model ready: first pass stays on this device',
         detail:
-          'Gemma 4 in Chrome on this computer. Contract extraction and judged checks run here unless you choose otherwise.',
+          'Gemini Nano 4 (Gemma 4) in Chrome on this computer. Contract extraction and judged checks run here unless you choose otherwise.',
         canDownload: false,
       };
     case 'downloadable':
       return {
         headline: 'On-device model not downloaded',
-        detail: 'Chrome can run Gemma 4 on this computer once the model is downloaded.',
+        detail: 'Chrome can run Gemini Nano 4 (Gemma 4) on this computer once the model is downloaded.',
         canDownload: true,
       };
     case 'downloading':
       return {
         headline: `Downloading ${percent(s.downloadProgress)}%`,
-        detail: 'Chrome is downloading Gemma 4. You can keep working; the download continues in the background.',
+        detail:
+          'Chrome is downloading Gemini Nano 4 (Gemma 4). You can keep working; the download continues in the background.',
         canDownload: false,
       };
     case 'unavailable':

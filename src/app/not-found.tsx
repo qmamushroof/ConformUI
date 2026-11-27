@@ -7,14 +7,23 @@ import { stateCopy } from './copy';
 export const NotFound: FC = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  // Prototype 404: "Nothing is stored at <path>." comes before the explanation.
+  // A path shaped like a project or run link may point at something deleted; any other path is simply not a page.
+  const stored = /^\/p\/[^/]+\/.+/.test(pathname);
   const { detail, ...notice } = stateCopy.NOT_FOUND;
   return (
     <main id="main" tabIndex={-1} className="page">
       <div className="state-wrap">
         <StateNotice notice={notice} heading onAction={() => navigate('/')}>
           <p className="small muted">
-            Nothing is stored at <span className="mono">{pathname}</span>. {detail}
+            {stored ? (
+              <>
+                Nothing is stored at <span className="mono">{pathname}</span>. {detail}
+              </>
+            ) : (
+              <>
+                There’s no page at <span className="mono">{pathname}</span>.
+              </>
+            )}
           </p>
         </StateNotice>
       </div>
