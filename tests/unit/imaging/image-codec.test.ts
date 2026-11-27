@@ -236,3 +236,72 @@ describe('SPEC-MEAS-04 probe', () => {
     expect(await code(codec().probe(new Blob(['x'], { type: 'image/png' })))).toBe('IMAGE_DECODE_FAILED');
   });
 });
+
+describe('SPEC-AI-11 letterbox for the on-device model', () => {
+  it('crop: a 1440x864 band becomes a 1024 square, grey padding, content centred, result says where', async () => {
+    const r = await codec().crop(img(1440, 2000), { x: 0, y: 0, w: 1440, h: 864 }, 1024, 'image/jpeg', {
+      letterbox: true,
+    });
+    const c = cv(0);
+    expect([c.width, c.height]).toEqual([1024, 1024]);
+    expect(c.fills).toHaveLength(1);
+    expect(c.draws[0]?.slice(1)).toEqual([0, 0, 1440, 864, 0, 205, 1024, 614]);
+    expect(r.letterbox).toEqual({ side: 1024, dx: 0, dy: 205, w: 1024, h: 614 });
+  });
+
+  it('crop without letterbox is unchanged and has no letterbox field', async () => {
+    const r = await codec().crop(img(1440, 2000), { x: 0, y: 0, w: 1440, h: 864 }, 1024, 'image/jpeg');
+    expect([cv(0).width, cv(0).height]).toEqual([1024, 614]);
+    expect(r.letterbox).toBeUndefined();
+  });
+
+  it('crop: a tiny region is enlarged (at most 2x) and centred on a square', async () => {
+    const r = await codec().crop(img(500, 500), { x: 10, y: 10, w: 100, h: 50 }, 1024, 'image/png', {
+      letterbox: true,
+    });
+    expect([cv(0).width, cv(0).height]).toEqual([200, 200]);
+    expect(r.letterbox).toMatchObject({ w: 200, h: 100, dx: 0, dy: 50 });
+  });
+
+  it('composePair: a pair wider than 2:1 is stacked, design on top, on a square canvas', async () => {
+    const r = await codec().composePair(
+      img(400, 200),
+      { x: 0, y: 0, w: 250, h: 100 },
+      img(400, 200),
+      { x: 0, y: 0, w: 250, h: 100 },
+      1024,
+      {
+        letterbox: true,
+      },
+    );
+    const c = cv(0);
+    expect(c.width).toBe(c.height);
+    expect(r.layout).toBe('stack');
+    const [d0, d1] = c.draws;
+    expect(d1?.[6]).toBeGreaterThan(d0?.[6] as number); // capture is lower than the design
+    expect(d1?.[5]).toBe(d0?.[5]); // same left edge
+  });
+
+  it('composePair: a narrow pair stays side by side, still on a square canvas', async () => {
+    const r = await codec().composePair(
+      img(400, 600),
+      { x: 0, y: 0, w: 200, h: 400 },
+      img(400, 600),
+      { x: 0, y: 0, w: 200, h: 400 },
+      1024,
+      {
+        letterbox: true,
+      },
+    );
+    expect(r.layout).toBe('side');
+    expect(cv(0).width).toBe(cv(0).height);
+    const [d0, d1] = cv(0).draws;
+    expect(d1?.[5]).toBeGreaterThan(d0?.[5] as number);
+  });
+
+  it('composePair without letterbox keeps the old side-by-side canvas', async () => {
+    const r = await codec().composePair(img(300, 200), full(300, 200), img(400, 100), full(400, 100), 5000);
+    expect([cv(0).width, cv(0).height]).toEqual([708, 200]);
+    expect(r.layout).toBe('side');
+  });
+});

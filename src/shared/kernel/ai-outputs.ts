@@ -20,7 +20,7 @@ export const EXTRACT_CHECK_KINDS = [
   'judged',
 ] as const;
 
-const box = z.tuple([
+const box_2d = z.tuple([
   z.number().min(0).max(1000),
   z.number().min(0).max(1000),
   z.number().min(0).max(1000),
@@ -35,7 +35,7 @@ export const ExtractOutputSchema = z.object({
         statement: z.string().max(160),
         condition: z.string().max(200),
         checkKind: z.enum(EXTRACT_CHECK_KINDS),
-        box, // 0..1000 of the given image: [x0, y0, x1, y1]
+        box_2d, // 0..1000 of the given image, Gemma/Gemini order: [ymin, xmin, ymax, xmax]
         matchHint: z.object({ tag: z.string().optional(), role: z.string().optional(), text: z.string().optional() }),
         expectedText: z.string().optional(),
         expectedCount: z.number().optional(),

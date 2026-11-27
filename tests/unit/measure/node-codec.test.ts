@@ -209,3 +209,17 @@ async function pngSize(b: Blob) {
   const img = await codec.pixels(b);
   return { width: img.width, height: img.height };
 }
+
+describe('8.1 node codec: letterbox', () => {
+  it('crop with letterbox gives a square with grey padding and the content centred', async () => {
+    const src = solidImage(40, 10, [255, 0, 0, 255]);
+    const out = await codec.crop(pngBlob(src), { x: 0, y: 0, w: 40, h: 10 }, 1024, 'image/png', { letterbox: true });
+    const img = await codec.pixels(out.blob);
+    expect(img.width).toBe(img.height);
+    expect(out.letterbox).toBeDefined();
+    const lb = out.letterbox as { dy: number; h: number; side: number };
+    expect(px(img, 0, 0)).toEqual([128, 128, 128, 255]);
+    expect(px(img, 5, lb.dy + 1)).toEqual([255, 0, 0, 255]);
+    expect(px(img, 5, lb.dy + lb.h + 2)).toEqual([128, 128, 128, 255]);
+  });
+});

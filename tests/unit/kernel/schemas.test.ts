@@ -366,7 +366,7 @@ describe('SPEC-KERNEL-03, SPEC-AI-05: the four AI task outputs', () => {
     statement: 'Primary CTA is 220 px wide',
     condition: 'CTA width within 8%',
     checkKind: 'size',
-    box: [100, 200, 300, 260],
+    box_2d: [200, 100, 260, 300],
     matchHint: { tag: 'button', text: 'Start free' },
     primary: true,
   });
@@ -383,13 +383,15 @@ describe('SPEC-KERNEL-03, SPEC-AI-05: the four AI task outputs', () => {
     const eight = Array.from({ length: 8 }, extractReq);
     expect(ExtractOutputSchema.safeParse({ requirements: eight }).success).toBe(true);
     expect(ExtractOutputSchema.safeParse({ requirements: [...eight, extractReq()] }).success).toBe(false);
-    expect(ExtractOutputSchema.safeParse({ requirements: [{ ...extractReq(), box: [0, 0, 1001, 10] }] }).success).toBe(
+    expect(
+      ExtractOutputSchema.safeParse({ requirements: [{ ...extractReq(), box_2d: [0, 0, 1001, 10] }] }).success,
+    ).toBe(false);
+    expect(
+      ExtractOutputSchema.safeParse({ requirements: [{ ...extractReq(), box_2d: [-1, 0, 10, 10] }] }).success,
+    ).toBe(false);
+    expect(ExtractOutputSchema.safeParse({ requirements: [{ ...extractReq(), box_2d: [0, 0, 10] }] }).success).toBe(
       false,
     );
-    expect(ExtractOutputSchema.safeParse({ requirements: [{ ...extractReq(), box: [-1, 0, 10, 10] }] }).success).toBe(
-      false,
-    );
-    expect(ExtractOutputSchema.safeParse({ requirements: [{ ...extractReq(), box: [0, 0, 10] }] }).success).toBe(false);
   });
 
   it('SPEC-KERNEL-03: extract-contract optional fields (expectedText, expectedCount, primary, matchHint parts)', () => {

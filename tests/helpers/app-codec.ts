@@ -10,8 +10,8 @@ export function createAppTestCodec(): ImageCodec {
   return {
     ...base,
     // The Node codec encodes PNG only; the extraction and Deep requests ask for JPEG, which the fake engine never decodes.
-    async crop(blob, r, maxSide, mime) {
-      const out = await base.crop(blob, r, maxSide, 'image/png');
+    async crop(blob, r, maxSide, mime, opts) {
+      const out = await base.crop(blob, r, maxSide, 'image/png', opts);
       return mime === 'image/jpeg' ? { ...out, mime } : out;
     },
     async normalise(file, cssWidth) {

@@ -310,7 +310,7 @@ describe('SPEC-AI-06 zod validation and one retry', () => {
       statement: 's',
       condition: 'c',
       checkKind: 'presence',
-      box: [0, 0, 10, 10],
+      box_2d: [0, 0, 10, 10],
       matchHint: {},
     };
     generate.mockResolvedValue(reply(JSON.stringify({ requirements: Array(9).fill(item) })));
