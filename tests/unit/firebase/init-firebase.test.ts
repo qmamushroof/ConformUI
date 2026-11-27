@@ -212,3 +212,41 @@ describe('remoteconfig.template.json', () => {
     }
   });
 });
+
+describe('SPEC-FB-09 ensureAppCheckToken', () => {
+  async function loadAll() {
+    vi.resetModules();
+    const ac = await import('firebase/app-check');
+    const mod = await import('../../../src/platform/firebase/index');
+    return { ac, mod };
+  }
+
+  it('asks App Check for the token of the initialised app, forced only on request', async () => {
+    const { ac, mod } = await loadAll();
+    (ac as unknown as { getToken: unknown }).getToken = undefined;
+    const getToken = vi.fn().mockResolvedValue({ token: 't' });
+    vi.doMock('firebase/app-check', () => ({
+      ReCaptchaEnterpriseProvider: vi.fn(),
+      initializeAppCheck: vi.fn(() => ({ id: 'ac' })),
+      getToken,
+    }));
+    vi.resetModules();
+    const m = await import('../../../src/platform/firebase/index');
+    const { app } = m.initFirebase(env);
+    await m.ensureAppCheckToken(app);
+    await m.ensureAppCheckToken(app, true);
+    expect(getToken.mock.calls).toEqual([
+      [{ id: 'ac' }, false],
+      [{ id: 'ac' }, true],
+    ]);
+    getToken.mockRejectedValueOnce(Object.assign(new Error('x'), { code: 'appCheck/throttled' }));
+    await expect(m.ensureAppCheckToken(app)).rejects.toMatchObject({ code: 'appCheck/throttled' });
+    expect(mod).toBeDefined();
+    vi.doUnmock('firebase/app-check');
+  });
+
+  it('is a no-op for an app that never had App Check', async () => {
+    const { mod } = await loadAll();
+    await expect(mod.ensureAppCheckToken({ name: 'other' } as never, true)).resolves.toBeUndefined();
+  });
+});

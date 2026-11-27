@@ -36,8 +36,11 @@ describe('SPEC-UI-05: copy keyed by ErrorCode and reason', () => {
     expect(stateCopy.QUOTA_EXCEEDED.title).toBe('Cloud limit reached. Your results are kept; try again later.');
     expect(stateCopy.DAILY_CAP.title).toBe(stateCopy.QUOTA_EXCEEDED.title);
     expect(stateCopy.AI_BAD_OUTPUT.title).toBe("Needs review: the model's answer could not be read.");
-    expect(stateCopy.APPCHECK_FAILED.title).toBe("Couldn't reach the cloud model. Nothing was lost.");
-    expect(stateCopy.AI_FAILED.title).toBe(stateCopy.APPCHECK_FAILED.title);
+    expect(stateCopy.AI_FAILED.title).toBe("Couldn't reach the cloud model. Nothing was lost.");
+    // An App Check refusal is not a network problem: it says so and offers a reload.
+    expect(stateCopy.APPCHECK_FAILED.title).toBe("Couldn't verify this app with the cloud service. Nothing was lost.");
+    expect(stateCopy.APPCHECK_FAILED.detail).toBe('Reload the page and try again. This try was not counted.');
+    expect(stateCopy.APPCHECK_FAILED.action).toBe('Try again');
     expect(stateCopy.CLOUD_DISABLED.title).toBe('Cloud analysis is paused.');
     expect(stateCopy.STORAGE_UNAVAILABLE.title).toBe("Couldn't open local storage. Nothing was deleted.");
     expect(stateCopy.STORAGE_UNAVAILABLE.action).toBe('Reload');

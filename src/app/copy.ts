@@ -197,7 +197,12 @@ export const stateCopy: Record<ErrorCode | NoticeReason, NoticeCopy> = {
   },
   QUOTA_EXCEEDED: { tone: 'danger', title: CLOUD_LIMIT },
   DAILY_CAP: { tone: 'danger', title: CLOUD_LIMIT },
-  APPCHECK_FAILED: { tone: 'danger', title: CLOUD_UNREACHABLE, action: 'Try again' },
+  APPCHECK_FAILED: {
+    tone: 'danger',
+    title: "Couldn't verify this app with the cloud service. Nothing was lost.",
+    detail: 'Reload the page and try again. This try was not counted.',
+    action: 'Try again',
+  },
   AI_NOT_ENABLED: {
     tone: 'danger',
     title: 'Cloud analysis is not set up yet.',

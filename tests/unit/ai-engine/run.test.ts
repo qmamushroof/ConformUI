@@ -618,3 +618,128 @@ describe('createAiEngine run wiring', () => {
     expect(out.engine).toBe('cloud');
   });
 });
+
+describe('SPEC-AI-14 first cloud call: App Check token and one transport retry', () => {
+  const cloud = () => req({ mode: 'ONLY_IN_CLOUD' });
+  const appCheckErr = () =>
+    Object.assign(new Error('Firebase: AppCheck: 403 error. (appCheck/initial-throttle).'), {
+      code: 'appCheck/initial-throttle',
+      name: 'FirebaseError',
+    });
+  const net = () => new TypeError('Failed to fetch');
+  let token: ReturnType<typeof vi.fn>;
+  let pause: ReturnType<typeof vi.fn>;
+  const r = () =>
+    createRunner({
+      app,
+      config,
+      clock,
+      status: async () => status,
+      online: () => online,
+      appCheckToken: token as never,
+      pause: pause as never,
+    });
+
+  beforeEach(() => {
+    token = vi.fn().mockResolvedValue(undefined);
+    pause = vi.fn().mockResolvedValue(undefined);
+  });
+
+  it('asks for the App Check token before the first cloud call, and not for the device', async () => {
+    await r().run(cloud());
+    expect(token).toHaveBeenCalledTimes(1);
+    expect(token).toHaveBeenCalledWith(false);
+    expect(token.mock.invocationCallOrder[0]).toBeLessThan(generate.mock.invocationCallOrder[0] as number);
+    token.mockClear();
+    generate.mockResolvedValue(reply(JSON.stringify(GOOD), { inferenceSource: 'on_device' }));
+    await r().run(req({ mode: 'ONLY_ON_DEVICE' }));
+    expect(token).not.toHaveBeenCalled();
+  });
+
+  it('a token that is not ready on the first try is refreshed and the call then succeeds', async () => {
+    token.mockRejectedValueOnce(appCheckErr());
+    const out = await r().run(cloud());
+    expect(out.engine).toBe('cloud');
+    expect(token.mock.calls).toEqual([[false], [true]]);
+    expect(generate).toHaveBeenCalledTimes(1);
+    expect(pause).toHaveBeenCalledTimes(1);
+  });
+
+  it('a call refused for App Check is retried once with a forced refresh and succeeds', async () => {
+    generate.mockRejectedValueOnce(sdkErrFor(403)).mockResolvedValueOnce(reply(JSON.stringify(GOOD)));
+    const out = await r().run(cloud());
+    expect(generate).toHaveBeenCalledTimes(2);
+    expect(token.mock.calls).toEqual([[false], [true]]);
+    expect(out.bytesSent).toBeGreaterThan(0);
+  });
+
+  it('counts the bytes of the attempt that answered only, not the one that failed to send', async () => {
+    const single = await r().run(cloud());
+    generate
+      .mockReset()
+      .mockRejectedValueOnce(net())
+      .mockResolvedValueOnce(reply(JSON.stringify(GOOD)));
+    const retried = await r().run(cloud());
+    expect(retried.bytesSent).toBe(single.bytesSent);
+  });
+
+  it('retries a network failure once', async () => {
+    generate.mockRejectedValueOnce(net()).mockResolvedValueOnce(reply(JSON.stringify(GOOD)));
+    await r().run(cloud());
+    expect(generate).toHaveBeenCalledTimes(2);
+  });
+
+  it('retries at most once: a second App Check failure surfaces APPCHECK_FAILED after two calls', async () => {
+    generate.mockRejectedValue(sdkErrFor(403));
+    expect(await code(r().run(cloud()))).toBe('APPCHECK_FAILED');
+    expect(generate).toHaveBeenCalledTimes(2);
+  });
+
+  it('retries at most once when the token itself keeps failing: no SDK call at all', async () => {
+    token.mockRejectedValue(appCheckErr());
+    expect(await code(r().run(cloud()))).toBe('APPCHECK_FAILED');
+    expect(token).toHaveBeenCalledTimes(2);
+    expect(generate).not.toHaveBeenCalled();
+  });
+
+  it('never retries a timeout', async () => {
+    vi.useFakeTimers();
+    generate.mockImplementation(() => new Promise(() => {}));
+    const p = code(r().run(cloud()));
+    await vi.advanceTimersByTimeAsync(DEFAULT_RUNTIME_VALUES.cloud_timeout_s * 1000 + 1);
+    expect(await p).toBe('AI_TIMEOUT');
+    expect(generate).toHaveBeenCalledTimes(1);
+    expect(pause).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ['quota 429', () => sdkErrFor(429), 'QUOTA_EXCEEDED'],
+    ['HTTP 400 content error', () => sdkErrFor(400), 'AI_FAILED'],
+    ['api-not-enabled', () => new AIError('api-not-enabled' as never, 'x', { status: 403 }), 'AI_NOT_ENABLED'],
+  ])('never retries %s', async (_n, make, expected) => {
+    generate.mockRejectedValue(make());
+    expect(await code(r().run(cloud()))).toBe(expected);
+    expect(generate).toHaveBeenCalledTimes(1);
+  });
+
+  it('never retries once the caller has cancelled', async () => {
+    const ctl = new AbortController();
+    generate.mockImplementation(async () => {
+      ctl.abort();
+      throw net();
+    });
+    expect(await code(r().run(cloud(), ctl.signal))).toBe('AI_FAILED');
+    expect(generate).toHaveBeenCalledTimes(1);
+  });
+
+  it('a bad answer still gets only its own single re-ask, with no extra transport retry', async () => {
+    generate.mockResolvedValue(reply('not json'));
+    expect(await code(r().run(cloud()))).toBe('AI_BAD_OUTPUT');
+    expect(generate).toHaveBeenCalledTimes(2);
+    expect(pause).not.toHaveBeenCalled();
+  });
+});
+
+function sdkErrFor(status: number) {
+  return new AIError('fetch-error' as never, 'raw sdk text', { status } as never);
+}

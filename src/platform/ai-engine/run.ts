@@ -1,4 +1,4 @@
-import type { FirebaseApp } from '@fb';
+import { ensureAppCheckToken, type FirebaseApp } from '@fb';
 import type { AiRequest, AiResponse, Clock, EngineStatus, RuntimeConfig } from '@kernel';
 import { CuiError } from '@kernel';
 import { AIError } from 'firebase/ai';
@@ -22,6 +22,10 @@ export interface RunnerDeps {
   factory?: ReturnType<typeof createModelFactory>;
   /** Connectivity for the cloud-only path; defaults to `navigator.onLine`. */
   online?: () => boolean;
+  /** Resolves when App Check holds a token (SPEC-AI-14); defaults to the Firebase App Check token for `app`. */
+  appCheckToken?: (forceRefresh: boolean) => Promise<void>;
+  /** The wait before the one transport retry (SPEC-AI-14); defaults to 600 ms. */
+  pause?: () => Promise<void>;
 }
 
 interface SdkResponse {
@@ -45,7 +49,15 @@ function isAppCheckFailure(e: unknown): boolean {
   return typeof message === 'string' && /app[ -]?check/i.test(message);
 }
 
+/** A failure that never reached a model answer and may clear on a second try: App Check or the network. */
+function isNetworkFailure(e: unknown): boolean {
+  if (e instanceof TypeError) return true;
+  return e instanceof AIError && e.code === 'fetch-error' && e.customErrorData?.status === undefined;
+}
+
 export function createRunner(d: RunnerDeps) {
+  const appCheckToken = d.appCheckToken ?? ((force: boolean) => ensureAppCheckToken(d.app, force));
+  const pause = d.pause ?? (() => new Promise<void>((resolve) => setTimeout(resolve, 600)));
   const factory = d.factory ?? createModelFactory({ app: d.app, config: d.config });
   const isOnline = d.online ?? (() => (typeof navigator === 'undefined' ? true : navigator.onLine !== false));
 
@@ -139,6 +151,40 @@ export function createRunner(d: RunnerDeps) {
     }
   }
 
+  /**
+   * SPEC-AI-14: a cloud call first makes sure App Check has a token, and an App Check or network failure is retried once
+   * with a forced token refresh. A timeout, a cancel, a quota or content error and every on-device call is never retried.
+   */
+  async function send(
+    model: Parameters<typeof callSdk>[0],
+    content: unknown,
+    timeoutMs: number,
+    external: AbortSignal | undefined,
+    onDevice: boolean,
+    mode: AiRequest['mode'],
+  ): Promise<SdkResponse> {
+    if (onDevice) return callSdk(model, content, timeoutMs, external, 'on-device');
+    for (let retry = 0; ; retry++) {
+      try {
+        try {
+          await appCheckToken(retry > 0);
+        } catch (e) {
+          if (isAppCheckFailure(e)) throw e;
+          throw Object.assign(new Error('App Check token unavailable'), {
+            code: 'appCheck/token-unavailable',
+            cause: e,
+          });
+        }
+        return await callSdk(model, content, timeoutMs, external, 'cloud');
+      } catch (e) {
+        const transient =
+          !(e instanceof CuiError) && (isNetworkFailure(e) || mapError(e, mode).code === 'APPCHECK_FAILED');
+        if (retry > 0 || !transient || external?.aborted || !isOnline()) throw e;
+        await pause();
+      }
+    }
+  }
+
   function readJson(task: AiRequest['task'], response: SdkResponse): unknown {
     // SPEC-AI-10: blocked or empty candidates.
     const first = response.candidates?.[0];
@@ -185,9 +231,10 @@ export function createRunner(d: RunnerDeps) {
       for (let attempt = 0; attempt < 2; attempt++) {
         const user = attempt === 0 ? req.user : req.user + RETRY_SUFFIX;
         const content = [{ type: 'text', text: user }, ...images];
-        payloadBytes += bytesSentFor('cloud', { system: req.system, user, images: req.images });
         try {
-          const response = await callSdk(model as never, content, timeoutMs, signal, onDevice ? 'on-device' : 'cloud');
+          const response = await send(model as never, content, timeoutMs, signal, onDevice, req.mode);
+          // Bytes are counted once an answer came back: a call that failed before or at the proxy sent nothing usable.
+          payloadBytes += bytesSentFor('cloud', { system: req.system, user, images: req.images });
           // SPEC-AI-04, SPEC-AI-02 (b): throws AI_FAILED for a missing source or an ONLY_ON_DEVICE cloud result.
           const engine = engineFromSource(response.inferenceSource, req.mode);
           if (req.mode === 'ONLY_ON_DEVICE' && engine !== 'on-device') throw new CuiError('AI_FAILED');

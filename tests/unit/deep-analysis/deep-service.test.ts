@@ -380,8 +380,30 @@ describe('run (SPEC-DEEP-05, SPEC-DEEP-06, SPEC-DEEP-07, SPEC-DEEP-08)', () => {
     expect((await settingsStore.read()).deepUsage).toEqual({ day: TODAY, count: 0 });
   });
 
-  it.each(['AI_FAILED', 'AI_BAD_OUTPUT', 'APPCHECK_FAILED', 'QUOTA_EXCEEDED'] as const)(
-    'SPEC-DEEP-04: %s still counts (only a timeout is refunded)',
+  it.each(['APPCHECK_FAILED', 'OFFLINE'] as const)(
+    'SPEC-DEEP-04: %s sent nothing, so it gives the use back and leaves the privacy counter alone',
+    async (code) => {
+      const r = await seed({ settings: { deepUsage: { day: TODAY, count: 2 } } });
+      fakeCfg.errors = { 'deep-analysis': code };
+      await expect(service.run(await service.preview(r), consent(), noop)).rejects.toMatchObject({ code });
+      const s = await settingsStore.read();
+      expect(s.deepUsage).toEqual({ day: TODAY, count: 2 });
+      expect(s.everSentToCloud).toBe(false);
+      expect((await store.getRun(r.id))?.trace.some((t) => t.step === 'deep')).toBe(false);
+    },
+  );
+
+  it('SPEC-DEEP-04: a refused request after an earlier real send keeps the privacy flag set', async () => {
+    const r = await seed({ settings: { everSentToCloud: true, deepUsage: { day: TODAY, count: 0 } } });
+    fakeCfg.errors = { 'deep-analysis': 'APPCHECK_FAILED' };
+    await expect(service.run(await service.preview(r), consent(), noop)).rejects.toMatchObject({
+      code: 'APPCHECK_FAILED',
+    });
+    expect((await settingsStore.read()).everSentToCloud).toBe(true);
+  });
+
+  it.each(['AI_FAILED', 'AI_BAD_OUTPUT', 'QUOTA_EXCEEDED'] as const)(
+    'SPEC-DEEP-04: %s still counts (only a timeout or a request that sent nothing is refunded)',
     async (code) => {
       const r = await seed({ settings: { deepUsage: { day: TODAY, count: 2 } } });
       fakeCfg.errors = { 'deep-analysis': code };
