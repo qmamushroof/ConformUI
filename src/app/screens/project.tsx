@@ -100,6 +100,11 @@ const ProjectRoute: FC = () => {
     };
   }, [projectId, projects, contracts, store, runs, ai, settings, version]);
 
+  // Warm the Run chunk so the Run button shows progress within 100 ms (SPEC-PERF-08).
+  useEffect(() => {
+    void import('./run').catch(() => undefined);
+  }, []);
+
   const project = load.kind === 'ready' ? load.data.project : undefined;
   const urls = useBlobUrls(blobs, project ? [...project.designs, ...project.captures].map((x) => x.image.blobId) : []);
   useEffect(() => sv.onEngineChange(refresh), [sv, refresh]);

@@ -27,6 +27,7 @@ import { CloseButton, Glyph, ManualCopySheet, Sheet, Toasts, useToast } from '..
 import { recordCloudStep } from '../flows/usage';
 import { NotFound } from '../not-found';
 import { useServices } from '../services';
+import { RunStarting } from './run-starting';
 
 type Progress = NonNullable<RunScreenProps['progress']>;
 
@@ -149,7 +150,8 @@ const RunRoute: FC = () => {
     });
   }, [starting, project]);
 
-  if (load.kind === 'loading') return <main id="main" tabIndex={-1} className="page" aria-busy="true" />;
+  if (load.kind === 'loading')
+    return starting ? <RunStarting /> : <main id="main" tabIndex={-1} className="page" aria-busy="true" />;
   if (load.kind === 'missing') return <NotFound />;
   const { project: p, contract, run, history, deepReason } = load.data;
   const { done, next } = stepper(p, history.length);

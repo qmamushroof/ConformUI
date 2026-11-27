@@ -3,6 +3,7 @@ import { Navigate, Route, Routes, useLocation } from 'react-router';
 import { NotFound } from './not-found';
 import { RouteBoundary } from './route-boundary';
 import ProjectsRoute from './screens/projects';
+import { RunStarting } from './screens/run-starting';
 import { useServices } from './services';
 import { Shell, type ShellProps } from './shell';
 import type { RouteKey } from './titles';
@@ -47,7 +48,9 @@ const Guarded: FC<{ route: RouteKey; onReload(): void; children: ReactNode }> = 
   // Keyed by path so a broken route recovers on navigation.
   return (
     <RouteBoundary key={pathname} route={route} onReload={onReload}>
-      <Suspense fallback={<Loading />}>{children}</Suspense>
+      <Suspense fallback={route === 'run' && pathname.endsWith('/run/new') ? <RunStarting /> : <Loading />}>
+        {children}
+      </Suspense>
     </RouteBoundary>
   );
 };
