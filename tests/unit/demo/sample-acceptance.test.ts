@@ -15,7 +15,7 @@ import { inlineMeasureClient } from '@measure';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { createFakeAiEngine, type FakeAiEngine } from '../../../src/app/testing/fake-ai-engine';
 import { loadSampleAssets, type SampleAssets } from '../../../src/features/demo';
-import { fixPrompt } from '../../../src/features/export';
+import { fixPrompt, reportJson, reportMarkdown } from '../../../src/features/export';
 import { createRunService, type RunService } from '../../../src/features/run';
 import { fixedClock } from '../../helpers/clock-ids';
 import { InMemoryBlobStore, InMemoryProjectStore } from '../../helpers/memory-stores';
@@ -376,5 +376,32 @@ describe('sample acceptance: Fix prompt (SPEC-TEST-03, S20, PRD-F-09)', () => {
     const verify = items.filter((l) => l.includes('verify first'));
     expect(verify).toHaveLength(1);
     expect(verify[0]).toContain(' R-07 ');
+  });
+});
+
+describe('export snapshots on the sample flawed Run (ROADMAP 14.3, SPEC §4.10.4)', () => {
+  async function flawedRun() {
+    const r = await rig();
+    await r.load('flawed');
+    const run = await r.service.start(r.project.id, { settings, status: AVAILABLE }, () => undefined);
+    const contract = (await r.store.getContract(r.contract.id)) ?? r.contract;
+    return { project: r.project, contract, run, findings: r.service.findings(run) };
+  }
+
+  it('SPEC-EXP-01: fixPrompt of the flawed Run is stable and names every failing or needs-review requirement', async () => {
+    const i = await flawedRun();
+    const text = fixPrompt(i);
+    expect(text).toMatchSnapshot();
+    for (const id of ['R-01', 'R-02', 'R-03', 'R-04', 'R-06', 'R-07', 'I-M-01']) {
+      expect(text.includes(id) || i.findings.some((f) => f.requirementId === id), id).toBe(true);
+    }
+    expect(text).not.toMatch(/R-05|R-08/);
+  });
+
+  it('SPEC-EXP-01: reportMarkdown of the flawed Run is stable; the JSON report carries app version 1.0.1', async () => {
+    const i = await flawedRun();
+    const md = reportMarkdown(i);
+    expect(md).toMatchSnapshot();
+    expect(reportJson(i).app.version).toBe('1.0.1');
   });
 });

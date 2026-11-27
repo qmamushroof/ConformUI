@@ -1,0 +1,150 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`export snapshots on the sample flawed Run (ROADMAP 14.3, SPEC §4.10.4) > SPEC-EXP-01: fixPrompt of the flawed Run is stable and names every failing or needs-review requirement 1`] = `
+"You are fixing a web page so it matches its design. Page: "Sample landing page", URL: https://sample.test/flawed/.
+Viewports checked: Desktop 1440 px, Mobile 390 px. Contract version 1, run 2023-11-14.
+Fix ONLY the items below. Leave everything that already passes unchanged.
+
+1. [Critical · Desktop · Explicit] R-01 Nothing is drawn where the design shows content: The hero shows an illustration at the right of the headline (ink 76.1% in the design vs 0.3% in the implementation), measured from images.
+   Observed: Ink coverage: 0.3% (capture image) vs 76.1% (design image).
+   Suggested fix: Add the missing element at the position shown in the design.
+   Done when: An illustration of about 520 x 400 px is visible at the right of the hero at 1440 px.
+
+2. [Major · Desktop · Explicit] R-02 Primary CTA is 132 px wide vs 220 px in the design (−40.0%), measured from DOM snapshot.
+   Observed: Primary CTA width: 132 px (DOM snapshot) vs 220 px (design image), -40%.
+   Element: body &gt; main:nth-of-type(1) &gt; section:nth-of-type(1) &gt; div:nth-of-type(1) &gt; a:nth-of-type(1)
+   Suggested fix: Make \`body &gt; main:nth-of-type(1) &gt; section:nth-of-type(1) &gt; div:nth-of-type(1) &gt; a:nth-of-type(1)\` 220 px width (or match the design's width rule) at a 1440 px viewport.
+   Done when: The Start free button width is within tolerance of 220 px at 1440 px.
+
+3. [Major · Desktop · Explicit] R-03 The headline "Plan your week, calmly" is 28 px, smaller than other text at 32 px, so it is not the dominant text; measured from DOM snapshot.
+   Observed: The headline "Plan your week, calmly" font size vs the largest other text: 28 px (DOM snapshot) vs 32 px (DOM snapshot).
+   Element: body &gt; main:nth-of-type(1) &gt; section:nth-of-type(1) &gt; div:nth-of-type(1) &gt; h1:nth-of-type(1)
+   Suggested fix: Make \`body &gt; main:nth-of-type(1) &gt; section:nth-of-type(1) &gt; div:nth-of-type(1) &gt; h1:nth-of-type(1)\` larger than every other text on the page (more than 32 px).
+   Done when: The h1 font size is at least that of every other text element at 1440 px.
+
+4. [Major · Desktop · Explicit] R-04 The navigation contains four links: found 3 visible matching elements, expected 4, measured from DOM snapshot.
+   Observed: Matching elements: 3 (DOM snapshot) vs 4 (contract).
+   Suggested fix: Render exactly 4 of these elements.
+   Done when: The nav landmark holds exactly 4 links at 1440 px.
+
+5. [Major · Desktop · Explicit · verify first] R-07 The call-to-action uses the design colour and the arrow icon: this could not be confirmed, so check it by eye. The button hue looks close to the design, but the icon looks like a chevron instead of an arrow.
+   Observed: no measurement recorded, verify against the design.
+   Suggested fix: Use the design arrow icon and the design button colour.
+   Done when: The Start free button has the same colour as the design and an arrow icon, not a chevron.
+
+6. [Minor · Desktop · Explicit] R-06 The vertical gap is 64 px vs 96 px in the design (−33.3%), measured from DOM snapshot.
+   Observed: vertical gap: 64 px (DOM snapshot) vs 96 px (design image), -33.3%.
+   Element: #features &gt; h2:nth-of-type(1)
+   Suggested fix: Set the space between \`body &gt; main:nth-of-type(1) &gt; section:nth-of-type(1)\` and \`#features &gt; h2:nth-of-type(1)\` to 96 px.
+   Done when: The vertical gap from the hero to the features heading is within tolerance of 96 px.
+
+7. [Minor · Mobile · Inferred] I-M-01 Expected the mobile page to fit the screen without overlap (inferred). The page does not fit its viewport: 64 px of horizontal overflow; 15 overlapping pairs (Main over Plan your week, calmly A simple planner…, and more), measured from DOM snapshot. (inferred)
+   Observed: Horizontal overflow: 64 px (DOM snapshot) vs 0 px (contract); Overlapping pairs: 15 (DOM snapshot) vs 0 (contract); Clipped text elements: 0 (DOM snapshot) vs 0 (contract).
+   Element: body &gt; nav:nth-of-type(1)
+   Suggested fix: Remove the horizontal overflow, separate the overlapping elements and stop clipping text at 390 px.
+   Done when: At 390 px there is no horizontal scroll and no overlapping or clipped text.
+
+Inferred items are advisory: no design shows that viewport.
+After fixing, take new screenshots and DOM snapshots at the same widths so the result can be re-verified.
+"
+`;
+
+exports[`export snapshots on the sample flawed Run (ROADMAP 14.3, SPEC §4.10.4) > SPEC-EXP-01: reportMarkdown of the flawed Run is stable; the JSON report carries app version 1.0.1 1`] = `
+"# Report: Sample landing page
+
+3 passing, 6 failing, 1 needs review, 0 not checked. Contract version 1, run 2023-11-14.
+
+## Engine trace
+
+| Step | Engine | Duration | Bytes sent |
+|---|---|---|---|
+| measured desktop | Measured | 0 ms | 0 |
+| visual desktop | Measured | 0 ms | 0 |
+| measured mobile | Measured | 0 ms | 0 |
+| judge R-07 desktop | On-device | 1 ms | 0 |
+
+## Critical (1)
+
+### R-01 · Desktop · Explicit
+
+- Statement: Nothing is drawn where the design shows content: The hero shows an illustration at the right of the headline (ink 76.1% in the design vs 0.3% in the implementation), measured from images.
+- Engine: Measured
+- Confidence: Medium
+- Measurement: Ink coverage: 0.3% (capture image) vs 76.1% (design image)
+- Suggested fix: Add the missing element at the position shown in the design.
+- Done when: An illustration of about 520 x 400 px is visible at the right of the hero at 1440 px.
+
+## Major (4)
+
+### R-02 · Desktop · Explicit
+
+- Statement: Primary CTA is 132 px wide vs 220 px in the design (−40.0%), measured from DOM snapshot.
+- Engine: Measured
+- Confidence: High
+- Measurement: Primary CTA width: 132 px (DOM snapshot) vs 220 px (design image), -40%
+- Element: body &gt; main:nth-of-type(1) &gt; section:nth-of-type(1) &gt; div:nth-of-type(1) &gt; a:nth-of-type(1)
+- Suggested fix: Make \\\`body &gt; main:nth-of-type(1) &gt; section:nth-of-type(1) &gt; div:nth-of-type(1) &gt; a:nth-of-type(1)\\\` 220 px width (or match the design's width rule) at a 1440 px viewport.
+- Done when: The Start free button width is within tolerance of 220 px at 1440 px.
+
+### R-03 · Desktop · Explicit
+
+- Statement: The headline "Plan your week, calmly" is 28 px, smaller than other text at 32 px, so it is not the dominant text; measured from DOM snapshot.
+- Engine: Measured
+- Confidence: High
+- Measurement: The headline "Plan your week, calmly" font size vs the largest other text: 28 px (DOM snapshot) vs 32 px (DOM snapshot)
+- Element: body &gt; main:nth-of-type(1) &gt; section:nth-of-type(1) &gt; div:nth-of-type(1) &gt; h1:nth-of-type(1)
+- Suggested fix: Make \\\`body &gt; main:nth-of-type(1) &gt; section:nth-of-type(1) &gt; div:nth-of-type(1) &gt; h1:nth-of-type(1)\\\` larger than every other text on the page (more than 32 px).
+- Done when: The h1 font size is at least that of every other text element at 1440 px.
+
+### R-04 · Desktop · Explicit
+
+- Statement: The navigation contains four links: found 3 visible matching elements, expected 4, measured from DOM snapshot.
+- Engine: Measured
+- Confidence: High
+- Measurement: Matching elements: 3 (DOM snapshot) vs 4 (contract)
+- Suggested fix: Render exactly 4 of these elements.
+- Done when: The nav landmark holds exactly 4 links at 1440 px.
+
+### R-07 · Desktop · Explicit · Needs review (verify first)
+
+- Statement: The call-to-action uses the design colour and the arrow icon: this could not be confirmed, so check it by eye. The button hue looks close to the design, but the icon looks like a chevron instead of an arrow.
+- Engine: On-device
+- Confidence: Low
+- Suggested fix: Use the design arrow icon and the design button colour.
+- Done when: The Start free button has the same colour as the design and an arrow icon, not a chevron.
+
+## Minor (2)
+
+### R-06 · Desktop · Explicit
+
+- Statement: The vertical gap is 64 px vs 96 px in the design (−33.3%), measured from DOM snapshot.
+- Engine: Measured
+- Confidence: High
+- Measurement: vertical gap: 64 px (DOM snapshot) vs 96 px (design image), -33.3%
+- Element: \\#features &gt; h2:nth-of-type(1)
+- Suggested fix: Set the space between \\\`body &gt; main:nth-of-type(1) &gt; section:nth-of-type(1)\\\` and \\\`\\#features &gt; h2:nth-of-type(1)\\\` to 96 px.
+- Done when: The vertical gap from the hero to the features heading is within tolerance of 96 px.
+
+### I-M-01 · Mobile · Inferred
+
+- Statement: Expected the mobile page to fit the screen without overlap (inferred). The page does not fit its viewport: 64 px of horizontal overflow; 15 overlapping pairs (Main over Plan your week, calmly A simple planner…, and more), measured from DOM snapshot.
+- Engine: Measured
+- Confidence: High
+- Measurement: Horizontal overflow: 64 px (DOM snapshot) vs 0 px (contract)
+- Measurement: Overlapping pairs: 15 (DOM snapshot) vs 0 (contract)
+- Measurement: Clipped text elements: 0 (DOM snapshot) vs 0 (contract)
+- Element: body &gt; nav:nth-of-type(1)
+- Suggested fix: Remove the horizontal overflow, separate the overlapping elements and stop clipping text at 390 px.
+- Done when: At 390 px there is no horizontal scroll and no overlapping or clipped text.
+
+## Passing (3)
+
+- R-05 · Desktop · Measured: The navigation shows the logo
+- R-08 · Desktop · Measured: The page ends with a footer
+- I-M-02 · Mobile · Measured: Expected the primary action to stay visible on mobile (inferred)
+
+## Not checked (0)
+
+None.
+"
+`;

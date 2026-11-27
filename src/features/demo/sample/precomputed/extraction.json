@@ -4,56 +4,105 @@
     "viewport": "desktop",
     "category": "presence",
     "label": "explicit",
-    "checkType": "visual",
-    "statement": "The hero has an illustration on the right",
-    "condition": "An illustration is visible at the right of the hero.",
-    "check": { "kind": "presence", "match": { "tag": "svg" } },
-    "region": { "rect": { "x": 800, "y": 137, "w": 519, "h": 399 }, "source": "snapped" },
+    "checkType": "measured",
+    "statement": "The header navigation bar is visible",
+    "condition": "The element with text 'Sample Co.', 'Features', 'Pricing', 'Docs', and 'About' is visible",
+    "check": {
+      "kind": "presence",
+      "match": {
+        "text": "Sample Co. navigation bar"
+      }
+    },
+    "region": {
+      "unresolved": true,
+      "suggested": {
+        "x": 96,
+        "y": 105,
+        "w": 600,
+        "h": 12
+      }
+    },
     "accepted": false,
     "origin": "precomputed",
-    "engine": "cloud"
+    "engine": "on-device"
   },
   {
     "id": "R-02",
     "viewport": "desktop",
-    "category": "size",
+    "category": "content",
     "label": "explicit",
-    "checkType": "measured",
-    "statement": "The Start free button is 220 px wide",
-    "condition": "The button width is within tolerance of 220 px.",
-    "check": { "kind": "size", "match": { "tag": "a", "text": "Start free" }, "dimension": "width" },
-    "region": { "rect": { "x": 120, "y": 393, "w": 220, "h": 52 }, "source": "snapped" },
+    "checkType": "judged",
+    "statement": "The hero headline text is 'Plan your week, calmly'",
+    "condition": "The text 'Plan your week, calmly' is visible",
+    "check": {
+      "kind": "judged",
+      "question": "The text 'Plan your week, calmly' is visible"
+    },
+    "region": {
+      "unresolved": true,
+      "suggested": {
+        "x": 104,
+        "y": 210,
+        "w": 540,
+        "h": 43
+      }
+    },
     "accepted": false,
     "origin": "precomputed",
-    "engine": "cloud"
+    "engine": "on-device"
   },
   {
     "id": "R-03",
     "viewport": "desktop",
-    "category": "typography",
+    "category": "presence",
     "label": "explicit",
     "checkType": "measured",
-    "statement": "The headline is the largest text",
-    "condition": "The h1 font size is the largest on the page.",
-    "check": { "kind": "dominant-text", "match": { "tag": "h1" } },
-    "region": { "rect": { "x": 124, "y": 236, "w": 605, "h": 53 }, "source": "snapped" },
+    "statement": "A primary call-to-action button is present",
+    "condition": "A button with the text 'Start free' and an arrow icon is visible",
+    "check": {
+      "kind": "presence",
+      "match": {
+        "text": "Start free button"
+      }
+    },
+    "region": {
+      "rect": {
+        "x": 120,
+        "y": 311,
+        "w": 243,
+        "h": 47
+      },
+      "source": "snapped"
+    },
+    "primary": true,
     "accepted": false,
     "origin": "precomputed",
-    "engine": "cloud"
+    "engine": "on-device"
   },
   {
     "id": "R-04",
     "viewport": "desktop",
     "category": "content",
     "label": "explicit",
-    "checkType": "measured",
-    "statement": "The navigation has four links",
-    "condition": "The nav holds 4 links.",
-    "check": { "kind": "count", "match": { "tag": "a", "within": { "tag": "nav" } }, "expected": 4 },
-    "region": { "rect": { "x": 321, "y": 29, "w": 274, "h": 15 }, "source": "snapped" },
+    "checkType": "judged",
+    "statement": "A description for the hero section is present",
+    "condition": "The text 'A simple planner for small teams. Sketch the week, share it, and keep everyone on the same page.' is visible",
+    "check": {
+      "kind": "judged",
+      "question": "The text 'A simple planner for small teams. Sketch the week, share it, and keep everyone on the same page.' is visible"
+    },
+    "region": {
+      "unresolved": true,
+      "suggested": {
+        "x": 104,
+        "y": 367,
+        "w": 540,
+        "h": 43
+      }
+    },
     "accepted": false,
     "origin": "precomputed",
-    "engine": "cloud"
+    "engine": "on-device"
   },
   {
     "id": "R-05",
@@ -61,54 +110,216 @@
     "category": "presence",
     "label": "explicit",
     "checkType": "measured",
-    "statement": "The logo is shown in the navigation",
-    "condition": "The wordmark is visible in the navigation.",
-    "check": { "kind": "presence", "match": { "text": "Sample Co.", "within": { "tag": "nav" } } },
-    "region": { "rect": { "x": 120, "y": 22, "w": 143, "h": 28 }, "source": "snapped" },
+    "statement": "A section header 'Everything in one place' is visible",
+    "condition": "The text 'Everything in one place' is visible",
+    "check": {
+      "kind": "presence",
+      "match": {
+        "text": "Section header"
+      }
+    },
+    "region": {
+      "unresolved": true,
+      "suggested": {
+        "x": 104,
+        "y": 579,
+        "w": 377,
+        "h": 35
+      }
+    },
     "accepted": false,
     "origin": "precomputed",
-    "engine": "cloud"
+    "engine": "on-device"
   },
   {
     "id": "R-06",
     "viewport": "desktop",
-    "category": "spacing",
+    "category": "presence",
     "label": "explicit",
     "checkType": "measured",
-    "statement": "The hero and features are about 96 px apart",
-    "condition": "The gap between the hero and the features heading is 96 px.",
-    "check": { "kind": "spacing", "a": { "tag": "section", "text": "Hero" }, "b": { "tag": "h2" }, "axis": "y" },
-    "region": { "rect": { "x": 120, "y": 136, "w": 1200, "h": 520 }, "source": "snapped" },
+    "statement": "A feature card for 'Quick capture' is present",
+    "condition": "A card labeled 'Quick capture' with a plus sign icon is visible",
+    "check": {
+      "kind": "presence",
+      "match": {
+        "text": "Quick capture card"
+      }
+    },
+    "region": {
+      "rect": {
+        "x": 120,
+        "y": 639,
+        "w": 384,
+        "h": 152
+      },
+      "source": "snapped"
+    },
     "accepted": false,
     "origin": "precomputed",
-    "engine": "cloud"
+    "engine": "on-device"
   },
   {
     "id": "R-07",
     "viewport": "desktop",
-    "category": "colour",
+    "category": "presence",
     "label": "explicit",
-    "checkType": "judged",
-    "statement": "The button colour matches the design",
-    "condition": "The Start free button colour equals the design colour.",
-    "check": { "kind": "judged", "question": "Does the button colour match the design?" },
-    "region": { "rect": { "x": 120, "y": 393, "w": 220, "h": 52 }, "source": "snapped" },
+    "checkType": "measured",
+    "statement": "A feature card for 'Shared weeks' is present",
+    "condition": "A card labeled 'Shared weeks' with a person icon is visible",
+    "check": {
+      "kind": "presence",
+      "match": {
+        "text": "Shared weeks card"
+      }
+    },
+    "region": {
+      "unresolved": true,
+      "suggested": {
+        "x": 507,
+        "y": 651,
+        "w": 22,
+        "h": 115
+      }
+    },
     "accepted": false,
     "origin": "precomputed",
-    "engine": "cloud"
+    "engine": "on-device"
   },
   {
     "id": "R-08",
     "viewport": "desktop",
-    "category": "size",
+    "category": "presence",
     "label": "explicit",
     "checkType": "measured",
-    "statement": "The feature cards are 334 px wide",
-    "condition": "Each feature card is within tolerance of 334 px wide.",
-    "check": { "kind": "size", "match": { "tag": "article" }, "dimension": "width" },
-    "region": { "rect": { "x": 145, "y": 770, "w": 334, "h": 90 }, "source": "snapped" },
+    "statement": "A feature card for 'Gentle reminders' is present",
+    "condition": "A card labeled 'Gentle reminders' with a bell icon is visible",
+    "check": {
+      "kind": "presence",
+      "match": {
+        "text": "Gentle reminders card"
+      }
+    },
+    "region": {
+      "rect": {
+        "x": 533,
+        "y": 702,
+        "w": 749,
+        "h": 90
+      },
+      "source": "snapped"
+    },
     "accepted": false,
     "origin": "precomputed",
-    "engine": "cloud"
+    "engine": "on-device"
+  },
+  {
+    "id": "R-09",
+    "viewport": "desktop",
+    "category": "presence",
+    "label": "explicit",
+    "checkType": "measured",
+    "statement": "The band contains a footer area",
+    "condition": "footer is visible",
+    "check": {
+      "kind": "presence",
+      "match": {
+        "role": "footer"
+      }
+    },
+    "region": {
+      "unresolved": true,
+      "suggested": {
+        "x": 0,
+        "y": 1032,
+        "w": 1440,
+        "h": 33
+      }
+    },
+    "accepted": false,
+    "origin": "precomputed",
+    "engine": "on-device"
+  },
+  {
+    "id": "R-10",
+    "viewport": "desktop",
+    "category": "content",
+    "label": "explicit",
+    "checkType": "measured",
+    "statement": "A text line 'Sample Co. is a made-up company used for demonstration only' is present",
+    "condition": "text content matches exactly",
+    "check": {
+      "kind": "text",
+      "match": {
+        "text": "Sample Co. is a made-up company used for demonstration only"
+      },
+      "expected": "Sample Co. is a made-up company used for demonstration only"
+    },
+    "region": {
+      "unresolved": true,
+      "suggested": {
+        "x": 105,
+        "y": 988,
+        "w": 494,
+        "h": 3
+      }
+    },
+    "accepted": false,
+    "origin": "precomputed",
+    "engine": "on-device"
+  },
+  {
+    "id": "R-11",
+    "viewport": "desktop",
+    "category": "presence",
+    "label": "explicit",
+    "checkType": "measured",
+    "statement": "An email input field exists in the footer",
+    "condition": "input field is visible",
+    "check": {
+      "kind": "presence",
+      "match": {
+        "role": "input"
+      }
+    },
+    "region": {
+      "unresolved": true,
+      "suggested": {
+        "x": 840,
+        "y": 1032,
+        "w": 393,
+        "h": 35
+      }
+    },
+    "accepted": false,
+    "origin": "precomputed",
+    "engine": "on-device"
+  },
+  {
+    "id": "R-12",
+    "viewport": "desktop",
+    "category": "content",
+    "label": "explicit",
+    "checkType": "measured",
+    "statement": "The text inside the email input field says 'Email for updates'",
+    "condition": "text inside input is visible",
+    "check": {
+      "kind": "text",
+      "match": {
+        "text": "Email for updates"
+      },
+      "expected": "Email for updates"
+    },
+    "region": {
+      "unresolved": true,
+      "suggested": {
+        "x": 854,
+        "y": 1051,
+        "w": 157,
+        "h": 16
+      }
+    },
+    "accepted": false,
+    "origin": "precomputed",
+    "engine": "on-device"
   }
 ]

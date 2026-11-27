@@ -111,7 +111,7 @@ describe('compareWithVerified (SPEC-DEMO-03, PRD-M-14)', () => {
     expect(compareWithVerified([z], [z])).toEqual({ matched: [], missing: ['Z'], extra: ['Z'] });
   });
 
-  it('SPEC-DEMO-03, PRD-M-14: the seeded extraction vs the verified Contract gives 7 matched, R-08 missing, 1 extra', () => {
+  it('SPEC-DEMO-03, PRD-M-14: the recorded on-device extraction (live smoke, 14.4) vs the verified Contract gives 0 matched, 8 missing, 12 extra', () => {
     const verified = ContractSchema.parse(
       JSON.parse(readFileSync(join(sampleDir, 'contract.json'), 'utf8')),
     ).requirements.filter((r) => r.viewport === 'desktop');
@@ -119,9 +119,11 @@ describe('compareWithVerified (SPEC-DEMO-03, PRD-M-14)', () => {
       (r) => RequirementSchema.parse(r),
     );
     const res = compareWithVerified(ai, verified);
-    expect(res.matched.length).toBe(7);
-    expect(res.missing).toEqual(['R-08']);
-    expect(res.extra.length).toBe(1);
+    expect(ai).toHaveLength(12);
+    expect(ai.every((r) => r.engine === 'on-device' && r.origin === 'precomputed')).toBe(true);
+    expect(res.matched.length).toBe(0);
+    expect(res.missing).toHaveLength(8);
+    expect(res.extra).toHaveLength(12);
   });
 });
 
