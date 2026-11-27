@@ -423,6 +423,29 @@ describe('SPEC-AI-10 error map', () => {
     expect(await code(runner().run(req({ mode: 'ONLY_IN_CLOUD' })))).toBe('APPCHECK_FAILED');
   });
 
+  it.each(['appCheck/throttled', 'appCheck/fetch-status-error', 'appCheck/recaptcha-error'])(
+    'SPEC-AI-10: an App Check failure (%s) surfaced as any error -> APPCHECK_FAILED',
+    async (c) => {
+      fails(
+        Object.assign(new Error(`Firebase: Requests throttled due to 403 error. (${c}).`), {
+          code: c,
+          name: 'FirebaseError',
+        }),
+      );
+      expect(await code(runner().run(req({ mode: 'ONLY_IN_CLOUD' })))).toBe('APPCHECK_FAILED');
+    },
+  );
+
+  it('SPEC-AI-10: an AIError whose text names App Check -> APPCHECK_FAILED', async () => {
+    fails(new AIError('fetch-error' as never, 'App Check token exchange failed: App attestation failed'));
+    expect(await code(runner().run(req({ mode: 'ONLY_IN_CLOUD' })))).toBe('APPCHECK_FAILED');
+  });
+
+  it('SPEC-AI-10: a plain network TypeError stays AI_FAILED', async () => {
+    fails(new TypeError('Failed to fetch'));
+    expect(await code(runner().run(req({ mode: 'ONLY_IN_CLOUD' })))).toBe('AI_FAILED');
+  });
+
   it.each(['PREFER_ON_DEVICE', 'ONLY_IN_CLOUD'] as const)(
     'SPEC-AI-10: api-not-enabled in %s (even with HTTP 403) -> AI_NOT_ENABLED',
     async (mode) => {

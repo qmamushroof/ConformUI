@@ -56,6 +56,8 @@ export interface FakeAiConfig {
   /** Throws `CuiError(code)` for that task, after the guards. */
   errors?: Partial<Record<AiTask, ErrorCode>>;
   durationMs?: number;
+  /** Real milliseconds the fake waits before answering or failing (slow cloud). */
+  delayMs?: number;
   /** What the SDK would report as `inferenceSource` (to prove guard SPEC-AI-02 (b)). Default: the selected engine. */
   inferenceSource?: 'on-device' | 'cloud';
   /** Published by the engine: every request, rejected ones included. Same array as `FakeAiEngine.calls`. */
@@ -159,6 +161,7 @@ export class FakeAiEngine implements AiEngine {
     if (req.mode === 'ONLY_ON_DEVICE' && reported !== 'on-device') throw new CuiError('AI_FAILED');
     engine = reported;
 
+    if (this.config.delayMs) await new Promise((r) => setTimeout(r, this.config.delayMs));
     const scripted = this.config.errors?.[req.task];
     if (scripted) throw new CuiError(scripted);
 

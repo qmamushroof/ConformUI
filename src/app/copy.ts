@@ -70,6 +70,12 @@ export const copy = {
     deep: {
       showPrecomputed: 'Show pre-computed result',
       failed: 'Deep Analysis did not finish. Your results are kept.',
+      running: 'Deep Analysis is running',
+      runningDetail: 'The cloud is reviewing the findings that need a closer look. This can take up to a minute.',
+      refined: (n: number) => `Deep Analysis refined ${n} ${n === 1 ? 'finding' : 'findings'}`,
+      refinedDetail: 'They are labelled Refined by Cloud, and the trace has a Cloud step.',
+      nothing: 'Deep Analysis finished: nothing to refine',
+      nothingDetail: 'The cloud agreed with the checks above, so no finding changed.',
     },
     runFailed: 'The run did not finish. Your captures and contract are kept.',
     project: {
