@@ -39,6 +39,15 @@ function useDocumentTitle(pathname: string): void {
   }, [pathname, name, id]);
 }
 
+/**
+ * A rejection from the Firebase SDK's own background work (installation, App Check and Remote Config refresh): it
+ * fails whenever the network is down and nothing on screen depends on it, so it is never an error of the screen.
+ */
+function isBackgroundSdkRejection(reason: unknown): boolean {
+  const { name, code } = (reason ?? {}) as { name?: unknown; code?: unknown };
+  return name === 'FirebaseError' && typeof code === 'string' && /^(installations|appCheck|remoteconfig)\//.test(code);
+}
+
 /** SPEC-APP-03: unhandled rejections map through `CuiError` to a notice, cleared on the next navigation. */
 function useRejection(pathname: string): unknown {
   const [rejection, setRejection] = useState<{ reason: unknown } | undefined>();
@@ -47,6 +56,7 @@ function useRejection(pathname: string): unknown {
   useEffect(() => {
     const on = (e: Event) => {
       e.preventDefault();
+      if (isBackgroundSdkRejection((e as PromiseRejectionEvent).reason)) return;
       setRejection({ reason: (e as PromiseRejectionEvent).reason });
     };
     window.addEventListener('unhandledrejection', on);
