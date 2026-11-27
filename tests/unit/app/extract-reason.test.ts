@@ -2,7 +2,7 @@ import { CuiError, type ErrorCode, type NotCheckedReason } from '@kernel';
 import { describe, expect, it } from 'vitest';
 import { stateCopy } from '../../../src/app/copy';
 import { precomputedNote, whyFromBlocked, whyFromError } from '../../../src/app/flows/extract-reason';
-import { blockedView } from '../../../src/app/flows/helpers';
+import { blockedView, errorView } from '../../../src/app/flows/helpers';
 
 // PRD-H-05, SPEC-DEMO-05: the sample's stored extraction says the real reason it is shown, never "you declined" by default.
 
@@ -77,5 +77,37 @@ describe('extraction notices on a project that is not the sample', () => {
     expect(blockedView('offline', 'OFFLINE').code).toBe('OFFLINE');
     expect(blockedView('device-unavailable').code).toBe('DEVICE_UNAVAILABLE');
     expect(blockedView('cloud-disabled').code).toBe('CLOUD_DISABLED');
+  });
+});
+
+describe('SPEC-UI-05: the timeout copy names where the call ran', () => {
+  it('a cloud timeout says the cloud model took too long, that nothing was charged, and offers Try again', () => {
+    const v = errorView(new CuiError('AI_TIMEOUT', undefined, { engine: 'cloud' }));
+    expect(v.code).toBe('AI_TIMEOUT');
+    expect(v.title).toMatch(/cloud model took too long/i);
+    expect(v.detail).toMatch(/not counted against today/i);
+    expect(v.detail).toMatch(/try again/i);
+    expect(`${v.title} ${v.detail}`).not.toMatch(/slower device/i);
+  });
+
+  it('an on-device timeout keeps the device wording', () => {
+    const v = errorView(new CuiError('AI_TIMEOUT', undefined, { engine: 'on-device' }));
+    expect(v.title).toBe(stateCopy.AI_TIMEOUT.title);
+    expect(v.detail).toMatch(/slower device/);
+  });
+
+  it('a timeout of unknown engine keeps the device wording (never claims a charge it cannot know about)', () => {
+    const v = errorView(new CuiError('AI_TIMEOUT'));
+    expect(v.detail).toBe(stateCopy.AI_TIMEOUT.detail);
+  });
+
+  it('other errors are unaffected by an engine', () => {
+    expect(errorView(new CuiError('AI_FAILED', undefined, { engine: 'cloud' })).title).toBe(stateCopy.AI_FAILED.title);
+  });
+
+  it('a blocked cloud extraction timeout also says cloud', () => {
+    const v = blockedView('ai-failed', 'AI_TIMEOUT', 'cloud');
+    expect(v.title).toMatch(/cloud model took too long/i);
+    expect(blockedView('ai-failed', 'AI_TIMEOUT', 'on-device').detail).toMatch(/slower device/);
   });
 });

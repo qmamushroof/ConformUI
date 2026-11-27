@@ -186,7 +186,11 @@ export async function runExtract(
 
   // Nothing AI-made: the existing Contract, or an empty one, plus rule-based Inferred items (SPEC-CON-03).
   // They are saved only when there is something new, so a Contract with all P0 viewports designed stays unsaved.
-  const blocked = async (reason: NotCheckedReason, errorCode?: ErrorCode): Promise<ExtractOutcome> => {
+  const blocked = async (
+    reason: NotCheckedReason,
+    errorCode?: ErrorCode,
+    errorEngine?: 'on-device' | 'cloud',
+  ): Promise<ExtractOutcome> => {
     const base: Contract = existing ?? {
       id: d.ids.next(),
       projectId,
@@ -196,7 +200,7 @@ export async function runExtract(
       requirements: [],
     };
     const withRules = withInferred(base, project);
-    const why = errorCode ? { errorCode } : {};
+    const why = errorCode ? { errorCode, ...(errorEngine && { errorEngine }) } : {};
     if (withRules === base) return { kind: 'blocked', reason, ...why, contract: base };
     const saved = existing?.locked
       ? { ...nextContractVersion(existing, d.ids, d.clock), requirements: withRules.requirements }
@@ -279,7 +283,7 @@ export async function runExtract(
         }
       } catch (e) {
         if (!(e instanceof CuiError)) throw e;
-        if (e.code !== 'AI_BAD_OUTPUT') return blocked(failReason(e.code), e.code);
+        if (e.code !== 'AI_BAD_OUTPUT') return blocked(failReason(e.code), e.code, e.engine);
       }
       if (!parsed) {
         push({ ...step, note: `Band ${band.index} could not be read. Add requirements manually.` });

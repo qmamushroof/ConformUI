@@ -1,5 +1,5 @@
 import { resolve } from 'node:path';
-import { stateCopy, copy as uiCopy } from '../../src/app/copy';
+import { cloudTimeoutCopy, stateCopy, copy as uiCopy } from '../../src/app/copy';
 import { ERROR_CODES, type ErrorCode } from '../../src/shared/kernel';
 import { expect, test } from './fixtures';
 import { createProject, SAMPLE } from './projects-helpers';
@@ -36,7 +36,7 @@ for (const code of ERROR_CODES) {
     await page.getByRole('button', { name: 'Deep Analysis' }).click();
     await page.getByRole('button', { name: 'Send to cloud' }).click();
 
-    const copy = stateCopy[code as ErrorCode];
+    const copy = code === 'AI_TIMEOUT' ? cloudTimeoutCopy : stateCopy[code as ErrorCode];
     const notice = page.getByRole('alert').filter({ hasText: copy.title });
     await expect(notice).toBeVisible(BIG);
     if (copy.detail) await expect(notice).toContainText(copy.detail);

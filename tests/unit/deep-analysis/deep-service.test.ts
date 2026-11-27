@@ -361,6 +361,35 @@ describe('run (SPEC-DEEP-05, SPEC-DEEP-06, SPEC-DEEP-07, SPEC-DEEP-08)', () => {
     expect((await settingsStore.read()).deepUsage.count).toBe(1);
   });
 
+  it('SPEC-DEEP-04: a timed-out request does not use one of the daily uses', async () => {
+    const r = await seed({ settings: { deepUsage: { day: TODAY, count: 4 } } });
+    fakeCfg.errors = { 'deep-analysis': 'AI_TIMEOUT' };
+    await expect(service.run(await service.preview(r), consent(), noop)).rejects.toMatchObject({
+      code: 'AI_TIMEOUT',
+    });
+    expect((await settingsStore.read()).deepUsage).toEqual({ day: TODAY, count: 4 });
+    expect((await settingsStore.read()).everSentToCloud).toBe(true);
+  });
+
+  it('SPEC-DEEP-04: a timeout on the first use of a new day leaves today at 0, never negative', async () => {
+    const r = await seed({ settings: { deepUsage: { day: '2000-01-01', count: 7 } } });
+    fakeCfg.errors = { 'deep-analysis': 'AI_TIMEOUT' };
+    await expect(service.run(await service.preview(r), consent(), noop)).rejects.toMatchObject({
+      code: 'AI_TIMEOUT',
+    });
+    expect((await settingsStore.read()).deepUsage).toEqual({ day: TODAY, count: 0 });
+  });
+
+  it.each(['AI_FAILED', 'AI_BAD_OUTPUT', 'APPCHECK_FAILED', 'QUOTA_EXCEEDED'] as const)(
+    'SPEC-DEEP-04: %s still counts (only a timeout is refunded)',
+    async (code) => {
+      const r = await seed({ settings: { deepUsage: { day: TODAY, count: 2 } } });
+      fakeCfg.errors = { 'deep-analysis': code };
+      await expect(service.run(await service.preview(r), consent(), noop)).rejects.toBeInstanceOf(CuiError);
+      expect((await settingsStore.read()).deepUsage.count).toBe(3);
+    },
+  );
+
   it('SPEC-DEEP-04: at the cap run refuses with DAILY_CAP and sends nothing', async () => {
     const r = await seed();
     const p = await service.preview(r);

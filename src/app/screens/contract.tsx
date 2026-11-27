@@ -153,7 +153,7 @@ const ContractRoute: FC = () => {
         if (p.isSample) await showPrecomputed('declined');
       } else if (out.kind === 'blocked') {
         if (p.isSample) await showPrecomputed(whyFromBlocked(out.reason, out.errorCode));
-        else setExtractError(blockedView(out.reason, out.errorCode));
+        else setExtractError(blockedView(out.reason, out.errorCode, out.errorEngine));
       }
     } catch (e) {
       if (p?.isSample) await showPrecomputed(whyFromError(e)).catch((err: unknown) => setExtractError(errorView(err)));

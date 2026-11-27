@@ -1,3 +1,4 @@
+import { Elapsed } from '@contract';
 import { DeepAnalysisButton, DeepConfirmSheet, type DeepPreview } from '@deep';
 import { LoadFixedButton, SampleBanner } from '@demo';
 import { fixPrompt as buildFixPrompt, fileName, reportJson, reportMarkdown } from '@export';
@@ -301,7 +302,9 @@ const RunRoute: FC = () => {
     <div className="notice notice-info" role="status" aria-busy="true">
       <Glyph d="M12 3v4M12 17v4M3 12h4M17 12h4" />
       <p className="title">{copy.flows.deep.running}</p>
-      <p className="small muted">{copy.flows.deep.runningDetail}</p>
+      <p className="small muted">
+        {copy.flows.deep.runningDetail} <Elapsed />
+      </p>
     </div>
   ) : deepDone !== undefined ? (
     <div className="notice notice-info" role="status">
