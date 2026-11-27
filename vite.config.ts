@@ -23,6 +23,15 @@ export default defineConfig(({ mode }) => ({
     'import.meta.env.VITE_APP_VERSION': JSON.stringify(appVersion()),
     'import.meta.env.VITE_E2E': JSON.stringify(mode === 'e2e' ? '1' : ''),
   },
+  build: {
+    rollupOptions: {
+      output: {
+        // zod and its jitless config share one chunk so the config runs before any kernel schema is built (CSP: no eval probe).
+        manualChunks: (id: string) =>
+          id.includes('/node_modules/zod/') || id.endsWith('/src/app/zod-jitless.ts') ? 'zod' : undefined,
+      },
+    },
+  },
   plugins: [
     react(),
     tailwindcss(),

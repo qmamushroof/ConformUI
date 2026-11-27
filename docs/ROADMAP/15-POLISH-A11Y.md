@@ -25,10 +25,10 @@ Fix defects in the owning module, never in the test.
 
 ### 15.3 CSP on Hosting (D1) and performance · A · 0.25 h · needs 2.6, 2.7, 4.5
 - [x] Add the SPEC-SEC-08 CSP (with any 4.5 amendment) as `Content-Security-Policy-Report-Only` in `firebase.json`; Human runs `npx firebase hosting:channel:deploy preview --expires 7d` (SPEC §8.1).
-- [ ] Human: add the preview channel host to the reCAPTCHA key domains and the API-key referrers. Keep the channel id `preview` so the host stays stable (SPEC §8.3 step 2).
-- [ ] Verify zero `script-src` `eval` violations on Hosting (zod jitless from 7.1; spike 4.5 saw one without it). A remaining one means the config ran after the kernel schemas were built.
-- [ ] On the preview: one Deep Analysis and one on-device image prompt; zero violations → switch to enforced `Content-Security-Policy`; redeploy preview and repeat once.
-- [ ] Lighthouse (DevTools) on the preview: record scores (SPEC-PERF-07, advisory); size check green (SPEC-PERF-04).
+- [x] Not needed: verification ran on the production host `conformui.web.app` (already a reCAPTCHA key domain), so no preview channel was used. Human: add the preview channel host to the reCAPTCHA key domains and the API-key referrers. Keep the channel id `preview` so the host stays stable (SPEC §8.3 step 2).
+- [x] Verify zero `script-src` `eval` violations on Hosting (zod jitless from 7.1; spike 4.5 saw one without it). A remaining one means the config ran after the kernel schemas were built. **Found on Hosting:** two eval reports from the `schemas` chunk, because zod and the kernel schemas shared a chunk that ran before the config in the entry chunk. Fixed by `manualChunks` in `vite.config.ts` putting zod and `app/zod-jitless.ts` in one `zod` chunk; zero violations after redeploy.
+- [x] On Hosting (no preview channel): sample flow, cloud Extract (Gemini through AI Logic, App Check accepted) and Deep Analysis send with zero violations → switched to enforced `Content-Security-Policy`; redeployed and repeated once. The on-device image prompt on the enforced host stays a human smoke (16.5).
+- [x] Lighthouse on the production host: performance 88, accessibility 95, best practices 77, SEO 91 (SPEC-PERF-07, advisory); size check green (SPEC-PERF-04).
 
 **Fallback:** a violation that cannot be fixed by an origin → apply the 4.5 fallback and record the `S#`; never ship without `default-src` and `object-src 'none'`.
 **Accept:** enforced CSP, zero violations on both prompts; scores noted for 16.2.

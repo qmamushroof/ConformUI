@@ -111,23 +111,23 @@ Deploys are manual from a developer machine; there is no deploy workflow.
 npm ci && npm run build && npx firebase deploy --only hosting
 ```
 
-A preview channel is available with `npx firebase hosting:channel:deploy preview --expires 7d`. Hosting serves the Content Security Policy in report-only mode until it is proven on the preview channel.
+A preview channel is available with `npx firebase hosting:channel:deploy preview --expires 7d`. Hosting serves an enforced Content Security Policy (proven with zero violations on the production host).
 
 ## Verify checklist
 
-Results are recorded by the owner on the hosted app. Until then every value is pending.
+Results were recorded on the hosted app at https://conformui.web.app. Rows marked pending need a desktop Chrome with on-device Gemma and are recorded by the owner.
 
 | Check | Result |
 |---|---|
-| Hosted URL loads over HTTPS and installs on desktop Chrome | pending |
+| Hosted URL loads over HTTPS and installs on desktop Chrome | Loads over HTTPS (HTTP 200, HSTS, nosniff, no-referrer); offline second visit opens the shell and the sample; install on desktop Chrome pending |
 | Sample Extract (On-device), Run, Deep Analysis (Cloud), Copy fix prompt, Re-verify, export | pending |
-| Both `inferenceSource` values seen; App Check accepted (no 401 or 403) | pending |
+| Both `inferenceSource` values seen; App Check accepted (no 401 or 403) | App Check accepted, no 401 or 403, cloud inferenceSource seen (Gemini through AI Logic); on-device value pending |
 | Offline first pass with the network off (on-device) | pending |
 | Deterministic Run stages for the sample, 2 viewports, within 3 s | pending |
 | On-device Contract extraction under 60 s | pending |
 | AI extraction covers at least 4 of the 6 measurable planted defects (Engine reported) | pending |
-| Zero CSP violations on Hosting for one Deep Analysis and one on-device image prompt | pending |
-| Lighthouse scores on the preview (advisory) | pending |
+| Zero CSP violations on Hosting for one Deep Analysis and one on-device image prompt | Enforced CSP: zero violations for the sample flow, cloud Extract and Deep Analysis send; on-device image prompt pending |
+| Lighthouse scores on the preview (advisory) | Production host: performance 88, accessibility 95, best practices 77, SEO 91; bundle size check passes |
 
 ## Demo video
 

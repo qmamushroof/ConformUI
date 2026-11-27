@@ -23,13 +23,13 @@
 **Accept:** README contains `ONLY_ON_DEVICE`, `PREFER_ON_DEVICE`, `ONLY_IN_CLOUD`; no `<HOSTED_URL>` left; no `<REPO_URL>` placeholder left in README/`package.json`; grep finds no build-tool or personal-detail mention (PRD-D-15), ignoring the repo URL the owner set in README and `package.json`.
 
 ### 16.3 Production deploy · Human (A prepares) · 0.1 h · needs 16.1, 15.3
-- [ ] A: clean `npm ci && npm run build`, `npm run check` green on `main`, tag `v1.0.0`.
-- [ ] Human: `npx firebase deploy --only hosting` (SPEC-DEPLOY-01; no CI deploy, S18).
+- [x] A: clean `npm ci && npm run build`, `npm run check` green on `main`, tag `v1.0.0`.
+- [x] Human: `npx firebase deploy --only hosting` (SPEC-DEPLOY-01; no CI deploy, S18).
 
 **Accept:** hosted URL loads over HTTPS; installs on desktop Chrome; second visit offline opens the shell and sample (PRD-M-12, SPEC-PWA-02).
 
 ### 16.4 Remote Config publish · Human · 0 h · needs 16.3
-- [ ] Import `remoteconfig.template.json` in the console (or `npx firebase deploy --only remoteconfig`) and publish (SPEC-FB-08, SPEC §8.3 step 3).
+- [x] Import `remoteconfig.template.json` in the console (or `npx firebase deploy --only remoteconfig`) and publish (SPEC-FB-08, SPEC §8.3 step 3).
 
 **Accept:** console lists every SPEC §4.1.6 key with its default.
 
