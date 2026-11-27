@@ -60,6 +60,7 @@ export const copy = {
       lead: (n: number) => `Add the new captures your agent produced. The same ${n} requirements are checked again.`,
       sampleHint: "Use the sample's fixed captures, or drop your own: PNG, JPEG or WebP up to 20 MB.",
       go: 'Run Re-verify',
+      unchanged: (n: number) => `Add new captures first. These are the captures Run ${n} already checked.`,
       noCapture: 'No capture yet',
       replace: (vp: string) => `Replace ${vp} capture`,
     },

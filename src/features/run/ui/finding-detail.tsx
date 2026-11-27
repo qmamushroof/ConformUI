@@ -69,7 +69,13 @@ export const FindingDetail: FC<FindingDetailProps> = ({
         </div>
       </div>
 
-      <ComparisonView finding={f} {...(design && { design })} {...(capture && { capture })} {...(diff && { diff })} />
+      <ComparisonView
+        finding={f}
+        nothingDrawn={requirement?.check.kind === 'presence'}
+        {...(design && { design })}
+        {...(capture && { capture })}
+        {...(diff && { diff })}
+      />
 
       {(ms.length > 0 || selector) && (
         <section className="sec" aria-labelledby={`${titleId}-m`}>

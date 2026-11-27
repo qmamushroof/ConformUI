@@ -45,11 +45,27 @@ function scaleOf(v: ViewportCtx): number {
   return v.designImage && v.designImage.cssWidth > 0 ? v.captureImage.cssWidth / v.designImage.cssWidth : 1;
 }
 
-function subject(req: Requirement, m?: { text?: string; selector?: string; tag?: string }): string {
+const NOUN: Record<string, string> = {
+  h1: 'headline',
+  h2: 'heading',
+  h3: 'heading',
+  h4: 'heading',
+  h5: 'heading',
+  h6: 'heading',
+  a: 'link',
+  button: 'button',
+  img: 'image',
+};
+
+/** A human label for the element a statement is about; never a raw CSS selector (that stays in facts and the fix). */
+function subject(req: Requirement, m?: { text?: string; tag?: string }, el?: DomElement): string {
   if (req.primary) return 'Primary CTA';
   if (m?.text) return `"${m.text}"`;
-  if (m?.selector) return `\`${m.selector}\``;
-  if (m?.tag) return `The <${m.tag}>`;
+  const tag = m?.tag ?? el?.tag;
+  const words = (el?.text ?? el?.name ?? '').trim();
+  const noun = tag ? NOUN[tag.toLowerCase()] : undefined;
+  if (words) return `The ${noun ?? 'element'} "${short(words, 50)}"`;
+  if (tag) return `The <${tag}>`;
   return 'The element';
 }
 
@@ -308,7 +324,7 @@ const size: Handler<'size'> = async (req, v) => {
     const [el] = await find(v, req.check.match, regionOn(req, v));
     if (!el) return regionIssue(req, 'no element in the DOM snapshot matches this item');
     const observed = dimension === 'width' ? el.box.w : el.box.h;
-    const who = subject(req, { ...req.check.match, ...(el.selector && { selector: el.selector }) });
+    const who = subject(req, req.check.match, el);
     const { measurement, pass } = geometryMeasurement(
       'size',
       `${who} ${dimension}`,
@@ -465,7 +481,7 @@ const dominantText: Handler<'dominant-text'> = async (req, v) => {
     (best, e) => (!best || e.style.fontSize > best.style.fontSize ? e : best),
     undefined,
   );
-  const who = subject(req, { ...req.check.match, selector: el.selector });
+  const who = subject(req, req.check.match, el);
   const measurement: Measurement = {
     name: `${who} font size vs the largest other text`,
     design: biggest?.style.fontSize ?? el.style.fontSize,
@@ -504,7 +520,7 @@ const colour: Handler<'colour'> = async (req, v) => {
   const seen = observedColour(v.dom, el, property);
   if (!seen) return regionIssue(req, 'the element colour could not be read from the DOM snapshot');
   const designColour = await v.m.dominantColour(design, region, property);
-  const who = subject(req, { ...req.check.match, selector: el.selector });
+  const who = subject(req, req.check.match, el);
   const made = colourMeasurement(`${who} ${property} colour`, designColour, seen, v.t);
   const measurement: Measurement = {
     ...made.measurement,
@@ -549,7 +565,7 @@ const layoutFits: Handler<'layout-fits'> = async (_req, v) => {
     fact('Overlapping pairs', pairs.length, 'count'),
     fact('Clipped text elements', clipped.length, 'count'),
   ];
-  const label = (e: DomElement) => short(e.name ?? e.text ?? e.selector);
+  const label = (e: DomElement) => short(e.name ?? e.text ?? `<${e.tag}>`);
   const parts: string[] = [];
   if (facts0.horizontalPx > 0) parts.push(`${facts0.horizontalPx} px of horizontal overflow`);
   if (pairs.length > 0) {

@@ -18,6 +18,8 @@ export interface OnboardingScreenProps {
   privacy: PrivacyCopy;
   onTrySample(): void;
   onStartProject(): void;
+  /** Requirements in the sample's contract, read from it by the app; the count is left out until known. */
+  sampleRequirements?: number;
 }
 
 const LOOP = [
@@ -29,7 +31,13 @@ const LOOP = [
 
 type Download = 'idle' | 'busy' | 'done';
 
-export const OnboardingScreen: FC<OnboardingScreenProps> = ({ settings, privacy, onTrySample, onStartProject }) => {
+export const OnboardingScreen: FC<OnboardingScreenProps> = ({
+  settings,
+  privacy,
+  onTrySample,
+  onStartProject,
+  sampleRequirements,
+}) => {
   const [view, setView] = useState<EngineView | null>(null);
   const [dl, setDl] = useState<Download>('idle');
   const [pct, setPct] = useState(0);
@@ -97,7 +105,8 @@ export const OnboardingScreen: FC<OnboardingScreenProps> = ({ settings, privacy,
             </button>
           </div>
           <p className="small muted">
-            The sample is a landing page with Desktop and Mobile captures and a 19-requirement contract, ready to run.
+            The sample is a landing page with Desktop and Mobile captures and a{' '}
+            {sampleRequirements === undefined ? '' : `${sampleRequirements}-requirement `}contract, ready to run.
           </p>
         </div>
 

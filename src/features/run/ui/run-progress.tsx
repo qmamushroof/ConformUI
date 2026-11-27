@@ -5,7 +5,7 @@ import { durationText, plural, stepLabel } from './labels';
 
 /** Progress of a Run in flight, built from the `RunEvent` stages the app collected (PRD-F-04.4, SPEC-RUN-01). */
 export interface RunProgressProps {
-  /** Requirements being checked ("Checking 19 requirements"). */
+  /** Requirements being checked ("Checking N requirements"). */
   total: number;
   /** Finished stages, in order (`RunEvent` `stage`). */
   steps: readonly TraceStep[];

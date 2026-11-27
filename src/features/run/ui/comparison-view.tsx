@@ -19,6 +19,8 @@ export interface ComparisonViewProps {
   capture?: EvidenceImage;
   /** Optional pixelmatch mask, same size as the capture; without it the overlay fills the capture region. */
   diff?: EvidenceImage;
+  /** A presence failure: nothing is drawn where the design shows content, so the implementation crop is empty. */
+  nothingDrawn?: boolean;
 }
 
 const PAD = 32;
@@ -42,14 +44,23 @@ const Shot: FC<{
   kind: 'design' | 'impl';
   full: boolean;
   diff?: { rect?: Rect; image?: EvidenceImage };
-}> = ({ image, label, viewBox, crop, kind, full, diff }) => {
-  const scroller = useRef<HTMLDivElement>(null);
+  /** The pane's scroll element, for the two panes to follow each other. */
+  paneRef?: (el: HTMLDivElement | null) => void;
+  onPaneScroll?: (el: HTMLDivElement) => void;
+}> = ({ image, label, viewBox, crop, kind, full, diff, paneRef, onPaneScroll }) => {
+  const scroller = useRef<HTMLDivElement | null>(null);
+  // Full page: the image is scaled to the pane width, so only the vertical position is set, centring the region.
   useEffect(() => {
     const el = scroller.current;
-    if (full && el && crop && typeof el.scrollTo === 'function') {
-      el.scrollTo({ left: Math.max(0, crop.x - PAD), top: Math.max(0, crop.y - PAD) });
+    if (!full || !el) return;
+    if (!crop || !el.clientWidth || image.width <= 0) {
+      el.scrollTop = 0;
+      return;
     }
-  }, [full, crop]);
+    const scale = el.clientWidth / image.width;
+    const max = Math.max(0, el.scrollHeight - el.clientHeight);
+    el.scrollTop = Math.min(max, Math.max(0, (crop.y + crop.h / 2) * scale - el.clientHeight / 2));
+  }, [full, crop, image.width]);
 
   const svg = (
     <svg
@@ -57,7 +68,7 @@ const Shot: FC<{
       viewBox={full ? `0 0 ${image.width} ${image.height}` : viewBox}
       role="img"
       aria-label={label}
-      style={full ? { width: image.width, maxWidth: 'none' } : undefined}
+      style={full ? { width: '100%' } : undefined}
     >
       <image href={image.src} x={0} y={0} width={image.width} height={image.height} />
       {diff?.image ? (
@@ -78,7 +89,15 @@ const Shot: FC<{
     </svg>
   );
   return full ? (
-    <div className="shot-scroll" ref={scroller}>
+    <div
+      className="shot-scroll"
+      style={{ overflowX: 'hidden' }}
+      ref={(el) => {
+        scroller.current = el;
+        paneRef?.(el);
+      }}
+      onScroll={(e) => onPaneScroll?.(e.currentTarget)}
+    >
       {svg}
     </div>
   ) : (
@@ -86,8 +105,19 @@ const Shot: FC<{
   );
 };
 
-export const ComparisonView: FC<ComparisonViewProps> = ({ finding, design, capture, diff }) => {
+export const ComparisonView: FC<ComparisonViewProps> = ({ finding, design, capture, diff, nothingDrawn }) => {
   const uid = useId();
+  const panes = useRef<{ design?: HTMLDivElement | null; impl?: HTMLDivElement | null }>({});
+  /** The two panes scroll together by proportion, since the design and the capture differ in height. */
+  const follow = (from: 'design' | 'impl') => (el: HTMLDivElement) => {
+    const other = panes.current[from === 'design' ? 'impl' : 'design'];
+    if (!other) return;
+    const span = el.scrollHeight - el.clientHeight;
+    const ratio = span > 0 ? el.scrollTop / span : 0;
+    const target = ratio * Math.max(0, other.scrollHeight - other.clientHeight);
+    // The other pane's own scroll event lands within a pixel of here, which ends the echo.
+    if (Math.abs(other.scrollTop - target) >= 1) other.scrollTop = target;
+  };
   const [showDiff, setShowDiff] = useState(false);
   const [full, setFull] = useState(false);
   const { designCrop, captureCrop, diffRatio } = finding.evidence;
@@ -136,6 +166,10 @@ export const ComparisonView: FC<ComparisonViewProps> = ({ finding, design, captu
                 viewBox={boxes.design}
                 kind="design"
                 full={full}
+                paneRef={(el) => {
+                  panes.current.design = el;
+                }}
+                onPaneScroll={follow('design')}
                 {...(designCrop && { crop: designCrop })}
               />
             ) : (
@@ -166,6 +200,10 @@ export const ComparisonView: FC<ComparisonViewProps> = ({ finding, design, captu
                 viewBox={boxes.capture}
                 kind="impl"
                 full={full}
+                paneRef={(el) => {
+                  panes.current.impl = el;
+                }}
+                onPaneScroll={follow('impl')}
                 diff={{
                   ...(captureCrop && { rect: captureCrop }),
                   ...(diff && { image: diff }),
@@ -180,6 +218,7 @@ export const ComparisonView: FC<ComparisonViewProps> = ({ finding, design, captu
                 </div>
               </div>
             )}
+            {capture && nothingDrawn ? <p className="small muted">Nothing drawn here</p> : null}
           </figure>
         </div>
       ) : (

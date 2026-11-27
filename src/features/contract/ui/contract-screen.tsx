@@ -18,10 +18,17 @@ export interface ExtractingView {
   viewportLabel: string;
   stages: ExtractStage[];
 }
+/** An item in the comparison with the statement of the contract it belongs to (AI and verified ids can collide). */
+export interface ComparisonItem {
+  id: string;
+  statement: string;
+}
 export interface Comparison {
   matched: string[];
-  missing: string[];
-  extra: string[];
+  /** Verified items the AI did not propose. */
+  missing: ComparisonItem[];
+  /** AI items with no verified counterpart. */
+  extra: ComparisonItem[];
 }
 
 /** Routed screen `/p/:projectId/contract` (SPEC §4.13.2). Data and services come in as props; navigation is a callback (SPEC-ARCH-07). */
@@ -402,12 +409,7 @@ export const ContractScreen: FC<ContractScreenProps> = (props) => {
             </div>
           </div>
           {comparison ? (
-            <ComparisonPanel
-              comparison={comparison}
-              pending={reqs}
-              onUseAi={props.onUseAi}
-              onKeepVerified={props.onKeepVerified}
-            />
+            <ComparisonPanel comparison={comparison} onUseAi={props.onUseAi} onKeepVerified={props.onKeepVerified} />
           ) : null}
         </div>
       ) : null}
@@ -806,27 +808,21 @@ const Detail: FC<DetailProps> = (p) => {
 /** Sample comparison (SPEC-DEMO-03): counts only; the two choices are callbacks owned by `app`. */
 const ComparisonPanel: FC<{
   comparison: Comparison;
-  pending: Requirement[];
   onUseAi?(): void;
   onKeepVerified?(): void;
-}> = ({ comparison: c, pending, onUseAi, onKeepVerified }) => {
+}> = ({ comparison: c, onUseAi, onKeepVerified }) => {
   const id = useId();
   const proposed = c.matched.length + c.extra.length;
-  const ids = (list: string[]) =>
-    list.length === 0 ? (
-      <span className="muted">None</span>
-    ) : (
-      list.map((x, i) => {
-        const st = pending.find((r) => r.id === x)?.statement;
-        return (
-          <span key={x}>
-            {i > 0 ? ' ' : ''}
-            <span className="mono xs">{x}</span>
-            {st ? ` ${st}.` : ''}
-          </span>
-        );
-      })
-    );
+  const none = <span className="muted">None</span>;
+  const items = (list: ComparisonItem[]) =>
+    list.length === 0
+      ? none
+      : list.map((x) => (
+          <div key={x.id}>
+            <span className="mono xs">{x.id}</span>
+            {x.statement ? ` ${x.statement}` : ''}
+          </div>
+        ));
   return (
     <section className="sec" aria-labelledby={`${id}-h`}>
       <div className="sec-head">
@@ -861,20 +857,20 @@ const ComparisonPanel: FC<{
               <td>Matched</td>
               <td className="r">{c.matched.length}</td>
               <td>
-                {c.matched.map((x) => (
-                  <span key={x} className="mono xs">{`${x} `}</span>
-                ))}
+                {c.matched.length === 0
+                  ? none
+                  : c.matched.map((x) => <span key={x} className="mono xs">{`${x} `}</span>)}
               </td>
             </tr>
             <tr>
               <td>Missed by AI</td>
               <td className="r">{c.missing.length}</td>
-              <td>{ids(c.missing)}</td>
+              <td>{items(c.missing)}</td>
             </tr>
             <tr>
               <td>Extra from AI</td>
               <td className="r">{c.extra.length}</td>
-              <td>{ids(c.extra)}</td>
+              <td>{items(c.extra)}</td>
             </tr>
           </tbody>
         </table>

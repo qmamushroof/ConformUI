@@ -1,5 +1,5 @@
 import { ContractScreen, type ExtractingView } from '@contract';
-import { compareWithVerified } from '@demo';
+import { describeComparison } from '@demo';
 import { contractJson, contractMarkdown, fileName } from '@export';
 import type { ConsentToken, Contract, Project, TraceStep, ViewportId } from '@kernel';
 import { ProjectHead } from '@projects';
@@ -166,7 +166,7 @@ const ContractRoute: FC = () => {
   const { project: proj, contract: active, pending, designSrc, runs, lockedBy } = load.data;
   const { done, next } = stepper(proj, runs);
   const comparison =
-    pending && active && proj.isSample ? compareWithVerified(pending.requirements, active.requirements) : undefined;
+    pending && active && proj.isSample ? describeComparison(pending.requirements, active.requirements) : undefined;
 
   const exportContract = (format: 'md' | 'json') => {
     const c = pending ?? active;
