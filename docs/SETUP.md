@@ -19,6 +19,7 @@ Paths below use `~` for your home directory and `%LOCALAPPDATA%` for the Windows
 5. **Verify the toolchain.**
    - `npm run check:fast` = `lint` (Biome) + `typecheck` (`tsc -b`) + `depcruise` (dependency rules) + `test` (Vitest unit, component and architecture tests).
    - `npm run check` = `check:fast` + `build` + `check:size` (bundle budget) + `check:dist` (built-output rules) + `test:e2e` (Playwright against the `--mode e2e` build on port 4173; fake AI only).
+   - `E2E_PORT` (optional, default 4173) sets the port of the Playwright preview server, so parallel local runs do not collide: `E2E_PORT=4519 npm run test:e2e`.
    - Others: `build:e2e` (E2E build), `icons` (regenerate PWA icons), `sample:capture` (re-capture the sample site).
 
    Verify: `npm run check:fast` is green. Run `npm run check` before a PR that touches the app.

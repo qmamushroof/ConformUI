@@ -92,7 +92,11 @@ const loc = () => screen.getByTestId('loc').textContent ?? '';
 /** Two clicks from Projects: Try the sample, then Run. */
 /** `viaLink`: click Try the sample first (jsdom navigation through the shell's link handler); otherwise start at /?sample=1, which that link opens. */
 async function sampleToFindings(viaLink = false) {
-  if (viaLink) fireEvent.click((await screen.findAllByRole('link', { name: 'Try the sample' }))[0] as HTMLElement);
+  if (viaLink) {
+    // Wait for the settled empty state: the header link of the loading state is removed once the list loads, and a click on a detached node never reaches the shell's document listener.
+    await screen.findByRole('heading', { name: 'No projects yet' });
+    click('Try the sample', 'link');
+  }
   await screen.findByRole('heading', { level: 1, name: 'Sample landing page' });
   click('Run');
   await screen.findByRole('heading', { level: 1, name: 'Run 1' }, { timeout: 90_000 });

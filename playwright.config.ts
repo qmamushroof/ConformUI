@@ -1,6 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const PORT = 4173;
+// `E2E_PORT` lets parallel local runs use different preview ports; CI keeps the default.
+const PORT = Number(process.env.E2E_PORT) || 4173;
 
 // E2E runs against the `--mode e2e` build served by `vite preview` (SPEC §7.1). Real AI is never called (FakeAiEngine).
 export default defineConfig({
