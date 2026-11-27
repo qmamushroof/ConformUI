@@ -1,5 +1,6 @@
 import type { EngineStatus, Settings } from '@kernel';
 import { useEffect, useState } from 'react';
+import { copy } from './copy';
 import { useServices } from './services';
 
 /** Fired by the cross-feature flows (7.3) after they record cloud usage, so the header counter refreshes. */
@@ -12,6 +13,21 @@ export function enginePill(status: EngineStatus, mode: Settings['mode']): Engine
   if (mode !== 'cloud-only' && status.device === 'available' && status.deviceImage !== false) return 'onDevice';
   if (mode !== 'on-device-only' && status.cloud === 'enabled' && status.online) return 'cloud';
   return 'measured';
+}
+
+/** Prototype pill states for a device model that is not usable yet (SPEC-APP-02); undefined when the device is ready or absent. */
+export function deviceStatePill(status: EngineStatus, mode: Settings['mode']): string | undefined {
+  if (mode === 'cloud-only') return undefined;
+  if (status.device === 'downloadable') return copy.header.engine.notDownloaded;
+  if (status.device === 'downloading') {
+    const p = Number.isFinite(status.downloadProgress) ? (status.downloadProgress as number) : 0;
+    return copy.header.engine.downloading(Math.round(Math.min(1, Math.max(0, p)) * 100));
+  }
+  const flagOff =
+    status.device === 'available'
+      ? status.deviceImage === false
+      : status.device === 'unavailable' && (status.reason === 'image-flag-off' || status.reason === 'no-prompt-api');
+  return flagOff ? copy.header.engine.deviceOff : undefined;
 }
 
 export interface EngineView {

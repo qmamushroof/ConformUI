@@ -21,7 +21,7 @@
 | `/settings` | Engine panel, mode, consents, privacy, clear data | `SPEC-SET-*` |
 | `*` | Not found | link home |
 
-`SPEC-APP-02`: header on every route: logo + "ConformUI", Engine status pill (On-device ready / Cloud with consent / Measured only), `PrivacyCounter`, nav (Projects, Snippet, Settings), "Offline" pill when offline. Routes lazy-loaded except `/`.
+`SPEC-APP-02`: header on every route: logo + "ConformUI", Engine status pill (On-device ready / Model not downloaded / Downloading NN% / On-device off / Cloud with consent / Measured only; the device-state texts come from the prototype and show unless the mode is Cloud only), `PrivacyCounter`, nav (Projects, Snippet, Settings), "Offline" pill when offline. Routes lazy-loaded except `/`.
 `SPEC-APP-03`: `openStorage()` rejection → full-screen `StateNotice` `STORAGE_UNAVAILABLE` + Reload; no services are composed. An error boundary per route shows a plain-language screen with Reload; unhandled rejections map through `CuiError` to `StateNotice` (§5.4); no user content in logs.
 
 ## 4.13.3 Manifest and icons (`vite-plugin-pwa`, `strategies: 'injectManifest'`, `registerType: 'prompt'`)

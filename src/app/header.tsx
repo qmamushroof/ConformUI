@@ -2,7 +2,7 @@ import { PrivacyCounter } from '@settings';
 import { type FC, useId, useState } from 'react';
 import { Link, useLocation } from 'react-router';
 import { copy } from './copy';
-import { type EnginePill, enginePill, useEngineView, useExternal, usePrivacyTotals } from './hooks';
+import { deviceStatePill, type EnginePill, enginePill, useEngineView, useExternal, usePrivacyTotals } from './hooks';
 import type { InstallPrompt } from './pwa';
 import { projectIdOf } from './titles';
 
@@ -64,7 +64,10 @@ export const AppHeader: FC<AppHeaderProps> = ({ install }) => {
   const canInstall = useExternal(install?.canInstall ?? never, install?.subscribe ?? noSub);
   const [open, setOpen] = useState(false);
   const menuId = useId();
-  const pill = PILL[view ? enginePill(view.status, view.mode) : 'measured'];
+  const deviceText = view ? deviceStatePill(view.status, view.mode) : undefined;
+  const pill = deviceText
+    ? { icon: 'chip' as const, text: deviceText }
+    : PILL[view ? enginePill(view.status, view.mode) : 'measured'];
   const offline = view ? !view.status.online : false;
   const inProject = projectIdOf(pathname) !== undefined;
 

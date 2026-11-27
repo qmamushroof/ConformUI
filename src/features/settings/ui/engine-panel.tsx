@@ -18,7 +18,7 @@ const MODE_LABEL: Record<Settings['mode'], string> = {
   'on-device-only': 'On-device only',
 };
 
-const FLAG = /^Open (chrome:\/\/\S+)$/;
+const FLAG = /chrome:\/\/\S+/g;
 
 function cloudText(s: EngineStatus): string {
   if (s.cloud === 'disabled') return 'Paused';
@@ -26,7 +26,11 @@ function cloudText(s: EngineStatus): string {
 }
 
 function imageText(s: EngineStatus): string {
-  if (s.device === 'unavailable') return 'Not available';
+  if (s.device === 'unavailable')
+    return s.reason === 'image-flag-off' || s.reason === 'no-prompt-api' ? 'Off' : 'Not available';
+  if (s.device === 'downloadable' || s.device === 'downloading')
+    return s.deviceImage === false ? 'Off' : 'On, after download';
+  if (s.deviceImage === false) return 'Off';
   if (s.deviceImage === 'unknown') return 'Not checked';
   return s.deviceImage ? 'On' : 'Off';
 }
@@ -49,26 +53,28 @@ export const EnginePanel: FC<EnginePanelProps> = ({ status, mode, onDownload, er
   };
 
   const step = (text: string, i: number): ReactNode => {
-    const flag = FLAG.exec(text)?.[1];
-    if (flag) {
+    const flags = text.match(FLAG);
+    if (flags) {
       return (
         <li key={text}>
           <div className="stack-sm">
             <span>
-              Open this address in a new tab. Pages can’t open <span className="mono">chrome://</span> links, so copy
-              it.
+              Open {flags.length > 1 ? 'these addresses, each in a new tab' : 'this address in a new tab'}. Pages can’t
+              open <span className="mono">chrome://</span> links, so copy {flags.length > 1 ? 'them' : 'it'}.
             </span>
-            <span className="inline-code small">
-              <code>{flag}</code>
-              <button
-                className="iconbtn"
-                type="button"
-                aria-label="Copy flag address"
-                onClick={() => copy(flag, 'Flag address copied')}
-              >
-                <Icon name="copy" small />
-              </button>
-            </span>
+            {flags.map((flag) => (
+              <span className="inline-code small" key={flag}>
+                <code>{flag}</code>
+                <button
+                  className="iconbtn"
+                  type="button"
+                  aria-label={flags.length > 1 ? `Copy flag address ${flag.split('#')[1]}` : 'Copy flag address'}
+                  onClick={() => copy(flag, 'Flag address copied')}
+                >
+                  <Icon name="copy" small />
+                </button>
+              </span>
+            ))}
           </div>
         </li>
       );
@@ -110,7 +116,7 @@ export const EnginePanel: FC<EnginePanelProps> = ({ status, mode, onDownload, er
           <Icon name={iconName} />
           <span>{downloading ? `Downloading ${pct}%` : t.headline}</span>
         </p>
-        {downloading ? null : <p className="muted">{t.detail}</p>}
+        <p className="muted">{t.detail}</p>
       </div>
 
       {error ? (

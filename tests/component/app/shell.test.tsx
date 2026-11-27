@@ -216,7 +216,10 @@ describe('header', () => {
   it.each([
     ['available+image', 'On-device ready'],
     ['unavailable-not-desktop-chrome', 'Cloud with consent'],
-    ['downloadable', 'Cloud with consent'],
+    ['downloadable', 'Model not downloaded'],
+    ['downloading', 'Downloading 40%'],
+    ['unavailable-image-flag-off', 'On-device off'],
+    ['available-text-only', 'On-device off'],
   ] as const)('SPEC-APP-02: engine pill for %s reads "%s"', async (status, text) => {
     await mount({ screens, fake: { status } });
     const pill = await screen.findByRole('link', { name: new RegExp(`Engine: ${text}`) });

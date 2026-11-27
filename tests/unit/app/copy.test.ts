@@ -58,6 +58,9 @@ describe('SPEC-APP-02, SPEC-APP-03, SPEC-APP-06, SPEC-PWA-05: shell copy', () =>
     expect(copy.header.engine.onDevice).toBe('On-device ready');
     expect(copy.header.engine.cloud).toBe('Cloud with consent');
     expect(copy.header.engine.measured).toBe('Measured only');
+    expect(copy.header.engine.notDownloaded).toBe('Model not downloaded');
+    expect(copy.header.engine.downloading(42)).toBe('Downloading 42%');
+    expect(copy.header.engine.deviceOff).toBe('On-device off');
     expect(copy.header.offline).toBe('Offline');
     expect(copy.header.nav).toEqual(['Projects', 'Snippet', 'Settings']);
   });
