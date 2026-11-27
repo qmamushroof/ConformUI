@@ -25,6 +25,7 @@ Errors: invalid env → thrown at startup (`app/env.ts` validates first, §8.2).
 | `SPEC-FB-03` | Production provider: **reCAPTCHA Enterprise** (`ReCaptchaEnterpriseProvider(VITE_RECAPTCHA_ENTERPRISE_KEY)`), score-based Web key, `isTokenAutoRefreshEnabled: true` (S5). |
 | `SPEC-FB-04` | Debug provider only when `import.meta.env.DEV && VITE_APPCHECK_DEBUG === '1'`: set `self.FIREBASE_APPCHECK_DEBUG_TOKEN = VITE_APPCHECK_DEBUG_TOKEN \|\| true` **before** `initializeAppCheck` (per hybrid get-started doc). The branch is dead-code-eliminated in production; a build test greps `dist/` for `FIREBASE_APPCHECK_DEBUG_TOKEN` → absent. Tokens never committed; `localhost` is not added to reCAPTCHA domains. |
 | `SPEC-FB-05` | App Check enforcement applies to AI Logic (enabled in the console from day 1 of development); Remote Config is not enforced. A rejected token surfaces as `APPCHECK_FAILED`. CI never needs a debug token (E2E uses `FakeAiEngine`). |
+| `SPEC-FB-09` | `ensureAppCheckToken(app, forceRefresh?)` (exported by `platform/firebase`) resolves when App Check holds a valid token and rejects with the SDK's `appCheck/*` error otherwise; a no-op for an app without App Check. The AI runner calls it before every cloud request (`SPEC-AI-14`). A token exchange refused with HTTP 403 ("App attestation failed") makes the SDK throttle App Check for that page session (`appCheck/initial-throttle`, 24 h); a reload clears it. |
 
 ```ts
 import { initializeAppCheck, ReCaptchaEnterpriseProvider } from 'firebase/app-check';

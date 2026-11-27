@@ -6,6 +6,7 @@ import {
   type DeepOutput,
   DeepOutputSchema,
   type EngineStatus,
+  type ErrorCode,
   type Finding,
   guardNumbers,
   type ImageRef,
@@ -88,9 +89,10 @@ interface Payload {
 export function createDeepService(d: DeepDeps): DeepService {
   const today = () => localDay(d.clock.now());
 
+  const NOTHING_SENT = new Set<ErrorCode>(['APPCHECK_FAILED', 'OFFLINE']);
   const usage = async () => {
     const s = await d.settings.read();
-    return { mode: s.mode, used: s.deepUsage.day === today() ? s.deepUsage.count : 0 };
+    return { mode: s.mode, used: s.deepUsage.day === today() ? s.deepUsage.count : 0, everSent: s.everSentToCloud };
   };
 
   /** Gives back the use taken when a request was sent. Re-reads the count: the day may have turned meanwhile. */
@@ -272,7 +274,7 @@ export function createDeepService(d: DeepDeps): DeepService {
 
     // SPEC-DEEP-04, S32: the same gate as the button, enforced again at send time.
     const status = await d.ai.status();
-    const { mode, used } = await usage();
+    const { mode, used, everSent } = await usage();
     const plan = resolveMode({ setting: mode, purpose: 'deep', needsImage: true, status, deepConsent: consent });
     if (plan.kind === 'blocked') throw new CuiError(plan.reason === 'offline' ? 'OFFLINE' : 'CLOUD_DISABLED');
     if (plan.kind !== 'call') throw new CuiError('CONSENT_REQUIRED');
@@ -291,7 +293,7 @@ export function createDeepService(d: DeepDeps): DeepService {
       consent: plan.consent ?? consent,
     };
 
-    // The count increments when the request is sent (SPEC-DEEP-04).
+    // The count increments when the request is sent (SPEC-DEEP-04); the privacy flag follows once bytes may have left.
     await d.settings.write({ deepUsage: { day: today(), count: used + 1 }, everSentToCloud: true });
 
     const step: TraceStep = {
@@ -316,6 +318,12 @@ export function createDeepService(d: DeepDeps): DeepService {
     } catch (e) {
       // SPEC-DEEP-04: a request that outlived its wait gave no answer, so it is not one of the day's uses.
       if (e instanceof CuiError && e.code === 'AI_TIMEOUT') await refund();
+      // Nothing left the device (App Check refused the call, or the connection was gone): the use is given back and the
+      // privacy counter is put back as it was.
+      if (e instanceof CuiError && NOTHING_SENT.has(e.code)) {
+        await refund();
+        if (!everSent) await d.settings.write({ everSentToCloud: false });
+      }
       if (e instanceof CuiError) throw e;
       throw new CuiError('AI_FAILED', undefined, { cause: e });
     }

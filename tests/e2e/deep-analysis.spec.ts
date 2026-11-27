@@ -131,7 +131,7 @@ test('SPEC-DEEP-07: a slow failure shows the busy status, then the mapped notice
   await page.getByRole('button', { name: 'Deep Analysis' }).click();
   await page.getByRole('button', { name: 'Send to cloud' }).click();
   await expect(page.getByRole('status').filter({ hasText: 'Deep Analysis is running' })).toBeVisible();
-  const alert = page.getByRole('alert').filter({ hasText: /reach the cloud/i });
+  const alert = page.getByRole('alert').filter({ hasText: /verify this app/i });
   await expect(alert).toBeVisible(BIG);
   await expect(alert).toBeInViewport();
   await expect(page.getByRole('button', { name: 'Show pre-computed result' })).toBeVisible();
