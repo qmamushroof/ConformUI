@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { ContractSchema, type Rect, type Requirement, RequirementSchema } from '@kernel';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { compareWithVerified, loadSampleAssets } from '../../../src/features/demo';
+import { compareWithVerified, describeComparison, loadSampleAssets } from '../../../src/features/demo';
 
 const repo = resolve(__dirname, '../../..');
 const sampleDir = join(repo, 'src/features/demo/sample');
@@ -159,5 +159,25 @@ describe('loadSampleAssets (SPEC-DEMO-06)', () => {
     expect(src).not.toMatch(/eager\s*:\s*true/);
     expect(src).not.toMatch(/^import .*sample\//m);
     expect(src).not.toMatch(/console\./);
+  });
+});
+
+describe('describeComparison (SPEC-DEMO-03)', () => {
+  it('looks statements up on the side each id came from, even when AI and verified ids collide', () => {
+    const verified = [
+      req('R-08', { statement: 'The page ends with a footer', rect: { x: 0, y: 0, w: 10, h: 10 } }),
+      req('I-M-02', { statement: 'Primary action stays visible', category: 'responsive' }),
+    ];
+    const ai = [req('R-08', { statement: 'The feature cards are 334 px wide', category: 'spacing' })];
+    const out = describeComparison(ai, verified);
+    expect(out.extra).toEqual([{ id: 'R-08', statement: 'The feature cards are 334 px wide' }]);
+    expect(out.missing).toEqual([
+      { id: 'R-08', statement: 'The page ends with a footer' },
+      { id: 'I-M-02', statement: 'Primary action stays visible' },
+    ]);
+  });
+
+  it('empty inputs give empty lists', () => {
+    expect(describeComparison([], [])).toEqual({ matched: [], missing: [], extra: [] });
   });
 });

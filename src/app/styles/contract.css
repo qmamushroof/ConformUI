@@ -1,5 +1,6 @@
 /* Contract screen, copied from the prototype page styles (SPEC-UI-02: tokens only). */
 .chead {
+  max-width: 1440px;
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
