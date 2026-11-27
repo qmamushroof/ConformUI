@@ -2,8 +2,6 @@
 
 Follow @docs/ROADMAP.md
 
-Final UI/UX must be exactly like @design/prototype/
-
 Whenever any functionality requires writing tests, write failing tests first with edgecases before development.
 
 The main session will plan, think, review & give orders to subagents but it will never directly implement anything itself.
