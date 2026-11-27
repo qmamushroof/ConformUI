@@ -248,7 +248,7 @@ export const ContractScreen: FC<ContractScreenProps> = (props) => {
   };
 
   return (
-    <main id="main" tabIndex={-1}>
+    <main id="main" tabIndex={-1} className="tool">
       <div className="chead">
         <div className="stack-sm">
           <h1 id="c-title">{title}</h1>

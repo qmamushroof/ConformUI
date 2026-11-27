@@ -238,7 +238,7 @@ export const RunScreen: FC<RunScreenProps> = (p) => {
   const notFound = !run && !p.progress && !p.error;
 
   return (
-    <main id="main" tabIndex={-1}>
+    <main id="main" tabIndex={-1} className="tool">
       <div className="runhead">
         <div className="stack-sm">
           <h1 id="run-title">{title}</h1>
@@ -350,7 +350,7 @@ export const RunScreen: FC<RunScreenProps> = (p) => {
           </p>
         </Notice>
       )}
-      {p.notices && <div style={{ padding: '0 var(--space-6) var(--space-5)' }}>{p.notices}</div>}
+      {p.notices && <div style={{ padding: '0 var(--space-6) var(--space-5)', maxWidth: 1440 }}>{p.notices}</div>}
 
       {!run && p.progress && <RunProgress {...p.progress} />}
       {notFound && (
