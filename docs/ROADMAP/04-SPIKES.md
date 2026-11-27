@@ -29,7 +29,7 @@ Live spikes run on the demo machine (2.8) from a throwaway branch `spike/hybrid`
 ### 4.3 A2 + A6: image size and on-device structured output · A · 0.2 h · needs 4.2
 - [x] A2: one 1024 px JPEG band + prompt, then two images in one prompt; note success, latency, any token-limit error.
 - [x] A6: each of the four task schemas (SPEC §4.3.4) once on-device with `responseConstraint`.
-- [ ] Record at the SPEC-AI-11 and `schemaFor` code sites.
+- [x] Record at the SPEC-AI-11 and `schemaFor` code sites (`src/platform/ai-engine/schema-for.ts`, `src/features/contract/extract.ts`).
 
 **Fallback:** token error at 1024 → on-device max side 768 (SPEC-AI-11). Schema rejected → flatten that task's device JSON Schema in `schemaFor`; zod stays the authority (SPEC-AI-05). Multi-image is not needed (S11).
 **Accept:** records present; SPEC edits made where answers differ.
@@ -53,4 +53,4 @@ Live spikes run on the demo machine (2.8) from a throwaway branch `spike/hybrid`
 
 - Every spike has a `// SPEC-… verified` record or an applied fallback with its SPEC edit.
 - 4.3 to 4.5 answered 2026-11-26 (A2 keep 1024, A6 no flattening, A4 both ids ok, O1 offline pass, D1 local: CSP unchanged, one zod `eval` probe violation fixed by jitless config in 7.1).
-- Remaining VERIFY: D1 on Hosting (15.3), T1 timings and O1 network-off run (14.4).
+- Remaining VERIFY: D1 on Hosting (15.3), T1 timings (14.4) and the end-to-end network-off extract + Run re-run of O1 (14.4; the on-device spike itself is done).
