@@ -1,14 +1,46 @@
+<div align="center">
+
+<img src="docs/brand/logo.svg" alt="ConformUI logo" width="88" height="88">
+
 # ConformUI
 
-Design acceptance testing for AI-built websites. Turn a design into a checkable contract, verify the implementation against it with measured evidence, and hand the failures back to your coding agent.
+**Check AI-built pages against the design, with on-device Gemini Nano 4 (Gemma 4) and cloud Gemini.**
 
-**Gemini Nano 4 (Gemma 4) runs on your device through Firebase AI Logic hybrid inference, with Gemini in the cloud as a labelled fallback.** Your designs stay private by default, and the first AI pass is free and works offline.
+Hybrid on-device and cloud AI through Firebase AI Logic, in one installable, offline-ready PWA with a single codebase.
 
-Hosted demo: https://conformui.web.app
-Repository: https://github.com/qmamushroof/ConformUI
-Demo video: (YouTube link)
+[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![CI](https://github.com/qmamushroof/ConformUI/actions/workflows/ci.yml/badge.svg)](https://github.com/qmamushroof/ConformUI/actions/workflows/ci.yml)
+[![Live on Firebase Hosting](https://img.shields.io/badge/live-Firebase%20Hosting-orange.svg)](https://conformui.web.app)
+[![PWA: installable](https://img.shields.io/badge/PWA-installable-5a0fc8.svg)](#platforms)
+[![On-device: Gemini Nano 4](https://img.shields.io/badge/on--device-Gemini%20Nano%204-1a73e8.svg)](#on-device-ai-gemini-nano-4)
+[![TypeScript and React](https://img.shields.io/badge/TypeScript-React%2019-3178c6.svg)](#architecture)
 
-Built for the #BuildHybridAI 2026 hackathon, Web/Chrome platform. Licence: Apache-2.0. To see on-device AI, use desktop Chrome and follow [Enabling on-device AI in Chrome](#enabling-on-device-ai-in-chrome).
+**[Live app](https://conformui.web.app)** · <!-- VIDEO_URL --> **[Quick start](#quick-start)** · **[On-device AI](#on-device-ai-gemini-nano-4)** · **[Screenshots](#screenshots)** · **[Docs](docs/)**
+
+<br>
+
+<img src="docs/screenshots/05-run-results.png" alt="ConformUI Run results on desktop: failing requirements, severity and measured evidence" width="640">
+&nbsp;
+<img src="docs/screenshots/mobile-02-run-results.png" alt="The same Run results on a phone-sized screen" width="150">
+
+</div>
+
+ConformUI is built for the #BuildHybridAI 2026 hackathon on the Web/Chrome platform. It turns a design into a checkable contract, measures a page against it, and hands the failures back to your coding agent. One installable PWA with a single codebase runs in modern desktop and mobile browsers and works offline. On-device AI runs in desktop Chrome; everywhere else the same app runs on cloud Gemini automatically.
+
+## Contents
+
+- [The problem and the value](#the-problem-and-the-value)
+- [What it does](#what-it-does)
+- [How Firebase AI Logic is used](#how-firebase-ai-logic-is-used)
+- [On-device AI (Gemini Nano 4)](#on-device-ai-gemini-nano-4)
+- [Hybrid strategy](#hybrid-strategy)
+- [Platforms](#platforms)
+- [Screenshots](#screenshots)
+- [Test it as a judge](#test-it-as-a-judge)
+- [Quick start](#quick-start) and [Setup](#setup)
+- [Enabling on-device AI in Chrome](#enabling-on-device-ai-in-chrome)
+- [Architecture](#architecture) and [Tests](#tests)
+- [Privacy](#privacy), [Built during the hackathon](#built-during-the-hackathon) and [License](#license)
 
 ## The problem and the value
 
@@ -128,6 +160,20 @@ Measured and Visual checks never use a model, so they run the same in every case
 - **Engine status and settings**: model readiness, enable steps, mode, cloud consent, a privacy counter and data deletion.
 - **Version and source**: Settings > About shows the version (1.0.1) and links to this repository.
 - **Installable and offline**: the app shell and the sample open offline.
+
+## Platforms
+
+One codebase, one installable PWA. The layout adapts from phone to desktop. Deterministic measurements, Contracts, local storage and exports run on the device on every platform.
+
+| Platform | Install | On-device AI (Gemini Nano 4 / Gemma 4) | Cloud Gemini | Smoke test |
+|---|---|---|---|---|
+| Chrome on desktop (Windows, macOS, Linux, ChromeOS) | Install from the address bar | Yes, with built-in AI enabled | Yes, after consent, labelled Cloud | Chromium, desktop |
+| Firefox on desktop | Runs in the browser | Not used | Automatic after consent, labelled Cloud | Firefox, desktop |
+| Chrome on Android | Install or Add to Home screen | Not used | Automatic after consent, labelled Cloud | Pixel 7 viewport (emulated) |
+
+Tested with Playwright on Chromium, Firefox and a Pixel 7 viewport: load, sample project, Run, Findings, Settings, manifest and service worker (`npm run test:cross`). The app shell and the sample open offline.
+
+Where on-device AI is not available, the same Firebase AI Logic hybrid call uses cloud Gemini after the person consents, and every AI result is labelled Cloud.
 
 ## Screenshots
 
@@ -258,8 +304,8 @@ The design documents are [docs/PRD.md](docs/PRD.md), [docs/SPEC.md](docs/SPEC.md
 ## Tested browsers
 
 - Desktop Chrome 158 on Windows: on-device and cloud paths.
-- Mobile layout: checked in desktop Chrome device emulation. Android hardware is not verified.
-- Other browsers and Android use the cloud path after consent.
+- Chromium, Firefox and a Pixel 7 viewport: cross-browser smoke test with Playwright (`npm run test:cross`).
+- Other browsers run on cloud Gemini after consent.
 
 ## Deploy
 
@@ -289,16 +335,17 @@ Results were recorded on the hosted app at https://conformui.web.app. Rows marke
 
 ## Demo video
 
-Demo video: (YouTube link)
+<!-- VIDEO_URL -->
+
+The demo shows the sample project end to end in under three minutes: on-device first pass, Run, Findings, Deep Analysis and Re-verify.
 
 ## Honest limits
 
-- On-device inference is desktop Chrome only. Android and other browsers use the cloud after consent.
+- On-device inference runs in desktop Chrome with built-in AI. Everywhere else the same app runs on cloud Gemini automatically, after consent.
 - On-device calls are single-turn with a small token limit, and images are downscaled before sending.
 - The model version on device is chosen by Chrome, not by the app.
 - The sample's pre-computed results are hand-authored.
 - Judged checks are model opinions labelled with Engine and confidence; only Measured and Visual checks are exact.
-- Android is not verified on hardware.
 
 ## Privacy
 

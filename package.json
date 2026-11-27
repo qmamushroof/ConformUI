@@ -31,6 +31,7 @@
     "screenshots": "node scripts/capture-screenshots.mjs",
     "check:dist": "node scripts/check-dist.mjs",
     "test:e2e": "playwright test",
+    "test:cross": "playwright test -c playwright.cross.config.ts",
     "test:prod": "playwright test -c playwright.prod.config.ts",
     "icons": "pwa-assets-generator && pwa-assets-generator --config scripts/pwa-assets.favicon.config.mjs",
     "sample:capture": "node scripts/capture-sample.mjs",

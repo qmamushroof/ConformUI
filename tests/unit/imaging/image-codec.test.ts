@@ -305,3 +305,68 @@ describe('SPEC-AI-11 letterbox for the on-device model', () => {
     expect(r.layout).toBe('side');
   });
 });
+
+describe('browsers without OffscreenCanvas (older Safari, some WebKit builds)', () => {
+  const stubDocument = () => {
+    const made: { width: number; height: number; draws: unknown[][]; blobArgs?: unknown[] }[] = [];
+    vi.stubGlobal('OffscreenCanvas', undefined);
+    vi.stubGlobal('document', {
+      createElement: (tag: string) => {
+        expect(tag).toBe('canvas');
+        const c = { width: 0, height: 0, draws: [] as unknown[][], blobArgs: undefined as unknown[] | undefined };
+        made.push(c);
+        return {
+          get width() {
+            return c.width;
+          },
+          set width(v: number) {
+            c.width = v;
+          },
+          get height() {
+            return c.height;
+          },
+          set height(v: number) {
+            c.height = v;
+          },
+          getContext: () => ({
+            set imageSmoothingQuality(_v: string) {},
+            set fillStyle(_v: string) {},
+            fillRect: () => {},
+            drawImage: (...a: unknown[]) => c.draws.push(a),
+            getImageData: (_x: number, _y: number, w: number, h: number) => ({
+              width: w,
+              height: h,
+              data: new Uint8ClampedArray(w * h * 4),
+            }),
+          }),
+          toBlob: (cb: (b: Blob | null) => void, type: string, quality?: number) => {
+            c.blobArgs = [type, quality];
+            cb(new Blob([`${type}:${c.width}x${c.height}`], { type }));
+          },
+        };
+      },
+    });
+    return made;
+  };
+
+  it('normalise falls back to a canvas element and encodes PNG at the target size', async () => {
+    const made = stubDocument();
+    const out = await codec().normalise(img(400, 200), 100);
+    expect(out.ref).toMatchObject({ mime: 'image/png', width: 100, height: 50 });
+    expect(made[0]).toMatchObject({ width: 100, height: 50 });
+    expect(made[0]?.blobArgs?.[0]).toBe('image/png');
+  });
+
+  it('a canvas that cannot encode is reported as an image error, not a crash', async () => {
+    stubDocument();
+    vi.stubGlobal('document', {
+      createElement: () => ({
+        width: 0,
+        height: 0,
+        getContext: () => ({ set imageSmoothingQuality(_v: string) {}, drawImage: () => {} }),
+        toBlob: (cb: (b: Blob | null) => void) => cb(null),
+      }),
+    });
+    expect(await code(codec().normalise(img(10, 10), 10))).toBe('IMAGE_DECODE_FAILED');
+  });
+});

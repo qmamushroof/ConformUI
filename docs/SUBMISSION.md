@@ -12,7 +12,7 @@ Check AI-built pages against the design with Gemini Nano 4 (Gemma 4) on-device a
 
 ## Selected platform category
 
-Web/Chrome
+Web/Chrome: an installable PWA (Web, desktop and mobile), with on-device Gemini Nano 4 (Gemma 4) in desktop Chrome and cloud Gemini everywhere else.
 
 ## Links
 
@@ -22,7 +22,7 @@ Web/Chrome
 
 ## Description
 
-Gemini Nano 4 (Gemma 4) on-device via Firebase AI Logic hybrid inference, with Gemini cloud fallback. AI coding agents build pages fast, and the pages drift from the design. Spacing is off, a heading is the wrong size, a section is missing on mobile. Checking by eye is slow, and asking a model "does this match?" gives an opinion, not evidence.
+Gemini Nano 4 (Gemma 4) on-device via Firebase AI Logic hybrid inference, with Gemini cloud fallback, in one installable cross-platform PWA that works offline: the same codebase runs in desktop and mobile browsers, on-device in desktop Chrome and on cloud Gemini automatically everywhere else. AI coding agents build pages fast, and the pages drift from the design. Spacing is off, a heading is the wrong size, a section is missing on mobile. Checking by eye is slow, and asking a model "does this match?" gives an opinion, not evidence.
 
 ConformUI is an installable web app (PWA) that answers one question: does this implementation satisfy the design it was meant to implement?
 
@@ -64,7 +64,7 @@ All model calls go through the Firebase AI Logic web SDK (`firebase/ai`) with hy
 - A DOM snippet that reads element boxes, text and key styles from your page and sends nothing over the network.
 - One-click sample Project with planted defects.
 - Engine status and settings: model readiness, mode, cloud consent, privacy counter and data deletion.
-- Installable, with the app shell and sample available offline.
+- Installable, with the app shell and sample available offline. One codebase, responsive from phone to desktop, tested with Playwright on Chromium, Firefox and a Pixel 7 viewport.
 
 ## Value proposition
 
