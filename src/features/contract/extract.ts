@@ -8,6 +8,7 @@ import {
   type DesignRef,
   type ElementMatcher,
   type EngineStatus,
+  type ErrorCode,
   type ExtractOutput,
   ExtractOutputSchema,
   guardNumbers,
@@ -177,7 +178,7 @@ export async function runExtract(
 
   // Nothing AI-made: the existing Contract, or an empty one, plus rule-based Inferred items (SPEC-CON-03).
   // They are saved only when there is something new, so a Contract with all P0 viewports designed stays unsaved.
-  const blocked = async (reason: NotCheckedReason): Promise<ExtractOutcome> => {
+  const blocked = async (reason: NotCheckedReason, errorCode?: ErrorCode): Promise<ExtractOutcome> => {
     const base: Contract = existing ?? {
       id: d.ids.next(),
       projectId,
@@ -187,13 +188,14 @@ export async function runExtract(
       requirements: [],
     };
     const withRules = withInferred(base, project);
-    if (withRules === base) return { kind: 'blocked', reason, contract: base };
+    const why = errorCode ? { errorCode } : {};
+    if (withRules === base) return { kind: 'blocked', reason, ...why, contract: base };
     const saved = existing?.locked
       ? { ...nextContractVersion(existing, d.ids, d.clock), requirements: withRules.requirements }
       : withRules;
     await d.store.putContract(saved);
     await d.store.put({ ...project, activeContractId: saved.id, updatedAt: d.clock.now() });
-    return { kind: 'blocked', reason, contract: saved };
+    return { kind: 'blocked', reason, ...why, contract: saved };
   };
 
   const stop = plans.find((p) => p.kind !== 'call');
@@ -267,7 +269,7 @@ export async function runExtract(
         }
       } catch (e) {
         if (!(e instanceof CuiError)) throw e;
-        if (e.code !== 'AI_BAD_OUTPUT') return blocked(failReason(e.code));
+        if (e.code !== 'AI_BAD_OUTPUT') return blocked(failReason(e.code), e.code);
       }
       if (!parsed) {
         push({ ...step, note: `Band ${band.index} could not be read. Add requirements manually.` });

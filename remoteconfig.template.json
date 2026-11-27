@@ -5,6 +5,7 @@
     "prompt_version": { "defaultValue": { "value": "1" }, "valueType": "STRING" },
     "cloud_enabled": { "defaultValue": { "value": "true" }, "valueType": "BOOLEAN" },
     "deep_daily_cap": { "defaultValue": { "value": "10" }, "valueType": "NUMBER" },
+    "on_device_timeout_s": { "defaultValue": { "value": "180" }, "valueType": "NUMBER" },
     "feature_ai_infer_responsive": { "defaultValue": { "value": "false" }, "valueType": "BOOLEAN" },
     "size_tolerance_pct": { "defaultValue": { "value": "8" }, "valueType": "NUMBER" },
     "major_deviation_pct": { "defaultValue": { "value": "25" }, "valueType": "NUMBER" },

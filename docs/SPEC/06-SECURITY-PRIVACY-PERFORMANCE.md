@@ -29,7 +29,7 @@
 | ID | Budget | Condition |
 |---|---|---|
 | `SPEC-PERF-01` | Deterministic stages of the sample Run (2 viewports) ≤ 3 s (PRD-F-04.4, PRD-M-08) | desktop Chrome, mid-range laptop; trace durations |
-| `SPEC-PERF-02` | On-device Contract extraction of the sample design < 60 s (PRD-M-08, VERIFY on demo hardware) | model ready, warm |
+| `SPEC-PERF-02` | On-device Contract extraction of the sample design < 60 s on demo hardware (PRD-M-08, VERIFY); on slower hardware it must still finish inside `on_device_timeout_s` (180 s, `SPEC-AI-08`: 46 s measured for one band on a Medium-class device), with elapsed seconds and Stop shown meanwhile | model ready, warm |
 | `SPEC-PERF-03` | Image add (normalise + store) ≤ 1.5 s for a 1440×4000 PNG | — |
 | `SPEC-PERF-04` | Initial JS (route `/`, gzip) ≤ 170 KB excluding lazy `firebase/*` chunk; `firebase/*` via dynamic `import()` after first paint; total JS gzip ≤ 450 KB; CSS ≤ 25 KB; fonts: Latin-subset woff2 only (5 files, about 70 KB), not in the JS/CSS budgets | `scripts/check-size.mjs` in CI (blocking) |
 | `SPEC-PERF-06` | Offline second visit: app shell interactive ≤ 1 s | Playwright `setOffline(true)` |

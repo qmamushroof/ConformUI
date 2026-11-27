@@ -1,5 +1,5 @@
 import { resolve } from 'node:path';
-import { stateCopy } from '../../src/app/copy';
+import { stateCopy, copy as uiCopy } from '../../src/app/copy';
 import { ERROR_CODES, type ErrorCode } from '../../src/shared/kernel';
 import { expect, test } from './fixtures';
 import { createProject, SAMPLE } from './projects-helpers';
@@ -54,6 +54,8 @@ const EXTRACT_COPY: [ErrorCode, ErrorCode][] = [
   ['QUOTA_EXCEEDED', 'AI_FAILED'],
   ['APPCHECK_FAILED', 'AI_FAILED'],
   ['AI_BLOCKED', 'AI_FAILED'],
+  ['AI_FAILED', 'AI_FAILED'],
+  ['AI_TIMEOUT', 'AI_TIMEOUT'],
 ];
 
 for (const [thrown, shown] of EXTRACT_COPY) {
@@ -67,7 +69,8 @@ for (const [thrown, shown] of EXTRACT_COPY) {
     await expect(page.getByText('Desktop design', { exact: true })).toBeVisible();
     await page.getByRole('link', { name: 'Extract contract' }).click();
     await page.getByRole('button', { name: 'Extract contract' }).click();
-    const copy = stateCopy[shown];
+    // An extraction that failed ran on the device or sent nothing: it never says the cloud was unreachable.
+    const copy = shown === 'AI_FAILED' ? uiCopy.flows.extract.failed : stateCopy[shown];
     const notice = page.getByRole('alert').filter({ hasText: copy.title });
     await expect(notice).toBeVisible();
     if (copy.detail) await expect(notice).toContainText(copy.detail);

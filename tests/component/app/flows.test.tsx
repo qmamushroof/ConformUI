@@ -211,6 +211,25 @@ describe('7.3 consent for extraction', () => {
     expect((await services.store.get(p?.id ?? ''))?.pendingAiContractId).toBeTruthy();
   });
 
+  it('SPEC-AI-08, SPEC-DEMO-05: an on-device timeout on the sample says it took too long (not "declined"), labels the stored results and offers Try again', async () => {
+    const { calls, services } = await mount(
+      { status: AVAILABLE, errors: { 'extract-contract': 'AI_TIMEOUT' } },
+      '/?sample=1',
+    );
+    await screen.findByRole('heading', { level: 1, name: 'Sample landing page' });
+    const [p] = await services.store.list();
+    cleanup();
+    await mountAt(services, `/p/${p?.id}/contract`);
+    await screen.findByRole('button', { name: 'Extract contract' });
+    click('Extract contract');
+    expect(await screen.findByText(/Sample results \(pre-computed\)/)).toBeTruthy();
+    expect(screen.getByText(/took too long/)).toBeTruthy();
+    expect(screen.queryByText(/declined/i)).toBeNull();
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(calls.every((c) => c.mode === 'ONLY_ON_DEVICE')).toBe(true);
+    expect(screen.getByRole('button', { name: 'Try again' })).toBeTruthy();
+  });
+
   it('SPEC-SET-05, SPEC-PROJ-07: after Revoke the next Extract asks again; Cloud steps add bytes to cloudUsage', async () => {
     const { calls, services } = await mount({ status: NO_DEVICE }, '/?sample=1');
     await screen.findByRole('heading', { level: 1, name: 'Sample landing page' });

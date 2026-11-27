@@ -8,6 +8,7 @@ import { type FC, useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { copy } from '../copy';
 import { useConsentPrompt } from '../flows/consent';
+import { type FallbackWhy, precomputedNote, whyFromBlocked, whyFromError } from '../flows/extract-reason';
 import { downloadText, MIME } from '../flows/files';
 import { blockedView, type ErrorView, errorView, stepper } from '../flows/helpers';
 import { recordCloudStep } from '../flows/usage';
@@ -68,6 +69,7 @@ const ContractRoute: FC = () => {
   const [extractError, setExtractError] = useState<ErrorView>();
   const [steps, setSteps] = useState<TraceStep[] | undefined>();
   const [waiting, setWaiting] = useState(false);
+  const [why, setWhy] = useState<FallbackWhy>();
   const [version, setVersion] = useState(0);
   const cancelled = useRef({ v: false });
   const refresh = useCallback(() => setVersion((v) => v + 1), []);
@@ -112,7 +114,8 @@ const ContractRoute: FC = () => {
   }, [projectId, projects, contract, store, blobs, version]);
 
   /** SPEC-DEMO-05: on a sample, the stored extraction stands in after Decline, blocked or failed. */
-  const showPrecomputed = async () => {
+  const showPrecomputed = async (reason: FallbackWhy) => {
+    setWhy(reason);
     const assets = await sample();
     await contract.loadPrecomputedExtraction(projectId, assets.precomputed.extraction);
   };
@@ -121,6 +124,7 @@ const ContractRoute: FC = () => {
     const mine = { v: false };
     cancelled.current = mine;
     setExtractError(undefined);
+    setWhy(undefined);
     setSteps([]);
     setWaiting(false);
     let p: Project | undefined;
@@ -146,13 +150,13 @@ const ContractRoute: FC = () => {
         const granted = await consent.request(out.sends, copy.flows.consent.extract);
         setWaiting(false);
         if (granted) return await extract(granted);
-        if (p.isSample) await showPrecomputed();
+        if (p.isSample) await showPrecomputed('declined');
       } else if (out.kind === 'blocked') {
-        if (p.isSample) await showPrecomputed();
-        else setExtractError(blockedView(out.reason));
+        if (p.isSample) await showPrecomputed(whyFromBlocked(out.reason, out.errorCode));
+        else setExtractError(blockedView(out.reason, out.errorCode));
       }
     } catch (e) {
-      if (p?.isSample) await showPrecomputed().catch((err: unknown) => setExtractError(errorView(err)));
+      if (p?.isSample) await showPrecomputed(whyFromError(e)).catch((err: unknown) => setExtractError(errorView(err)));
       else setExtractError(errorView(e));
     } finally {
       if (!mine.v) setSteps(undefined);
@@ -203,6 +207,7 @@ const ContractRoute: FC = () => {
         project={proj}
         {...(active && { contract: active })}
         {...(pending && { pending, pendingSource: sourceOf(pending) })}
+        {...(pending && sourceOf(pending) === 'precomputed' && { pendingNote: precomputedNote(why) })}
         {...(comparison && { comparison })}
         {...(lockedBy && { lockedBy })}
         designSrc={designSrc}

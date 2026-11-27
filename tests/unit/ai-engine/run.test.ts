@@ -321,27 +321,63 @@ describe('SPEC-AI-06 zod validation and one retry', () => {
 describe('SPEC-AI-08 timeouts and abort', () => {
   const never = () => new Promise(() => {});
 
-  it.each([
-    ['ONLY_ON_DEVICE', 45_000],
-    ['PREFER_ON_DEVICE', 60_000],
-    ['ONLY_IN_CLOUD', 60_000],
-  ] as const)('SPEC-AI-08: %s times out after %d ms -> AI_FAILED (retryable)', async (mode, ms) => {
+  const timesOutAfter = async (mode: AiMode, ms: number, over: Partial<AiRequest> = {}) => {
     vi.useFakeTimers();
     generate.mockImplementation(never);
     let err: unknown;
     const p = runner()
-      .run(req({ mode }))
+      .run(req({ mode, ...over }))
       .catch((e) => {
         err = e;
       });
     await vi.advanceTimersByTimeAsync(ms - 1);
-    expect(err).toBeUndefined();
+    expect(err, 'still waiting one ms before the limit').toBeUndefined();
     await vi.advanceTimersByTimeAsync(1);
     await p;
     expect(err).toBeInstanceOf(CuiError);
-    expect((err as CuiError).code).toBe('AI_FAILED');
+    expect((err as CuiError).code).toBe('AI_TIMEOUT');
     expect((err as CuiError).retryable).toBe(true);
-    expect(generate).toHaveBeenCalledTimes(1);
+    expect(generate).toHaveBeenCalledTimes(1); // a timeout is never retried: that would double the wait
+  };
+
+  it.each([
+    ['ONLY_ON_DEVICE', 180_000],
+    ['PREFER_ON_DEVICE', 180_000], // the device is usable, so it may be the one answering
+    ['ONLY_IN_CLOUD', 60_000],
+  ] as const)('SPEC-AI-08: %s times out after %d ms -> AI_TIMEOUT (retryable)', (mode, ms) => timesOutAfter(mode, ms));
+
+  it('SPEC-AI-08: PREFER_ON_DEVICE with no usable device is a cloud wait of 60 s', async () => {
+    status = { ...okStatus, device: 'unavailable' };
+    await timesOutAfter('PREFER_ON_DEVICE', 60_000);
+  });
+
+  it('SPEC-AI-08: PREFER_ON_DEVICE with an image the device cannot take is a cloud wait of 60 s', async () => {
+    status = { ...okStatus, deviceImage: false };
+    await timesOutAfter('PREFER_ON_DEVICE', 60_000, { images: [img] });
+  });
+
+  it('SPEC-AI-08: the on-device wait follows on_device_timeout_s from Remote Config, read per request', async () => {
+    values = { ...DEFAULT_RUNTIME_VALUES, on_device_timeout_s: 90 };
+    await timesOutAfter('ONLY_ON_DEVICE', 90_000);
+  });
+
+  it('SPEC-AI-08: the cloud wait does not change with on_device_timeout_s', async () => {
+    values = { ...DEFAULT_RUNTIME_VALUES, on_device_timeout_s: 600 };
+    await timesOutAfter('ONLY_IN_CLOUD', 60_000);
+  });
+
+  it('SPEC-AI-08: a slow but successful on-device answer at 100 s is kept (the old 45 s limit would have failed it)', async () => {
+    vi.useFakeTimers();
+    generate.mockImplementation(
+      () =>
+        new Promise((resolve) =>
+          setTimeout(() => resolve(reply(JSON.stringify(GOOD), { inferenceSource: 'on_device' })), 100_000),
+        ),
+    );
+    const p = runner().run(req({ mode: 'ONLY_ON_DEVICE', consent: undefined }));
+    await vi.advanceTimersByTimeAsync(100_000);
+    expect((await p).engine).toBe('on-device');
+    expect(vi.getTimerCount()).toBe(0);
   });
 
   it('SPEC-AI-08: the SDK signal is aborted on timeout', async () => {
@@ -378,7 +414,7 @@ describe('SPEC-AI-08 timeouts and abort', () => {
     expect(err).toBeUndefined();
     await vi.advanceTimersByTimeAsync(1);
     await p;
-    expect((err as CuiError).code).toBe('AI_FAILED');
+    expect((err as CuiError).code).toBe('AI_TIMEOUT');
   });
 
   it('SPEC-AI-08: a caller abort mid-flight rejects with AI_FAILED, aborts the SDK signal and clears the timer', async () => {
