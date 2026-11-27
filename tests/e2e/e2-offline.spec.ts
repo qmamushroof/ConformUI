@@ -30,7 +30,7 @@ test('PRD-M-04, PRD-M-07, SPEC-SEC-02, E2: offline on-device Extract then Run co
   await page.getByRole('link', { name: /Contract v\d/ }).click();
   await expect(page.getByRole('heading', { level: 1, name: /^Contract/ })).toBeVisible(BIG);
   await page.getByRole('button', { name: 'Extract contract' }).click();
-  await expect(page.getByText(/AI extracted \d+ requirements?, On-device/)).toBeVisible(BIG);
+  await expect(page.getByText(/AI extracted \d+ requirements?, On-device · Gemini Nano 4/)).toBeVisible(BIG);
   await expect(page.getByRole('dialog')).toHaveCount(0);
   expect((await fakeCalls()).length).toBeGreaterThan(0);
 

@@ -270,8 +270,11 @@ test.describe('responsive', () => {
     await sweep(page, 'export-sheet');
     await page.keyboard.press('Escape');
     await expect(page.locator('dialog[open]')).toHaveCount(0);
-    await page.getByRole('button', { name: 'Deep Analysis' }).click();
-    await expect(page.getByRole('dialog')).toBeVisible();
+    // The click can land while the export sheet is still closing; retry until the Deep Analysis sheet is up.
+    await expect(async () => {
+      await page.getByRole('button', { name: 'Deep Analysis' }).click();
+      await expect(page.getByRole('dialog')).toBeVisible({ timeout: 2000 });
+    }).toPass({ timeout: 15_000 });
     await sweep(page, 'deep-analysis-sheet');
   });
 

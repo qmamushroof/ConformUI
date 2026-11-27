@@ -59,7 +59,7 @@ test.describe('E3 sample project', () => {
     await page.getByRole('button', { name: 'Extract contract' }).click();
     expect(await fakeCalls()).toEqual([]);
     await page.getByRole('dialog').getByRole('button', { name: 'Allow for this project' }).click();
-    await expect(page.getByText(/AI extracted \d+ requirements?, Cloud/)).toBeVisible(BIG);
+    await expect(page.getByText(/AI extracted \d+ requirements?, Cloud · Gemini./)).toBeVisible(BIG);
     const calls = (await fakeCalls()) as Call[];
     expect(calls.length).toBeGreaterThan(0);
     expect(calls.every((c) => c.mode === 'PREFER_ON_DEVICE')).toBe(true);

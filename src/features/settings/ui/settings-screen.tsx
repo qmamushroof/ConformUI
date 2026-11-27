@@ -422,7 +422,9 @@ export const SettingsScreen: FC<SettingsScreenProps> = ({
               <dd>{about?.licence ?? 'Apache-2.0'}</dd>
               <dt>Source</dt>
               <dd>
-                <a href={source}>{source}</a>
+                <a href={source} target="_blank" rel="noopener noreferrer">
+                  {source}
+                </a>
               </dd>
             </dl>
             <div className="field" style={{ maxWidth: 280 }}>

@@ -73,6 +73,9 @@ const VP_ORDER: ViewportId[] = ['desktop', 'mobile', 'tablet'];
 const VP_TEXT: Record<ViewportId, string> = { desktop: 'Desktop 1440', mobile: 'Mobile 390', tablet: 'Tablet 768' };
 const VP_NAME: Record<ViewportId, string> = { desktop: 'Desktop', mobile: 'Mobile', tablet: 'Tablet' };
 
+/** Where an extraction ran, named for the person (the on-device model is Gemini Nano 4). */
+const SOURCE_LABEL = { 'on-device': 'On-device · Gemini Nano 4', cloud: 'Cloud · Gemini' } as const;
+
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 const rectText = (r: { x: number; y: number; w: number; h: number }) => `${r.w} × ${r.h} px at ${r.x}, ${r.y}`;
 
@@ -263,7 +266,7 @@ export const ContractScreen: FC<ContractScreenProps> = (props) => {
   const reviewTitle =
     source === 'precomputed'
       ? `Sample results (pre-computed): ${plural(reqs.length, 'requirement', 'requirements')}. Review them, then accept.`
-      : `AI extracted ${plural(reqs.length, 'requirement', 'requirements')}, ${source === 'cloud' ? 'Cloud' : 'On-device'}. Review them, then accept.`;
+      : `AI extracted ${plural(reqs.length, 'requirement', 'requirements')}, ${SOURCE_LABEL[source === 'cloud' ? 'cloud' : 'on-device']}. Review them, then accept.`;
   const reviewSub =
     source === 'precomputed'
       ? (props.pendingNote ??
@@ -564,7 +567,7 @@ export const ContractScreen: FC<ContractScreenProps> = (props) => {
                   {reviewing
                     ? source === 'precomputed'
                       ? 'Pre-computed extraction'
-                      : `Extracted ${source === 'cloud' ? 'Cloud' : 'On-device'}`
+                      : `Extracted ${SOURCE_LABEL[source === 'cloud' ? 'cloud' : 'on-device']}`
                     : ''}
                 </span>
               )}

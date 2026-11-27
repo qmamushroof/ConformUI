@@ -117,7 +117,7 @@ export const OnboardingScreen: FC<OnboardingScreenProps> = ({
               <p className="title">
                 {dl === 'done'
                   ? 'On-device model ready. The first pass stays on this device.'
-                  : "This browser can run Gemma 4, but the model isn't downloaded yet."}
+                  : "This browser can run Gemini Nano 4 (Gemma 4), but the model isn't downloaded yet."}
               </p>
               <p className="small muted">
                 {dl === 'done'
@@ -182,7 +182,7 @@ export const OnboardingScreen: FC<OnboardingScreenProps> = ({
             <dt>
               <EngineBadge engine="on-device" />
             </dt>
-            <dd>Gemma 4 in Chrome. First pass stays on this device.</dd>
+            <dd>Gemini Nano 4 (Gemma 4) in Chrome. First pass stays on this device.</dd>
             <dt>
               <EngineBadge engine="cloud" />
             </dt>
