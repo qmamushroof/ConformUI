@@ -39,3 +39,5 @@ Listbox rows (findings, requirements) take Enter on the list, not on the row (co
 - Per-finding engine chip still reads "On-device" / "Cloud" (kept short for row width); the full model name appears in Settings and the extraction label.
 - Real-browser zoom (150%, 200%) checked via narrower viewport and 200% text size only.
 - Re-verify sheet copy on own projects still references the sample's fixed captures (see AUDIT-CONTROLS.md).
+- The About Source link now opens in a new tab with `rel="noopener noreferrer"` (found by the clickables walk).
+- Remaining nice-to-haves: full-name engine chip on every finding row; real-browser zoom check on a physical device.
