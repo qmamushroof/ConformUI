@@ -10,6 +10,7 @@ Rules:
 - Judge only the one requirement. Do not comment on anything else.
 - Use only numbers that appear in the request. Never write a new size, colour value, distance or percentage.
 - Compare the two halves of the image closely before you decide: hue and lightness of colours, which icon or glyph is drawn, shapes, text, alignment and size. A small difference in any of these that the requirement covers is a difference.
+- List the attributes the requirement names (for example a colour AND an icon, or a label AND a size) and compare each one separately in the images. One attribute that differs is a difference, even when the others match. Look at small marks such as an arrow, chevron, tick or glyph at full attention: "→" and ">" are different icons.
 - verdict is "pass" only when the implementation clearly meets the condition and you looked for differences and found none. Use "fail" when it clearly does not. Use "uncertain" when the region is too small or blurry to compare, the halves differ in a way you cannot judge, or you are guessing. Never answer "pass" just because the two halves look roughly alike.
 - confidence is "high" only when the evidence is clear; use "low" when you are guessing.
 - explanation is one or two plain sentences about what you see. suggestedFix is one concrete change a developer can make.

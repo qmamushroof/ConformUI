@@ -2,6 +2,7 @@ import {
   type AiImage,
   type AiMode,
   type AiRequest,
+  aiDebug,
   type ConsentToken,
   CuiError,
   contextRect,
@@ -266,9 +267,13 @@ export async function judgeStage(
   ): RequirementResult {
     const cap = textOnly ? minConfidence(i.need.cap, 'medium') : i.need.cap;
     const confidence = minConfidence(out.confidence, cap);
+    // SPEC-RUN-03: the small on-device model never earns a Pass below High confidence when it looked at an image.
+    const deviceUnsure = engine === 'on-device' && !textOnly && confidence !== 'high';
     const status =
       out.verdict === 'pass'
-        ? 'pass'
+        ? deviceUnsure
+          ? 'needs-review'
+          : 'pass'
         : out.verdict === 'uncertain' || (out.verdict === 'fail' && i.need.strict && confidence !== 'high')
           ? 'needs-review'
           : 'fail';
@@ -340,6 +345,14 @@ export async function judgeStage(
     const textOnly = textOnlyOf(i);
     const maxSide = plan.mode === 'ONLY_IN_CLOUD' ? CLOUD_MAX_SIDE : ON_DEVICE_MAX_SIDE;
     const p = await prepare(i, textOnly, maxSide);
+    aiDebug('judge images sent', {
+      id: i.req.id,
+      viewport: i.req.viewport,
+      engine: plan.mode,
+      images: p.images.map((m) => ({ role: m.role, mime: m.mime, bytes: m.bytes })),
+      captureCropCssPx: p.captureCrop,
+      user: p.user,
+    });
     const req: AiRequest = {
       task: 'judge',
       mode: plan.mode,
@@ -373,6 +386,7 @@ export async function judgeStage(
         const ok = JudgeOutputSchema.safeParse(res.json);
         if (ok.success) parsed = ok.data;
       }
+      aiDebug('judge parsed', { id: i.req.id, viewport: i.req.viewport, engine, output: parsed ?? 'invalid' });
       result = parsed ? mapOutput(i, parsed, p, textOnly, engine) : notChecked(i, 'ai-invalid-output');
       if (tripped > 0) step.note = `numberGuardTripped: ${tripped}`;
     } finally {

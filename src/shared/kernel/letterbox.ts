@@ -55,6 +55,60 @@ export function rectFromNormalised(box: readonly [number, number, number, number
   };
 }
 
+/** Smallest box side the app believes, in thousandths of the image: thinner is a collapsed or invented box. */
+const MIN_BOX_EXTENT = 3;
+const MIN_CONTENT_OVERLAP = 0.5;
+const UNPADDED: Letterbox = { side: 1000, dx: 0, dy: 0, w: 1000, h: 1000 };
+
+export interface BoxRead {
+  rect: Rect;
+  /** `canvas`: as the prompt says. `content`: the model ignored the padding and drew relative to the picture only. */
+  reading: 'canvas' | 'content';
+  /** `normalised` 0..1000, `unit` 0..1 fractions, `pixels` of the canvas that was sent. */
+  scale: 'normalised' | 'unit' | 'pixels';
+}
+
+/**
+ * A model box [ymin, xmin, ymax, xmax] to a CSS rect in `src`, tolerating the scales models actually answer in
+ * (0..1 fractions, pixels of the canvas) and a box drawn without regard to the padding. `pixelSide` is the canvas side
+ * in pixels when it is known. Returns undefined for a box that is not believable (negative, not finite, collapsed).
+ */
+export function readBox(
+  raw: readonly [number, number, number, number],
+  src: Rect,
+  lb: Letterbox,
+  pixelSide?: number,
+): BoxRead | undefined {
+  if (raw.some((n) => !Number.isFinite(n) || n < 0)) return undefined;
+  const max = Math.max(...raw);
+  let scale: BoxRead['scale'] = 'normalised';
+  let f = 1;
+  if (max <= 1) {
+    scale = 'unit';
+    f = 1000;
+  } else if (max > 1000) {
+    if (!pixelSide || max > pixelSide * 1.02) return undefined;
+    scale = 'pixels';
+    f = 1000 / pixelSide;
+  }
+  const n = raw.map((v) => Math.min(1000, v * f)) as [number, number, number, number];
+  const ymin = Math.min(n[0], n[2]);
+  const ymax = Math.max(n[0], n[2]);
+  const xmin = Math.min(n[1], n[3]);
+  const xmax = Math.max(n[1], n[3]);
+  if (ymax - ymin < MIN_BOX_EXTENT || xmax - xmin < MIN_BOX_EXTENT) return undefined;
+
+  const cx0 = (lb.dx / lb.side) * 1000;
+  const cx1 = ((lb.dx + lb.w) / lb.side) * 1000;
+  const cy0 = (lb.dy / lb.side) * 1000;
+  const cy1 = ((lb.dy + lb.h) / lb.side) * 1000;
+  const iw = Math.max(0, Math.min(xmax, cx1) - Math.max(xmin, cx0));
+  const ih = Math.max(0, Math.min(ymax, cy1) - Math.max(ymin, cy0));
+  const onContent = (iw * ih) / ((xmax - xmin) * (ymax - ymin));
+  if (onContent >= MIN_CONTENT_OVERLAP) return { rect: rectFromNormalised(n, src, lb), reading: 'canvas', scale };
+  return { rect: rectFromNormalised(n, src, UNPADDED), reading: 'content', scale };
+}
+
 /** The inverse of {@link rectFromNormalised}: a rect inside `src` to [ymin, xmin, ymax, xmax] on the canvas. */
 export function rectToNormalised(rect: Rect, src: Rect, lb: Letterbox): [number, number, number, number] {
   const fx = (x: number) => ((((x - src.x) / src.w) * lb.w + lb.dx) / lb.side) * 1000;

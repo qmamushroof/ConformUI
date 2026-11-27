@@ -2,7 +2,12 @@ import { readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { ContractSchema, type Rect, type Requirement, RequirementSchema } from '@kernel';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { compareWithVerified, describeComparison, loadSampleAssets } from '../../../src/features/demo';
+import {
+  compareWithVerified,
+  describeComparison,
+  loadSampleAssets,
+  overlapIgnoringCategory,
+} from '../../../src/features/demo';
 
 const repo = resolve(__dirname, '../../..');
 const sampleDir = join(repo, 'src/features/demo/sample');
@@ -24,6 +29,25 @@ const req = (id: string, over: Partial<Requirement> & { rect?: Rect } = {}): Req
     ...rest,
   };
 };
+
+describe('overlapIgnoringCategory (diagnostic only)', () => {
+  it('counts verified items an AI item overlaps at IoU >= 0.5 in the same viewport, whatever the category', () => {
+    const v = [req('V1'), req('V2', { rect: { x: 500, y: 500, w: 50, h: 50 } }), req('V3', { viewport: 'mobile' })];
+    const ai = [
+      req('A1', { category: 'presence' }),
+      req('A2', { category: 'colour', rect: { x: 0, y: 0, w: 40, h: 100 } }),
+    ];
+    expect(overlapIgnoringCategory(ai, v).verifiedWithOverlap).toEqual(['V1']);
+    // the match rule itself is unchanged: different category is still not a match
+    expect(compareWithVerified(ai, v).matched).toEqual([]);
+  });
+
+  it('is empty for empty inputs and for items without a region', () => {
+    expect(overlapIgnoringCategory([], []).verifiedWithOverlap).toEqual([]);
+    const noRegion = { ...req('A'), region: undefined } as Requirement;
+    expect(overlapIgnoringCategory([noRegion], [req('V')]).verifiedWithOverlap).toEqual([]);
+  });
+});
 
 describe('compareWithVerified (SPEC-DEMO-03, PRD-M-14)', () => {
   it('SPEC-DEMO-03: identical lists give everything matched, nothing missing or extra', () => {

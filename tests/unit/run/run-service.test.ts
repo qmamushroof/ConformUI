@@ -186,6 +186,37 @@ describe('Judged stage (SPEC-RUN-01 step 3, SPEC-AI-11, SPEC-SEC-07)', () => {
     }
   });
 
+  it('SPEC-RUN-03: an on-device image pass below High confidence is Needs review, never Pass (R-07 case)', async () => {
+    for (const confidence of ['medium', 'low']) {
+      const w = await world({
+        fake: {
+          outputs: { judge: { verdict: 'pass', confidence, explanation: 'Looks the same.', suggestedFix: 'None.' } },
+        },
+      });
+      const run = await w.service.start('project-1', w.ctxFor(), w.on);
+      expect(resultOf(run, 'R-02'), confidence).toMatchObject({ status: 'needs-review', engine: 'on-device' });
+      expect(resultOf(run, 'R-02')?.finding?.status, confidence).toBe('needs-review');
+    }
+  });
+
+  it('SPEC-RUN-03: an on-device image pass at High confidence is still a Pass', async () => {
+    const w = await world({
+      fake: {
+        outputs: { judge: { verdict: 'pass', confidence: 'high', explanation: 'Same.', suggestedFix: 'None.' } },
+      },
+    });
+    const run = await w.service.start('project-1', w.ctxFor(), w.on);
+    expect(resultOf(run, 'R-02')).toMatchObject({ status: 'pass', engine: 'on-device' });
+  });
+
+  it('SPEC-RUN-03: the judge prompt asks for each named attribute (colour and icon) to be compared separately', async () => {
+    const w = await world();
+    await w.service.start('project-1', w.ctxFor(), w.on);
+    const system = w.ai.calls[0]?.system ?? '';
+    expect(system).toMatch(/each one separately/i);
+    expect(system).toMatch(/icon/i);
+  });
+
   it('SPEC-RUN-01 step 3: an invalid AI answer is retried once, then not-checked ai-invalid-output', async () => {
     const w = await world({ fake: { outputs: { judge: { nonsense: true } } } });
     const run = await w.service.start('project-1', w.ctxFor(), w.on);

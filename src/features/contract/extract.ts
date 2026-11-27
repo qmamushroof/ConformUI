@@ -1,5 +1,6 @@
 import {
   type AiRequest,
+  aiDebug,
   type CheckSpec,
   type CheckType,
   type ConsentToken,
@@ -21,7 +22,7 @@ import {
   type Project,
   type Rect,
   type Requirement,
-  rectFromNormalised,
+  readBox,
   resolveMode,
   type SendList,
   type Settings,
@@ -145,6 +146,7 @@ function mapCheck(item: Item): { check: CheckSpec; checkType: CheckType } {
 interface Draft {
   req: Omit<Requirement, 'id'>;
   rect: Rect;
+  hasRegion: boolean;
 }
 
 export async function runExtract(
@@ -251,6 +253,14 @@ export async function runExtract(
       const letterbox = maxSide === ON_DEVICE_MAX_SIDE; // cloud models handle any aspect ratio; Chrome stretches
       const img = await d.codec.crop(blobs.get(design.id) as Blob, band.rect, maxSide, 'image/jpeg', { letterbox });
       const lb = img.letterbox ?? IDENTITY;
+      aiDebug('extract image sent', {
+        viewport: design.viewport,
+        band: band.index,
+        bandDesignPx: band.rect,
+        mime: img.mime,
+        bytes: img.bytes,
+        letterbox: img.letterbox ?? 'none (cloud or unpadded)',
+      });
       const req: AiRequest = {
         task: 'extract-contract',
         mode: plan.mode,
@@ -293,10 +303,27 @@ export async function runExtract(
       const engine = step.engine === 'cloud' ? 'cloud' : 'on-device';
       let tripped = 0;
       for (const item of parsed.requirements.slice(0, MAX_PER_BAND)) {
-        const suggested = rectFromNormalised(item.box_2d, band.rect, lb);
-        const snapped = await d.measure.snapRegion(pixels, suggested, thresholds);
-        const rect = 'rect' in snapped ? snapped.rect : suggested;
-        if (drafts.some((o) => o.req.category === item.category && iou(o.rect, rect) >= DEDUPE_IOU)) continue;
+        const read = readBox(item.box_2d, band.rect, lb, letterbox ? lb.side : undefined);
+        const suggested = read?.rect;
+        const snapped = suggested ? await d.measure.snapRegion(pixels, suggested, thresholds) : undefined;
+        const snappedRect = snapped && 'rect' in snapped ? snapped.rect : undefined;
+        // An unreadable box leaves the item without a region (never a guess pinned to an edge).
+        const rect = snappedRect ?? suggested ?? { x: 0, y: band.rect.y + band.rect.h - 1, w: 1, h: 1 };
+        aiDebug('extract box', {
+          viewport: design.viewport,
+          band: band.index,
+          statement: item.statement,
+          category: item.category,
+          raw: item.box_2d,
+          reading: read ? { scale: read.scale, reading: read.reading } : 'rejected',
+          suggestedDesignPx: suggested,
+          snappedDesignPx: snappedRect ?? 'not snapped',
+        });
+        if (
+          suggested &&
+          drafts.some((o) => o.req.category === item.category && o.hasRegion && iou(o.rect, rect) >= DEDUPE_IOU)
+        )
+          continue;
 
         const allowed = item.expectedCount === undefined ? [] : [item.expectedCount];
         const name = item.matchHint.tag ?? item.matchHint.role ?? 'element';
@@ -312,6 +339,7 @@ export async function runExtract(
         const { check, checkType } = mapCheck({ ...item, statement, condition });
         drafts.push({
           rect,
+          hasRegion: suggested !== undefined,
           req: {
             viewport: design.viewport,
             category: item.category,
@@ -320,7 +348,9 @@ export async function runExtract(
             statement: statement.slice(0, 160),
             condition: condition.slice(0, 200),
             check,
-            region: 'rect' in snapped ? { rect, source: 'snapped' } : { unresolved: true, suggested },
+            ...(suggested && {
+              region: snappedRect ? { rect, source: 'snapped' as const } : { unresolved: true as const, suggested },
+            }),
             ...(item.primary && { primary: true }),
             accepted: false,
             origin: 'ai',

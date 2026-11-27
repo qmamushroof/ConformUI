@@ -20,12 +20,9 @@ export const EXTRACT_CHECK_KINDS = [
   'judged',
 ] as const;
 
-const box_2d = z.tuple([
-  z.number().min(0).max(1000),
-  z.number().min(0).max(1000),
-  z.number().min(0).max(1000),
-  z.number().min(0).max(1000),
-]);
+// 0..1000 is the contract; the ceiling is wider so a model that answers in canvas pixels or fractions can be read (readBox).
+const boxValue = z.number().min(0).max(4096);
+const box_2d = z.tuple([boxValue, boxValue, boxValue, boxValue]);
 
 export const ExtractOutputSchema = z.object({
   requirements: z
