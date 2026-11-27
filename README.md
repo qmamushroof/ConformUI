@@ -344,7 +344,7 @@ The demo shows the sample project end to end in under three minutes: on-device f
 - On-device inference runs in desktop Chrome with built-in AI. Everywhere else the same app runs on cloud Gemini automatically, after consent.
 - On-device calls are single-turn with a small token limit, and images are downscaled before sending.
 - The model version on device is chosen by Chrome, not by the app.
-- The sample's pre-computed results are hand-authored.
+- The sample's pre-computed results are hand-authored, except the contract extraction: that is a real on-device Gemma 4 recording (live smoke, ROADMAP 14.4). On that pass it matched 0 of the 8 verified desktop items, so it is shown as recorded. The Judged and Deep Analysis seeds stay hand-authored because the live on-device judge passed the colour-and-icon requirement (defect 7), which is wrong, and the cloud call was not available during the smoke.
 - Judged checks are model opinions labelled with Engine and confidence; only Measured and Visual checks are exact.
 
 ## Privacy

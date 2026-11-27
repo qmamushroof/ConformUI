@@ -6,12 +6,12 @@ Video ≤ 3:00, public on YouTube (PRD-D-13). Beats and timings follow PRD §10.
 
 ## Before recording
 
-- [ ] Hosted URL in desktop Chrome with the model `available`; Settings > Clear all data; onboarding visible; privacy counter reads "Nothing has left this device".
-- [ ] `sample-site/flawed/index.html` from the repo open in a second tab at 1440 px with DevTools ready.
-- [ ] A coding-agent window with the flawed page source (for the 1:45 beat; shown generically, no product named).
-- [ ] Cloud beat: a second Chrome profile without the multimodal flag (on-device unavailable), DevTools device emulation at 390 px, data cleared.
-- [ ] Network toggle reachable (DevTools Network > Offline or OS toggle).
-- [ ] One fallback take of each beat already recorded while the model was ready (PRD §10), e.g. right after 14.4.
+- [x] Hosted URL in desktop Chrome with the model `available`; Settings > Clear all data; onboarding visible; privacy counter reads "Nothing has left this device". (pipeline in `ComformUI demo video`: `scripts/rec.cjs`, `takes/`)
+- [x] `sample-site/flawed/index.html` from the repo open in a second tab at 1440 px with DevTools ready. (pipeline in `ComformUI demo video`: `scripts/rec.cjs`, `takes/`)
+- [x] A coding-agent window with the flawed page source (for the 1:45 beat; shown generically, no product named). (pipeline in `ComformUI demo video`: `scripts/rec.cjs`, `takes/`)
+- [x] Cloud beat: a second Chrome profile without the multimodal flag (on-device unavailable), DevTools device emulation at 390 px, data cleared. (pipeline in `ComformUI demo video`: `scripts/rec.cjs`, `takes/`)
+- [x] Network toggle reachable (DevTools Network > Offline or OS toggle). (pipeline in `ComformUI demo video`: `scripts/rec.cjs`, `takes/`)
+- [x] One fallback take of each beat already recorded while the model was ready (PRD §10), e.g. right after 14.4. (pipeline in `ComformUI demo video`: `scripts/rec.cjs`, `takes/`)
 
 ## Script
 

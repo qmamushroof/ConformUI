@@ -15,7 +15,7 @@ import { VIEWPORT_PRESETS } from '@kernel';
 
 // Pure text helpers shared by the export functions (SPEC §4.10). No I/O, no clock reads.
 
-export const APP_VERSION = '0.1.0';
+export const APP_VERSION = '1.0.1';
 export const MAX_TEXT = 400;
 
 const VIEWPORT_ORDER: readonly ViewportId[] = ['desktop', 'mobile', 'tablet'];

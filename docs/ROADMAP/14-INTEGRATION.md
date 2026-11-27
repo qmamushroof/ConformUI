@@ -42,15 +42,29 @@ Within a milestone, merge in the order listed; each lane rebases on `main` and r
 
 ### 14.3 E8, E9, E10, E13, export snapshots · C · 0.4 h · needs 14.0, 14.4
 - [x] E8 inputs (picker, drop, paste, error copy, viewport suggestion and change), E9 projects persist and cascade delete, E10 settings (mode, revoke → asks again, clear data, download from click), E13 every `ErrorCode` copy.
-- [ ] Snapshot tests of `fixPrompt` and `reportMarkdown` on the sample flawed Run (SPEC §4.10.4), taken after the 14.4 re-record.
+- [x] Snapshot tests of `fixPrompt` and `reportMarkdown` on the sample flawed Run (SPEC §4.10.4), taken after the 14.4 re-record. Evidence: `tests/unit/demo/sample-acceptance.test.ts` (snapshots in `tests/unit/demo/__snapshots__/`); `APP_VERSION` is 1.0.1.
 
 **Accept:** specs green; PRD-F-01, PRD-F-02, PRD-F-11, SPEC-UI-05, SPEC-EXP-01 cited.
 
 ### 14.4 Live smoke and precomputed re-record · B · 0.4 h · needs M3, 2.8
 - [ ] Demo machine, dev build with real Firebase: Try the sample → Extract contract (on-device) → Run → Deep Analysis (cloud). Record `inferenceSource` per call; both values observed.
-- [ ] Record: AI-vs-verified match count (PRD-M-14), extraction time (SPEC-PERF-02), deterministic Run stages (SPEC-PERF-01, PRD-M-08, VERIFY T1), network-off extract + Run (PRD-M-07, VERIFY O1), image add time (SPEC-PERF-03).
-- [ ] Re-record `extraction` and `deep` in `src/features/demo/sample/precomputed/` from this run. For `flawed`/`fixed` Judged items, replace the seed only when the live verdict matches PRD-M-01/02; otherwise keep the seed and note it in the README limits (SPEC §4.11.2). Rerun sample acceptance.
-- [ ] Manual defect 7 check: Judged result is Needs review on flawed, Resolved on fixed (PRD-M-01, PRD-M-02 manual part).
+- [ ] Record (all but image add time, which was not captured in the smoke; see table below): AI-vs-verified match count (PRD-M-14), extraction time (SPEC-PERF-02), deterministic Run stages (SPEC-PERF-01, PRD-M-08, VERIFY T1), network-off extract + Run (PRD-M-07, VERIFY O1), image add time (SPEC-PERF-03).
+- [x] Re-record `extraction` and `deep` in `src/features/demo/sample/precomputed/` from this run. For `flawed`/`fixed` Judged items, replace the seed only when the live verdict matches PRD-M-01/02; otherwise keep the seed and note it in the README limits (SPEC §4.11.2). Rerun sample acceptance.
+- [x] Manual defect 7 check: Judged result is Needs review on flawed, Resolved on fixed (PRD-M-01, PRD-M-02 manual part). Checked against the live log (2026-11-27): NOT met on-device. Gemma 4 judged R-07 (button colour plus arrow vs chevron) `pass`/`high` on the flawed capture, three times ("matches in colour and the presence of an arrow icon"), so the defect was missed. The sample's pre-computed path still gives Needs review on flawed and Resolved on fixed. Follow-up, not done: the judge prompt already requires per-attribute comparison; a stronger fix needs model-in-the-loop tuning.
+
+### 14.4 results (live smoke, 2026-11-27, on-device Gemma 4, dev build)
+
+| Metric | Result |
+|---|---|
+| Extraction (SPEC-PERF-02) | 84.4 s final pass (2 bands); 180.9 s on the first pass |
+| AI vs verified (PRD-M-14) | Final pass: 12 proposed, 0 matched, 8 verified desktop items missed (the model boxes did not reach IoU 0.5 and its categories differed; the model picked mostly text/presence items). First pass: 9 proposed, 7 matched. |
+| Deterministic Run (SPEC-PERF-01, PRD-M-08) | Measured 1 ms, Visual 157 ms, mobile Measured 1 ms; Judged R-07 9.6 s on-device; 0 B sent |
+| Re-verify | 5 resolved, 1 remaining; Visual 1.6 s, Judged R-07 10.9 s |
+| Network-off extract + Run (PRD-M-07, O1) | Works: extraction 136.5 s (18 proposals), Run 6 fail / 4 pass, 0 B sent |
+| `inferenceSource` | `on-device` observed. `cloud` not observed: App Check token exchange returned 403 on the dev build, so Deep Analysis showed "Couldn't verify this app" and the pre-computed result |
+| Image add time (SPEC-PERF-03) | Not captured |
+
+Re-recorded: `extraction.json` is the 12 real on-device proposals (final pass, regions snapped where the model box hit an element). Kept as seed: `deep.json` (no real cloud response) and `flawed.json`/`fixed.json` (live R-07 verdict `pass`/`high` does not match PRD-M-01). Box matching: the logs show model boxes off by about 5 % vertically and categories that differ from the contract; no defect in `readBox` was found, so nothing was changed.
 
 **Fallback:** on-device not ready → record cloud results after consent (labelled Cloud), keep the seed for on-device-dependent fields, and list the gap in the README limits.
 **Accept:** results table saved for the README (16.2); `npm run check` green after the re-record.
