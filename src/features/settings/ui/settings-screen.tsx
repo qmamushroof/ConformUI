@@ -415,7 +415,9 @@ export const SettingsScreen: FC<SettingsScreenProps> = ({
             <h2 id="about-h">About</h2>
             <dl className="kv">
               <dt>Version</dt>
-              <dd>{about ? `${about.version}${about.commit ? ` (${about.commit})` : ''}` : APP_VERSION_FALLBACK}</dd>
+              <dd title={about?.commit ? `Build ${about.commit}` : undefined}>
+                {about?.version ?? APP_VERSION_FALLBACK}
+              </dd>
               <dt>Licence</dt>
               <dd>{about?.licence ?? 'Apache-2.0'}</dd>
               <dt>Source</dt>

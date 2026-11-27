@@ -106,11 +106,58 @@ Measured and Visual checks never use a model, so they run the same in every case
 - **Exports**: a Fix prompt for a coding agent, and the Contract and report as Markdown and JSON.
 - **Demo sample**: one click opens a sample Project with planted defects.
 - **Engine status and settings**: model readiness, enable steps, mode, cloud consent, a privacy counter and data deletion.
+- **Version and source**: Settings > About shows the version (1.0.1) and links to this repository.
 - **Installable and offline**: the app shell and the sample open offline.
 
 ## Screenshots
 
-The demo video shows every screen. To see them yourself, open the hosted app and click **Try the sample**.
+Captured from the sample project with `npm run screenshots` (see [scripts/capture-screenshots.mjs](scripts/capture-screenshots.mjs)). They use the app build with a fake AI engine, so they need no network and show no keys or personal data. Run the script again after a UI change.
+
+### Projects and Contract
+
+![Projects list with the sample project, its viewports and the privacy note](docs/screenshots/02-projects.png)
+
+![Contract review: the requirement list on the left and the design with measured boxes on the right](docs/screenshots/03-contract-review.png)
+
+![An Inferred requirement, labelled Inferred, for the Mobile viewport](docs/screenshots/04-contract-inferred.png)
+
+![The Contract after Run 1 has locked it](docs/screenshots/12-contract-locked.png)
+
+### Run, Findings and Evidence
+
+![Run 1 results: 6 fail, 1 needs review, 3 pass, with the findings list](docs/screenshots/05-run-results.png)
+
+![A Finding with severity, confidence, Measured label and design versus implementation crops](docs/screenshots/06-finding-evidence.png)
+
+![Re-verify sheet loading the fixed implementation](docs/screenshots/10-reverify-sheet.png)
+
+![Run 2 after Re-verify showing resolved requirements](docs/screenshots/11-reverify-results.png)
+
+### Deep Analysis and export
+
+![Deep Analysis confirm sheet listing exactly what is sent to the cloud](docs/screenshots/07-deep-analysis-consent.png)
+
+![Findings labelled Refined by Cloud after Deep Analysis](docs/screenshots/08-deep-analysis-result.png)
+
+![Export report sheet with Copy and Download as Markdown or JSON](docs/screenshots/09-export-report.png)
+
+### Engine, settings and offline
+
+![Settings showing the on-device model status and the Auto, Cloud only and On-device only modes](docs/screenshots/13-settings-mode.png)
+
+![Settings About with version 1.0.1, the Apache-2.0 licence and the repository link](docs/screenshots/14-settings-about.png)
+
+![Header status chip when the on-device model is unavailable](docs/screenshots/15-model-unavailable.png)
+
+![Engine panel explaining why on-device AI is unavailable and offering the cloud](docs/screenshots/16-settings-engine-unavailable.png)
+
+![Offline: the header shows Offline, Run still completes and Deep Analysis waits for a connection](docs/screenshots/17-offline.png)
+
+### Mobile (390 x 844)
+
+![Sample project on a phone-sized screen](docs/screenshots/mobile-01-project.png)
+
+![Run results on a phone-sized screen](docs/screenshots/mobile-02-run-results.png)
 
 ## Test it as a judge
 

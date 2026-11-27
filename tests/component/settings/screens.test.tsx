@@ -360,22 +360,29 @@ describe('S10: theme and about', () => {
     expect(screen.getByText('Version').nextElementSibling?.textContent).toMatch(/^\d+\.\d+\.\d+/);
   });
 
-  it('About shows the app version with the short commit as a secondary form', async () => {
+  it('About shows only the version; the short commit is a tooltip, never visible text', async () => {
     mount({ about: { version: '1.0.1', commit: 'e2b6a69' } });
     await screen.findByText('Apache-2.0');
-    expect(screen.getByText('Version').nextElementSibling?.textContent).toBe('1.0.1 (e2b6a69)');
+    const dd = screen.getByText('Version').nextElementSibling as HTMLElement;
+    expect(dd.textContent).toBe('1.0.1');
+    expect(dd.getAttribute('title')).toBe('Build e2b6a69');
+    expect(document.body.textContent).not.toContain('e2b6a69');
   });
 
   it('About shows the bare version when no commit is known, and never a bare hash', async () => {
     mount({ about: { version: '1.0.1' } });
     await screen.findByText('Apache-2.0');
-    expect(screen.getByText('Version').nextElementSibling?.textContent).toBe('1.0.1');
+    const dd = screen.getByText('Version').nextElementSibling as HTMLElement;
+    expect(dd.textContent).toBe('1.0.1');
+    expect(dd.hasAttribute('title')).toBe(false);
   });
 
   it('About treats an empty commit like a missing one', async () => {
     mount({ about: { version: '1.0.1', commit: '' } });
     await screen.findByText('Apache-2.0');
-    expect(screen.getByText('Version').nextElementSibling?.textContent).toBe('1.0.1');
+    const dd = screen.getByText('Version').nextElementSibling as HTMLElement;
+    expect(dd.textContent).toBe('1.0.1');
+    expect(dd.hasAttribute('title')).toBe(false);
   });
 
   it('About always links Source to the repository, with or without a build-time value, never a placeholder', async () => {
