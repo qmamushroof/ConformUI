@@ -30,8 +30,8 @@ Within a milestone, merge in the order listed; each lane rebases on `main` and r
 **Accept:** the 3.7 smoke spec runs through the fixture; spy records zero AI requests on it.
 
 ### 14.1 E1, E2, E3, E11 · A · 0.4 h · needs 14.0
-- [ ] E1 (2 clicks to Findings, both device scenarios), E2 (offline on-device extract + Run, 0 bytes), E3 (consent sheet, zero calls before Allow, Decline path), E11 (manifest, installability, offline second load ≤ 1 s) per SPEC §7.5.
-- [ ] E3 also on a sample Project: Extract with device `unavailable` opens the consent sheet (SPEC-DEMO-05); Decline shows the pre-computed extraction labelled.
+- [x] E1 (2 clicks to Findings, both device scenarios), E2 (offline on-device extract + Run, 0 bytes), E3 (consent sheet, zero calls before Allow, Decline path), E11 (manifest, installability, offline second load ≤ 1 s) per SPEC §7.5.
+- [x] E3 also on a sample Project: Extract with device `unavailable` opens the consent sheet (SPEC-DEMO-05); Decline shows the pre-computed extraction labelled.
 
 **Accept:** specs green; titles cite PRD-M-13, PRD-M-04, PRD-M-06, PRD-H-05, PRD-M-12, SPEC-PERF-06.
 
