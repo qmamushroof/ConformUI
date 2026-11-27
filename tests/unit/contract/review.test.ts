@@ -185,11 +185,11 @@ describe('SPEC-CON-04, S24, PRD-M-10, PRD-F-08.3: Inferred generation after extr
     await seed(['desktop']);
     const two = {
       requirements: [
-        { ...valid.requirements[0], box: [100, 100, 300, 160] },
+        { ...valid.requirements[0], box_2d: [100, 100, 160, 300] },
         {
           ...valid.requirements[0],
           statement: 'Second CTA exists',
-          box: [500, 700, 700, 760],
+          box_2d: [700, 500, 760, 700],
           matchHint: { tag: 'a' },
         },
       ],

@@ -3,6 +3,7 @@
 export * from './consent';
 export * from './errors';
 export * from './helpers';
+export * from './letterbox';
 export * from './limits';
 export * from './ports';
 export * from './runtime-values';

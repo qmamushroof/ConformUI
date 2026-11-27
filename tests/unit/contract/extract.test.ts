@@ -11,8 +11,10 @@ import {
   type ImageCodec,
   type MeasureClient,
   mintConsent,
+  planLetterbox,
   type Rect,
   type RuntimeConfig,
+  rectToNormalised,
   type Settings,
   type TraceStep,
 } from '@kernel';
@@ -44,6 +46,8 @@ let blobs: InMemoryBlobStore;
 let fakeCfg: FakeAiConfig;
 let ai: FakeAiEngine;
 let crops: Rect[];
+let fakeLetterbox: boolean;
+let cropOpts: ({ letterbox?: boolean } | undefined)[];
 let measureRects: (r: Rect) => { rect: Rect; iou: number } | { unresolved: true };
 let svc: ContractService;
 
@@ -57,9 +61,17 @@ const codec = (): ImageCodec => ({
   async pixels() {
     return { width: 1, height: 1, data: new Uint8ClampedArray(4) };
   },
-  async crop(blob, r, maxSide, mime) {
+  async crop(blob, r, maxSide, mime, opts) {
     crops.push(r);
-    return { mime, base64: 'QUJD', bytes: 1000 + maxSide, role: 'design', blob };
+    cropOpts.push(opts);
+    return {
+      mime,
+      base64: 'QUJD',
+      bytes: 1000 + maxSide,
+      role: 'design',
+      blob,
+      ...(fakeLetterbox && opts?.letterbox && { letterbox: planLetterbox(r.w, r.h, maxSide) }),
+    };
   },
   async composePair() {
     throw new Error('unused');
@@ -113,6 +125,8 @@ beforeEach(() => {
   store = new InMemoryProjectStore();
   blobs = new InMemoryBlobStore();
   crops = [];
+  cropOpts = [];
+  fakeLetterbox = false;
   measureRects = (r) => ({ rect: r, iou: 1 });
   fakeCfg = { status: 'available+image', outputs: { 'extract-contract': valid } };
   ai = createFakeAiEngine(fakeCfg, {});
@@ -200,6 +214,97 @@ describe('SPEC-CON-01 bands and calls', () => {
     expect(c?.user).toMatch(/1440/);
     expect(c?.user).toContain('<<<DATA');
     expect(c?.user).toContain('DATA>>>');
+  });
+});
+
+describe('SPEC-AI-11 letterbox (on-device only)', () => {
+  it('on-device bands are letterboxed to a square; cloud bands are left as they were', async () => {
+    await seed({ height: 500 });
+    await extract();
+    expect(cropOpts.every((o) => o?.letterbox === true)).toBe(true);
+    cropOpts = [];
+    await extract({ mode: 'cloud-only', consent: consent() });
+    expect(cropOpts.every((o) => !o?.letterbox)).toBe(true);
+  });
+
+  it('boxes the model draws on the letterboxed square map back through the padding to design CSS px', async () => {
+    fakeLetterbox = true;
+    await seed({ height: 1000 });
+    const band = { x: 0, y: 864, w: 1440, h: 136 }; // short last band: a very wide image, mostly padding
+    const target = { x: 600, y: 900, w: 220, h: 56 };
+    const lb = planLetterbox(band.w, band.h, 1024);
+    const box = rectToNormalised(target, band, lb);
+    fakeCfg.outputs = {
+      'extract-contract': {
+        sequence: [{ requirements: [] }, { requirements: [{ ...valid.requirements[0], box_2d: box }] }],
+      },
+    };
+    measureRects = () => ({ unresolved: true });
+    const c = done(await extract());
+    const reg = c.requirements[0]?.region;
+    const rect = reg && 'suggested' in reg ? reg.suggested : undefined;
+    expect(rect?.x).toBeCloseTo(target.x, 0);
+    expect(rect?.y).toBeCloseTo(target.y, 0);
+    expect(rect?.w).toBeCloseTo(target.w, 0);
+    expect(rect?.h).toBeCloseTo(target.h, 0);
+  });
+
+  it('a box inside the padding stays inside the design', async () => {
+    fakeLetterbox = true;
+    await seed({ height: 1000 });
+    fakeCfg.outputs = {
+      'extract-contract': {
+        sequence: [{ requirements: [] }, { requirements: [{ ...valid.requirements[0], box_2d: [0, 0, 120, 1000] }] }],
+      },
+    };
+    measureRects = () => ({ unresolved: true });
+    const c = done(await extract());
+    const reg = c.requirements[0]?.region;
+    const rect = reg && 'suggested' in reg ? reg.suggested : undefined;
+    expect(rect?.y).toBeGreaterThanOrEqual(864);
+    expect((rect?.y ?? 0) + (rect?.h ?? 0)).toBeLessThanOrEqual(1000);
+  });
+});
+
+describe('SPEC-CON-01 box_2d convention and prompt', () => {
+  it('box_2d is [ymin, xmin, ymax, xmax] (the Gemma/Gemini order), not [x0, y0, x1, y1]', async () => {
+    await seed({ height: 500 });
+    fakeCfg.outputs = {
+      'extract-contract': { requirements: [{ ...valid.requirements[0], box_2d: [100, 500, 300, 700] }] },
+    };
+    measureRects = () => ({ unresolved: true });
+    const reg = done(await extract({ mode: 'cloud-only', consent: consent() })).requirements[0]?.region;
+    const r = reg && 'suggested' in reg ? reg.suggested : undefined;
+    expect(r?.x).toBeCloseTo(720, 0);
+    expect(r?.w).toBeCloseTo(288, 0);
+    expect(r?.y).toBeCloseTo(50, 0);
+    expect(r?.h).toBeCloseTo(100, 0);
+  });
+
+  it('the prompt names box_2d order, asks for one specific requirement per element and bans boilerplate', async () => {
+    await seed({ height: 500 });
+    await extract();
+    const sys = calls()[0]?.system ?? '';
+    expect(sys).toMatch(/box_2d/);
+    expect(sys).toMatch(/ymin, xmin, ymax, xmax/);
+    expect(sys).toMatch(/one requirement per distinct element/i);
+    expect(sys).toMatch(/duplicate/i);
+    expect(sys).toMatch(/boilerplate|lorem|copyright/i);
+    for (const w of ['size', 'spacing', 'count', 'colour', 'hierarchy', 'position'])
+      expect(sys).toMatch(new RegExp(w, 'i'));
+    expect(sys).toMatch(/grey|gray/i);
+  });
+
+  it('the user text says the image is a square with grey bars to ignore (on-device)', async () => {
+    await seed({ height: 500 });
+    await extract();
+    expect(calls()[0]?.user).toMatch(/grey|gray/i);
+  });
+
+  it('the cloud user text does not mention grey bars', async () => {
+    await seed({ height: 500 });
+    await extract({ mode: 'cloud-only', consent: consent() });
+    expect(calls()[0]?.user).not.toMatch(/grey|gray/i);
   });
 });
 
@@ -303,8 +408,8 @@ describe('SPEC-CON-01 mapping', () => {
     fakeCfg.outputs = {
       'extract-contract': {
         requirements: [
-          { ...valid.requirements[0], box: [500, 500, 100, 100] },
-          { ...valid.requirements[1], box: [10, 10, 10, 10] },
+          { ...valid.requirements[0], box_2d: [500, 500, 100, 100] },
+          { ...valid.requirements[1], box_2d: [10, 10, 10, 10] },
         ],
       },
     };
@@ -321,14 +426,14 @@ describe('SPEC-CON-01 mapping', () => {
 
   it('SPEC-CON-01: dedupe keeps the first of same-category boxes with IoU >= 0.6, keeps other categories', async () => {
     await seed({ height: 500 });
-    const a = { ...valid.requirements[0], box: [100, 100, 300, 200] };
+    const a = { ...valid.requirements[0], box_2d: [100, 100, 200, 300] };
     fakeCfg.outputs = {
       'extract-contract': {
         requirements: [
           { ...a, statement: 'First', condition: 'First ok' },
-          { ...a, box: [105, 102, 305, 202], statement: 'Duplicate', condition: 'Dup ok' },
+          { ...a, box_2d: [102, 105, 202, 305], statement: 'Duplicate', condition: 'Dup ok' },
           { ...a, category: 'content', statement: 'Other category', condition: 'Other ok' },
-          { ...a, box: [600, 100, 800, 200], statement: 'Far away', condition: 'Far ok' },
+          { ...a, box_2d: [100, 600, 200, 800], statement: 'Far away', condition: 'Far ok' },
         ],
       },
     };
@@ -345,7 +450,7 @@ describe('SPEC-CON-01 mapping', () => {
     const mk = (i: number) => ({
       ...valid.requirements[0],
       category: 'content',
-      box: [0, i * 120, 100, i * 120 + 100],
+      box_2d: [i * 120, 0, i * 120 + 100, 100],
       statement: `Item ${i}`,
       condition: `Cond ${i}`,
     });

@@ -73,7 +73,7 @@ export const DEFAULT_FAKE_OUTPUTS: Record<AiTask, unknown> = {
         statement: 'The primary call to action is present',
         condition: 'A button with the call to action text is visible',
         checkKind: 'presence',
-        box: [100, 600, 300, 680],
+        box_2d: [600, 100, 680, 300],
         matchHint: { tag: 'button' },
         primary: true,
       },

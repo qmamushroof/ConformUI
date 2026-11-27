@@ -104,8 +104,8 @@ export interface RgbaImage { width: number; height: number; data: Uint8ClampedAr
 export interface ImageCodec {
   normalise(file: Blob, cssWidth: number): Promise<{ blob: Blob; ref: Omit<ImageRef, 'blobId'> }>;
   pixels(blob: Blob): Promise<RgbaImage>;
-  crop(blob: Blob, r: Rect, maxSide: number, mime: 'image/jpeg' | 'image/png'): Promise<AiImage & { blob: Blob }>;
-  composePair(design: Blob, dr: Rect, capture: Blob, cr: Rect, maxSide: number): Promise<AiImage>;   // design left, capture right
+  crop(blob: Blob, r: Rect, maxSide: number, mime: 'image/jpeg' | 'image/png', opts?: { letterbox?: boolean }): Promise<AiImage & { blob: Blob; letterbox?: Letterbox }>;
+  composePair(design: Blob, dr: Rect, capture: Blob, cr: Rect, maxSide: number, opts?: { letterbox?: boolean }): Promise<AiImage & { layout?: PairLayout }>;   // design left, capture right (stacked when letterboxed and wider than 2:1)
   probe(file: Blob): Promise<{ width: number; height: number; mime: string }> }   // source size, no resample (SPEC-MEAS-04)
 export interface ImageMeta { width: number; height: number; cssWidth: number }
 export interface Alignment { ok: boolean; widthDeltaPct: number; heightDesign: number; heightCapture: number; issues: ('width-mismatch' | 'height-differs')[] }
