@@ -52,6 +52,12 @@ const evidence = (src: string, ref: ImageRef): EvidenceImage => ({
   height: Math.round((ref.height * ref.cssWidth) / ref.width),
 });
 
+/** Findings the cloud changed: a result whose status, confidence or finding differs after the merge. */
+function refinedCount(before: Run, after: Run): number {
+  const was = new Map(before.results.map((r) => [r.requirementId, JSON.stringify(r)]));
+  return after.results.filter((r) => was.get(r.requirementId) !== JSON.stringify(r)).length;
+}
+
 /**
  * `/p/:projectId/run/:runId` (SPEC-RUN-*). `runId` `new` starts a Run on arrival and replaces itself with the stored
  * Run's id when it ends. Wires Deep Analysis (SPEC-DEEP-01), Re-verify (SPEC-RUN-09), the sample fallbacks
@@ -73,6 +79,9 @@ const RunRoute: FC = () => {
   const [preview, setPreview] = useState<DeepPreview>();
   const [manual, setManual] = useState<string>();
   const [busy, setBusy] = useState(false);
+  const [deepBusy, setDeepBusy] = useState(false);
+  const deepRunning = useRef(false);
+  const [deepDone, setDeepDone] = useState<number>();
   const [toast, say] = useToast();
   const abort = useRef<AbortController | undefined>(undefined);
   const started = useRef(false);
@@ -150,6 +159,17 @@ const RunRoute: FC = () => {
     });
   }, [starting, project]);
 
+  // The notices sit at the top of the page: bring a new one into view when the person triggered it from further down.
+  const noticeKey = deepBusy ? 'busy' : error ? 'error' : deepDone !== undefined ? 'done' : '';
+  useEffect(() => {
+    if (!noticeKey) return;
+    const id = requestAnimationFrame(() => {
+      const sel = noticeKey === 'error' ? '[role="alert"].notice' : '.notice[role="status"]';
+      document.querySelector(sel)?.scrollIntoView?.({ block: 'nearest' });
+    });
+    return () => cancelAnimationFrame(id);
+  }, [noticeKey]);
+
   if (load.kind === 'loading')
     return starting ? <RunStarting /> : <main id="main" tabIndex={-1} className="page" aria-busy="true" />;
   if (load.kind === 'missing') return <NotFound />;
@@ -214,7 +234,7 @@ const RunRoute: FC = () => {
   };
 
   const sendDeep = (ev: { isTrusted: boolean }) => {
-    if (!run || !preview) return;
+    if (!run || !preview || deepRunning.current) return;
     const pv = preview;
     let token: ConsentToken;
     try {
@@ -225,13 +245,17 @@ const RunRoute: FC = () => {
       return;
     }
     setPreview(undefined);
-    setBusy(true);
+    setError(undefined);
+    setDeepDone(undefined);
+    deepRunning.current = true;
+    setDeepBusy(true);
     deep
       .run(pv, token, (step) => void recordCloudStep(sv, projectId, step))
-      .then(() => setError(undefined))
+      .then((after) => setDeepDone(refinedCount(run, after)))
       .catch((e: unknown) => setError({ ...errorView(e), precomputedDeep: p.isSample }))
       .finally(() => {
-        setBusy(false);
+        deepRunning.current = false;
+        setDeepBusy(false);
         refresh();
       });
   };
@@ -273,9 +297,29 @@ const RunRoute: FC = () => {
     };
   }
 
-  const notices: ReactNode = run?.precomputed ? (
+  const deepNotice: ReactNode = deepBusy ? (
+    <div className="notice notice-info" role="status" aria-busy="true">
+      <Glyph d="M12 3v4M12 17v4M3 12h4M17 12h4" />
+      <p className="title">{copy.flows.deep.running}</p>
+      <p className="small muted">{copy.flows.deep.runningDetail}</p>
+    </div>
+  ) : deepDone !== undefined ? (
+    <div className="notice notice-info" role="status">
+      <Glyph d="M12 11v6M12 7.5v.5" />
+      <p className="title">{deepDone > 0 ? copy.flows.deep.refined(deepDone) : copy.flows.deep.nothing}</p>
+      <p className="small muted">{deepDone > 0 ? copy.flows.deep.refinedDetail : copy.flows.deep.nothingDetail}</p>
+    </div>
+  ) : undefined;
+  const banner: ReactNode = run?.precomputed ? (
     <SampleBanner {...(p.isSample && !busy && { onAllowLive: () => void allowLive() })} />
   ) : undefined;
+  const notices: ReactNode =
+    deepNotice || banner ? (
+      <>
+        {deepNotice}
+        {banner}
+      </>
+    ) : undefined;
 
   const errorProp: RunScreenProps['error'] = error
     ? {
@@ -327,7 +371,11 @@ const RunRoute: FC = () => {
         {...(notices && { notices })}
         {...(run && {
           deepSlot: (
-            <DeepAnalysisButton {...(deepReason && { disabledReason: deepReason })} onOpen={() => void openDeep()} />
+            <DeepAnalysisButton
+              {...(deepReason && { disabledReason: deepReason })}
+              busy={deepBusy}
+              onOpen={() => void openDeep()}
+            />
           ),
         })}
         {...(selected && { selectedId: selected })}

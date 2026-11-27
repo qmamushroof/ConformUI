@@ -21,6 +21,8 @@ export interface FakeConfig {
   outputs?: Record<string, unknown>;
   errors?: Record<string, string>;
   durationMs?: number;
+  /** Real milliseconds the fake waits before answering or failing (slow cloud). */
+  delayMs?: number;
   inferenceSource?: 'on-device' | 'cloud';
 }
 
