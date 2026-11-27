@@ -6,8 +6,8 @@ import { bytesSentFor, createModelFactory, engineFromSource, ON_DEVICE_MODEL_NAM
 import { outputSchemaFor } from './schema-for';
 
 // SPEC-AI-02, SPEC-AI-06, SPEC-AI-08..11: guards, one validated retry, timeouts and the error map around one request.
+// The on-device wait is `on_device_timeout_s` (default 180 s): Gemma 4 with an image took 46 s on a Medium-class device.
 
-const ON_DEVICE_TIMEOUT_MS = 45_000;
 const CLOUD_TIMEOUT_MS = 60_000;
 const RETRY_SUFFIX = '\nReturn only valid JSON matching the schema.';
 const BLOCKING_FINISH = new Set(['SAFETY', 'BLOCKLIST', 'PROHIBITED_CONTENT', 'SPII', 'RECITATION']);
@@ -74,7 +74,8 @@ export function createRunner(d: RunnerDeps) {
     return new CuiError('AI_FAILED', undefined, { cause: e });
   }
 
-  async function guardPreCall(req: AiRequest, hasImages: boolean): Promise<void> {
+  /** Resolves to whether the device can answer this request, so the caller can pick the wait (SPEC-AI-08). */
+  async function guardPreCall(req: AiRequest, hasImages: boolean): Promise<boolean> {
     const cloudCapable = req.mode !== 'ONLY_ON_DEVICE';
     // SPEC-AI-02 (a)
     if (cloudCapable) {
@@ -92,7 +93,7 @@ export function createRunner(d: RunnerDeps) {
     if (cloudCapable && !d.config.get().cloud_enabled) throw new CuiError('CLOUD_DISABLED');
     if (req.mode === 'ONLY_IN_CLOUD') {
       if (!isOnline()) throw new CuiError('OFFLINE');
-      return;
+      return false;
     }
     const status = await d.status();
     const deviceUsable = status.device === 'available' && (!hasImages || status.deviceImage === true);
@@ -104,6 +105,7 @@ export function createRunner(d: RunnerDeps) {
     } else if (!deviceUsable && !isOnline()) {
       throw new CuiError('OFFLINE');
     }
+    return deviceUsable;
   }
 
   /** SPEC-AI-08: one SDK call with a timeout and the caller's signal; always cleans up. */
@@ -119,7 +121,7 @@ export function createRunner(d: RunnerDeps) {
     const guard = new Promise<never>((_, reject) => {
       timer = setTimeout(() => {
         ctl.abort();
-        reject(new CuiError('AI_FAILED', 'The AI took too long'));
+        reject(new CuiError('AI_TIMEOUT', 'The AI took too long'));
       }, timeoutMs);
       onAbort = () => {
         ctl.abort();
@@ -162,7 +164,7 @@ export function createRunner(d: RunnerDeps) {
   async function run(req: AiRequest, signal?: AbortSignal): Promise<AiResponse> {
     if (signal?.aborted) throw new CuiError('AI_FAILED', 'The AI request was cancelled');
     const hasImages = req.images.length > 0;
-    await guardPreCall(req, hasImages);
+    const deviceUsable = await guardPreCall(req, hasImages);
 
     const started = d.clock.now();
     try {
@@ -173,7 +175,9 @@ export function createRunner(d: RunnerDeps) {
         promptVersion: req.promptVersion,
         hasImages,
       });
-      const timeoutMs = req.mode === 'ONLY_ON_DEVICE' ? ON_DEVICE_TIMEOUT_MS : CLOUD_TIMEOUT_MS;
+      // PREFER_ON_DEVICE may be answered by the device, so it waits as long as the device needs when the device is usable.
+      const onDevice = req.mode === 'ONLY_ON_DEVICE' || (req.mode === 'PREFER_ON_DEVICE' && deviceUsable);
+      const timeoutMs = onDevice ? d.config.get().on_device_timeout_s * 1000 : CLOUD_TIMEOUT_MS;
       const images = req.images.map((i) => ({ type: 'inlineData', inlineData: { mimeType: i.mime, data: i.base64 } }));
       let payloadBytes = 0;
       for (let attempt = 0; attempt < 2; attempt++) {

@@ -63,6 +63,23 @@ export const copy = {
       noCapture: 'No capture yet',
       replace: (vp: string) => `Replace ${vp} capture`,
     },
+    extract: {
+      /** Why a contract extraction stopped, on a project that is not the sample. */
+      failed: {
+        title: 'The model could not finish reading the design. Nothing was sent.',
+        detail: 'Your contract is unchanged. Try again.',
+      },
+      /** Why the sample shows its stored extraction (SPEC-DEMO-05). Only 'declined' may blame the person. */
+      precomputed: {
+        tail: 'These are the sample’s stored extraction results, labelled Pre-computed. The verified contract stays active until you choose below.',
+        declined: 'You declined the cloud, so nothing was sent.',
+        timeout: 'The model took too long to answer, so nothing was sent. Try again to give it more time.',
+        failed: 'The model could not finish reading the design, so nothing was sent.',
+        offline: 'You are offline and the on-device model is not ready, so nothing was sent.',
+        device: 'The on-device model is not available right now, so nothing was sent.',
+        'cloud-disabled': 'Cloud analysis is paused and the on-device model is not available, so nothing was sent.',
+      },
+    },
     consent: {
       extract: 'Reading the design needs a cloud model, because this device cannot do it.',
       run: 'Judging the visual items needs a cloud model, because this device cannot do it.',
@@ -184,6 +201,12 @@ export const stateCopy: Record<ErrorCode | NoticeReason, NoticeCopy> = {
   },
   AI_BLOCKED: { tone: 'danger', title: 'The model did not answer this request. Nothing was lost.' },
   AI_FAILED: { tone: 'danger', title: CLOUD_UNREACHABLE, action: 'Try again' },
+  AI_TIMEOUT: {
+    tone: 'danger',
+    title: 'The model took too long to answer. Nothing was lost.',
+    detail: 'A slower device can need a few minutes. Try again.',
+    action: 'Try again',
+  },
   CONSENT_REQUIRED: { tone: 'danger', title: 'Cloud use needs your permission first. Nothing was sent.' },
   CONTRACT_LOCKED: {
     tone: 'info',

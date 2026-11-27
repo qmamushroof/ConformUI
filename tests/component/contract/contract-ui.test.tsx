@@ -7,7 +7,7 @@ import {
 } from '@contract';
 import type { Contract, Project, Requirement } from '@kernel';
 import { EngineBadge } from '@settings';
-import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 afterEach(cleanup);
@@ -86,8 +86,8 @@ function mount(o: Partial<ContractScreenProps> = {}) {
     renderBadge: (r) => <EngineBadge engine={r.engine ?? 'measured'} origin={r.origin} />,
     ...o,
   };
-  render(<ContractScreen {...props} />);
-  return { props, svc };
+  const r = render(<ContractScreen {...props} />);
+  return { props, svc, rerender: (next: ContractScreenProps) => r.rerender(<ContractScreen {...next} />) };
 }
 
 describe('SPEC-CON-08: RequirementRow', () => {
@@ -357,6 +357,41 @@ describe('SPEC-UI-01, PRD-F-04.4: Extract and Export', () => {
     expect(screen.getByRole('button', { name: /Extract contract/ }).getAttribute('aria-busy')).toBe('true');
   });
 
+  it('PRD-F-04.4: the extracting view counts elapsed seconds and restarts for a new run', () => {
+    vi.useFakeTimers();
+    try {
+      const view = {
+        engine: 'on-device' as const,
+        viewportLabel: 'Desktop',
+        stages: [{ label: 'Reading the design', state: 'run' as const, detail: 'Running', percent: 50 }],
+      };
+      const { rerender, props } = mount({ extracting: view });
+      expect(screen.getByText(/0 s elapsed/)).toBeTruthy();
+      act(() => {
+        vi.advanceTimersByTime(5000);
+      });
+      expect(screen.getByText(/5 s elapsed/)).toBeTruthy();
+      act(() => {
+        vi.advanceTimersByTime(65_000);
+      });
+      expect(screen.getByText(/1 min 10 s elapsed/)).toBeTruthy();
+      rerender({ ...props, extracting: undefined });
+      expect(screen.queryByText(/elapsed/)).toBeNull();
+      rerender({ ...props, extracting: view });
+      expect(screen.getByText(/0 s elapsed/)).toBeTruthy();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('PRD-P-12: an extraction error has a Try again button', () => {
+    const { props } = mount({
+      extractError: { title: 'The model took too long.', code: 'AI_TIMEOUT' },
+    });
+    fireEvent.click(within(screen.getByRole('alert')).getByRole('button', { name: 'Try again' }));
+    expect(props.onExtract).toHaveBeenCalledTimes(1);
+  });
+
   it('PRD-P-12: an extraction error is an alert with its code', () => {
     mount({
       extractError: { title: 'Band 2 could not be read.', detail: 'Add requirements by hand.', code: 'AI_BAD_OUTPUT' },
@@ -410,6 +445,27 @@ describe('SPEC-DEMO-03: review draft and sample comparison', () => {
     expect(screen.getByText(/AI extracted 3 requirements, On-device\. Review them, then accept\./)).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: /Accept all/ }));
     await waitFor(() => expect(svc.accept).toHaveBeenCalledWith('ctr_ai', 'all'));
+  });
+
+  it('SPEC-DEMO-05: the pre-computed note is the one given (the real reason), with a Try again that extracts again', () => {
+    const { props } = mount({
+      pending: pending(),
+      pendingSource: 'precomputed',
+      pendingNote: 'The on-device model took too long, so nothing was sent.',
+    });
+    expect(screen.getByText('The on-device model took too long, so nothing was sent.')).toBeTruthy();
+    expect(screen.queryByText(/declined/i)).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Try again' }));
+    expect(props.onExtract).toHaveBeenCalledTimes(1);
+  });
+
+  it('SPEC-DEMO-05: a pre-computed draft with no note blames nobody; an AI draft has no Try again', () => {
+    mount({ pending: pending(), pendingSource: 'precomputed' });
+    expect(screen.queryByText(/declined/i)).toBeNull();
+    expect(screen.getByRole('button', { name: 'Try again' })).toBeTruthy();
+    cleanup();
+    mount({ pending: pending(), pendingSource: 'on-device' });
+    expect(screen.queryByRole('button', { name: 'Try again' })).toBeNull();
   });
 
   it('PRD-P-06: a pre-computed draft is labelled as such, not as AI', () => {

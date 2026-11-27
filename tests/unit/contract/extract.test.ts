@@ -457,6 +457,7 @@ describe('SPEC-CON-01 failures', () => {
     ['DEVICE_NO_IMAGE', 'device-unavailable'],
     ['QUOTA_EXCEEDED', 'ai-failed'],
     ['AI_FAILED', 'ai-failed'],
+    ['AI_TIMEOUT', 'ai-failed'],
     ['AI_BLOCKED', 'ai-failed'],
     ['APPCHECK_FAILED', 'ai-failed'],
     ['AI_NOT_ENABLED', 'ai-failed'],
@@ -473,6 +474,21 @@ describe('SPEC-CON-01 failures', () => {
       expect((kept?.requirements ?? []).every((r) => r.origin === 'rule')).toBe(true);
     });
   }
+
+  it('SPEC-CON-01: a blocked outcome carries the error code, so the screen can say why (timeout, failure, offline)', async () => {
+    for (const code of ['AI_TIMEOUT', 'AI_FAILED', 'OFFLINE'] as const) {
+      await seed({ height: 1000 });
+      fakeCfg.errors = { 'extract-contract': code };
+      expect(await extract()).toMatchObject({ kind: 'blocked', errorCode: code });
+    }
+  });
+
+  it('SPEC-CON-01: an AI_TIMEOUT is not retried and does not ask the next band', async () => {
+    await seed({ height: 2000 });
+    fakeCfg.errors = { 'extract-contract': 'AI_TIMEOUT' };
+    await extract();
+    expect(calls()).toHaveLength(1);
+  });
 
   it('SPEC-CON-01: a project without designs is an error, not an empty Contract', async () => {
     await store.put(project({ id: PID, designs: [], captures: [] }));

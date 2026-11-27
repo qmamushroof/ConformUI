@@ -3,6 +3,7 @@ import type {
   BlobStore,
   Clock,
   Contract,
+  ErrorCode,
   Ids,
   ImageCodec,
   MeasureClient,
@@ -29,4 +30,10 @@ export interface ContractDeps {
 export type ExtractOutcome =
   | { kind: 'done'; contract: Contract }
   | { kind: 'needs-consent'; plan: ModePlan; sends: SendList }
-  | { kind: 'blocked'; reason: NotCheckedReason; contract: Contract /*rule-based items only*/ };
+  | {
+      kind: 'blocked';
+      reason: NotCheckedReason;
+      /** The engine error behind `reason`, when there was one (a timeout and a failure are both `ai-failed`). */
+      errorCode?: ErrorCode;
+      contract: Contract /*rule-based items only*/;
+    };

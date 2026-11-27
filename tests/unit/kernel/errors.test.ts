@@ -33,6 +33,7 @@ const EXPECTED: Record<ErrorCode, boolean> = {
   AI_BAD_OUTPUT: true,
   AI_BLOCKED: false,
   AI_FAILED: true,
+  AI_TIMEOUT: true,
   CONSENT_REQUIRED: false,
   CONTRACT_LOCKED: false,
   STORAGE_FAILED: true,
@@ -40,9 +41,9 @@ const EXPECTED: Record<ErrorCode, boolean> = {
 };
 
 describe('SPEC-KERNEL-09: CuiError', () => {
-  it('SPEC-KERNEL-09: ERROR_CODES lists exactly the 21 SPEC codes', () => {
+  it('SPEC-KERNEL-09: ERROR_CODES lists exactly the 22 SPEC codes', () => {
     expect([...ERROR_CODES].sort()).toEqual(Object.keys(EXPECTED).sort());
-    expect(ERROR_CODES).toHaveLength(21);
+    expect(ERROR_CODES).toHaveLength(22);
   });
 
   for (const [code, retryable] of Object.entries(EXPECTED) as [ErrorCode, boolean][]) {

@@ -176,7 +176,8 @@ export function resolveMode(i: { setting: Settings['mode']; purpose: 'first-pass
 | `APPCHECK_FAILED` | HTTP 401/403 | yes |
 | `AI_NOT_ENABLED` | cloud mode + `api-not-enabled` (copy: "Enable Firebase AI Logic in the console") | no |
 | `AI_BAD_OUTPUT` | zod failed after 1 retry | yes |
-| `AI_BLOCKED` / `AI_FAILED` | safety block / other SDK, network, timeout | no / yes |
+| `AI_BLOCKED` / `AI_FAILED` | safety block / other SDK or network failure | no / yes |
+| `AI_TIMEOUT` | the request outlived its timeout (`SPEC-AI-08`); a failure of its own so screens can say "took too long" | yes |
 | `CONSENT_REQUIRED` | cloud-capable mode without matching token (defect guard) | no |
 | `CONTRACT_LOCKED` / `STORAGE_FAILED` | edit of locked Contract / IndexedDB | no / yes |
 | `STORAGE_UNAVAILABLE` | IndexedDB cannot be opened at start (`openStorage`, `SPEC-STORE-04`) | yes (Reload) |
@@ -192,6 +193,7 @@ export function resolveMode(i: { setting: Settings['mode']; purpose: 'first-pass
 | `prompt_version` | string | `1` | — | Selects `prompts/<task>.v<N>.md`; unknown → `1` |
 | `cloud_enabled` | boolean | `true` | — | Kill switch → `CLOUD_DISABLED` (PRD-R-07) |
 | `deep_daily_cap` | number | `10` | 0–100 | Per-device Deep Analysis cap (PRD-D-27) |
+| `on_device_timeout_s` | number | `180` | 30–600 | Seconds to wait for one on-device model call before `AI_TIMEOUT` (`SPEC-AI-08`); measured 46 s for one band on a Medium-class device |
 | `feature_ai_infer_responsive` | boolean | `false` | — | AI-proposed Inferred requirements (§4.7.4) (enable once the `infer-responsive` prompt ships; rule-based Inferred items always run, SPEC-CON-04) |
 | `size_tolerance_pct` | number | `8` | 2–30 | Size pass band |
 | `major_deviation_pct` | number | `25` | 10–80 | ≥ this → Major |

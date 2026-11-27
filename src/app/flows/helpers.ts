@@ -1,6 +1,6 @@
 import { CuiError, type ErrorCode, type NotCheckedReason, type Project } from '@kernel';
 import type { ProjectStep } from '@projects';
-import { stateCopy } from '../copy';
+import { copy, stateCopy } from '../copy';
 
 /** An error as the contract and run screens show it: the notice title and detail, and the code for support. */
 export interface ErrorView {
@@ -22,10 +22,11 @@ const REASON_CODE: Partial<Record<NotCheckedReason, ErrorCode>> = {
   'device-unavailable': 'DEVICE_UNAVAILABLE',
 };
 
-/** A blocked extraction as a notice (SPEC-CON-01 step 1). */
-export function blockedView(reason: NotCheckedReason): ErrorView {
-  const code = REASON_CODE[reason] ?? 'AI_FAILED';
-  const notice = stateCopy[code];
+/** A blocked extraction as a notice (SPEC-CON-01 step 1). `errorCode` is the engine error behind `ai-failed`, so a timeout says so. */
+export function blockedView(reason: NotCheckedReason, errorCode?: ErrorCode): ErrorView {
+  const code = errorCode === 'AI_TIMEOUT' ? 'AI_TIMEOUT' : (REASON_CODE[reason] ?? 'AI_FAILED');
+  // An extraction that failed ran on the device or was sent nowhere: the cloud-unreachable copy would be wrong.
+  const notice = code === 'AI_FAILED' ? copy.flows.extract.failed : stateCopy[code];
   return { title: notice.title, ...(notice.detail && { detail: notice.detail }), code };
 }
 

@@ -32,6 +32,8 @@ export interface ContractScreenProps {
   /** AI draft awaiting review: shown instead of the active one, which stays active (SPEC-CON-09, SPEC-DEMO-03). */
   pending?: Contract;
   pendingSource?: 'on-device' | 'cloud' | 'precomputed';
+  /** The sentence under a pre-computed draft's title: why the stored results are shown (`app` knows the reason). */
+  pendingNote?: string;
   comparison?: Comparison;
   /** Object URLs of the design images by viewport, resolved by `app`. */
   designSrc?: Partial<Record<ViewportId, string>>;
@@ -101,6 +103,16 @@ const EngineText: FC<{ engine: Engine }> = ({ engine }) => (
     {engine === 'cloud' ? 'Cloud' : 'On-device'}
   </span>
 );
+
+/** Seconds since it appeared: the extraction view mounts it per run, so it restarts at 0 for each. Not a live region (one update a second would be noise). */
+const Elapsed: FC = () => {
+  const [s, setS] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setS((n) => n + 1), 1000);
+    return () => clearInterval(id);
+  }, []);
+  return <span>{s < 60 ? `${s} s elapsed.` : `${Math.floor(s / 60)} min ${s % 60} s elapsed.`}</span>;
+};
 
 export const ContractScreen: FC<ContractScreenProps> = (props) => {
   const { project, service, extracting, extractError, comparison, designSrc = {} } = props;
@@ -238,7 +250,8 @@ export const ContractScreen: FC<ContractScreenProps> = (props) => {
       : `AI extracted ${plural(reqs.length, 'requirement', 'requirements')}, ${source === 'cloud' ? 'Cloud' : 'On-device'}. Review them, then accept.`;
   const reviewSub =
     source === 'precomputed'
-      ? 'You declined the cloud, so nothing was sent. These are the sample’s stored extraction results, labelled Pre-computed. The verified contract stays active until you choose below.'
+      ? (props.pendingNote ??
+        'These are the sample’s stored extraction results, labelled Pre-computed. The verified contract stays active until you choose below.')
       : source === 'cloud'
         ? 'The list you approved was sent to Google Gemini through Firebase for this project. The verified contract stays active until you choose below.'
         : 'Nothing was sent off this device. AI regions are suggestions, snapped to element bounds on the design image. The verified contract stays active until you choose below.';
@@ -358,6 +371,13 @@ export const ContractScreen: FC<ContractScreenProps> = (props) => {
                 {extractError.detail} {extractError.code ? <span className="mono">{extractError.code}</span> : null}
               </p>
             ) : null}
+            {hasDesign && !busy ? (
+              <div className="btn-row">
+                <button className="btn btn-ghost" type="button" onClick={props.onExtract}>
+                  Try again
+                </button>
+              </div>
+            ) : null}
           </div>
         </div>
       ) : null}
@@ -399,6 +419,11 @@ export const ContractScreen: FC<ContractScreenProps> = (props) => {
                 <Icon name="check" small />
                 Accept all
               </button>
+              {source === 'precomputed' && hasDesign && !busy ? (
+                <button className="btn btn-ghost" type="button" onClick={props.onExtract}>
+                  Try again
+                </button>
+              ) : null}
             </div>
           </div>
           {comparison ? (
@@ -474,6 +499,10 @@ export const ContractScreen: FC<ContractScreenProps> = (props) => {
                     ? 'Sent to Google Gemini through Firebase for this project.'
                     : 'Nothing is sent off this device.'}
                 </span>
+              </p>
+              <p className="small muted">
+                <Elapsed />
+                {extracting.engine === 'cloud' ? '' : ' On-device can take a few minutes on some devices.'}
               </p>
               <div>
                 <button className="btn btn-ghost" type="button" onClick={props.onStopExtract}>
