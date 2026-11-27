@@ -15,9 +15,20 @@ import {
 const CHECK = 'M5 12.5l4.5 4.5L19 7.5';
 const CLOSE = 'M6 6l12 12M18 6L6 18';
 
+/** The sprite's three-dot "more" icon (circles, not a path). */
+export const MORE_DOTS = 'more';
+
 export const Glyph: FC<{ d: string; small?: boolean }> = ({ d, small }) => (
   <svg className={small ? 'i i-sm' : 'i'} aria-hidden="true" viewBox="0 0 24 24">
-    <path d={d} />
+    {d === MORE_DOTS ? (
+      <>
+        <circle cx="5" cy="12" r="1.2" />
+        <circle cx="12" cy="12" r="1.2" />
+        <circle cx="19" cy="12" r="1.2" />
+      </>
+    ) : (
+      <path d={d} />
+    )}
   </svg>
 );
 

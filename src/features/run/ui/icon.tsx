@@ -8,10 +8,10 @@ const PATHS = {
   file: 'M6 3h8l4 4v14H6zM14 3v4h4',
   check: 'M5 12.5l4.5 4.5L19 7.5',
   dash: 'M7 12h10',
-  review: 'M9.8 9.6a2.3 2.3 0 1 1 3.4 2c-.8.4-1.2.9-1.2 1.8M12 16.2v.4M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z',
+  review: 'M9.8 9.6a2.3 2.3 0 1 1 3.4 2c-.8.4-1.2.9-1.2 1.8M12 16.2v.4',
   plus: 'M12 5v14M5 12h14',
   play: 'M7 4l13 8-13 8z',
-  more: 'M5 12h.01M12 12h.01M19 12h.01',
+  more: '',
   download: 'M12 4v11M7 10l5 5 5-5M4 20h16',
   copy: 'M8 8h12v12H8zM16 8V4H4v12h4',
   chev: 'M9 6l6 6-6 6',
@@ -29,6 +29,21 @@ const PATHS = {
   minor: 'M20 12a8 8 0 1 1-16 0 8 8 0 0 1 16 0z',
 } as const;
 
+// Sprite shapes that are not plain paths: the dashed review ring, the three "more" dots and the image sun.
+const Shapes: FC<{ name: string }> = ({ name }) => {
+  if (name === 'review') return <circle cx="12" cy="12" r="9" strokeDasharray="3 2.6" />;
+  if (name === 'more')
+    return (
+      <>
+        <circle cx="5" cy="12" r="1.2" />
+        <circle cx="12" cy="12" r="1.2" />
+        <circle cx="19" cy="12" r="1.2" />
+      </>
+    );
+  if (name === 'image') return <circle cx="15.5" cy="8.5" r="1.5" />;
+  return null;
+};
+
 export type IconName = keyof typeof PATHS | 'layers';
 
 const FILLED = new Set<IconName>(['critical', 'major']);
@@ -39,6 +54,7 @@ export const Icon: FC<{ name: IconName; small?: boolean; className?: string }> =
     aria-hidden="true"
     viewBox="0 0 24 24"
   >
+    <Shapes name={name} />
     {name === 'layers' ? (
       <>
         <rect x="3" y="3" width="12" height="12" />

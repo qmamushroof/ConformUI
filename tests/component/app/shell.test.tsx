@@ -111,6 +111,7 @@ describe('routes', () => {
     await mount({ path: '/nope', screens });
     expect(await screen.findByRole('heading', { level: 1, name: "This page doesn't exist." })).toBeTruthy();
     expect(screen.getByRole('banner')).toBeTruthy();
+    expect(screen.getByText(/Nothing is stored at/).textContent).toContain('/nope');
     expect(document.title).toBe('Not found · ConformUI');
     fireEvent.click(screen.getByRole('button', { name: 'Back to Projects' }));
     expect(await screen.findByRole('heading', { level: 1, name: 'Projects screen' })).toBeTruthy();
