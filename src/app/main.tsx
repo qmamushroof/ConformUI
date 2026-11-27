@@ -7,6 +7,14 @@ import { appEnv } from './env';
 import { registerServiceWorker } from './pwa-register';
 import './styles/index.css';
 
+// Settings stores the chosen theme under `cui-theme`; apply it before first paint (SPEC-UI-04).
+try {
+  const t = localStorage.getItem('cui-theme');
+  if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+} catch {
+  // Storage blocked: follow the system theme.
+}
+
 const result = appEnv();
 // SPEC-APP-06: development fails loudly; production shows "Configuration error" and keeps the sample usable.
 if (!result.ok && import.meta.env.DEV) throw new Error(`Invalid environment: ${result.issues.join(', ')}`);

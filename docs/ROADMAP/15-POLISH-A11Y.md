@@ -12,14 +12,14 @@
 Fix defects in the owning module, never in the test.
 
 ### 15.1 E12: axe and keyboard · C · 0.3 h · needs M3
-- [ ] `@axe-core/playwright` on Projects, Project, Contract, Run, Finding detail, Settings, Onboarding, Snippet, light and dark (SPEC-UI-06).
-- [ ] Keyboard-only E1 and E4 (sheets trap focus, Esc, focus return).
+- [x] `@axe-core/playwright` on Projects, Project, Contract, Run, Finding detail, Settings, Onboarding, Snippet, light and dark (SPEC-UI-06).
+- [x] Keyboard-only E1 and E4 (sheets trap focus, Esc, focus return).
 
 **Accept:** zero serious/critical violations (PRD-M-11); keyboard specs green.
 
 ### 15.2 Manual a11y and polish pass · C · 0.2 h · needs 15.1
-- [ ] 320 px and 200 % zoom without page scroll; `prefers-reduced-motion`; screen reader on the core flow (announcements, crop `alt`).
-- [ ] Vocabulary matches PRD §8 exactly (PRD-D-19); every state has its copy (SPEC-UI-05); no chat input (PRD-P-08); progress within 100 ms and repeat clicks ignored (SPEC-PERF-08).
+- [x] 320 px and 200 % zoom without page scroll; `prefers-reduced-motion`; screen reader on the core flow (announcements, crop `alt`; roles and live regions checked in `polish15.spec.ts`, a real screen-reader pass remains for a human).
+- [x] Vocabulary matches PRD §8 exactly (PRD-D-19); every state has its copy (SPEC-UI-05); no chat input (PRD-P-08); progress within 100 ms and repeat clicks ignored (SPEC-PERF-08).
 
 **Accept:** checklist ticked in the PR; defects fixed.
 

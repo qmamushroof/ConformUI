@@ -139,6 +139,12 @@ export const RunScreen: FC<RunScreenProps> = (p) => {
   const [sheet, setSheet] = useState<'prompt' | 'export' | null>(null);
   const menuBtn = useRef<HTMLButtonElement>(null);
   const menuWrap = useRef<HTMLDivElement>(null);
+  // The sheets open from a menu item that hides on click, so focus returns to the menu button on close (SPEC-UI-06).
+  const sheetWas = useRef(false);
+  useEffect(() => {
+    if (sheet === null && sheetWas.current) menuBtn.current?.focus();
+    sheetWas.current = sheet !== null;
+  }, [sheet]);
 
   useEffect(() => {
     if (p.selectedId) setSel(p.selectedId);
