@@ -18,7 +18,7 @@ function appVersion(): string {
 // `--mode e2e` builds with the FakeAiEngine seam enabled (SPEC-TEST-01). Production builds define it empty so the
 // branch is dead-code-eliminated (SPEC-TEST-02).
 export default defineConfig(({ mode }) => ({
-  resolve: { alias: moduleAliases() },
+  resolve: { alias: moduleAliases(), dedupe: ['react', 'react-dom'] },
   define: {
     'import.meta.env.VITE_APP_VERSION': JSON.stringify(appVersion()),
     'import.meta.env.VITE_E2E': JSON.stringify(mode === 'e2e' ? '1' : ''),
@@ -27,8 +27,13 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         // zod and its jitless config share one chunk so the config runs before any kernel schema is built (CSP: no eval probe).
-        manualChunks: (id: string) =>
-          id.includes('/node_modules/zod/') || id.endsWith('/src/app/zod-jitless.ts') ? 'zod' : undefined,
+        // React, react-dom and scheduler share one chunk: otherwise the bundler may wrap the CJS React core into two chunks
+        // and react-dom and the components end up on different copies ("Cannot read properties of null (reading 'useState')").
+        manualChunks: (id: string) => {
+          if (id.includes('/node_modules/zod/') || id.endsWith('/src/app/zod-jitless.ts')) return 'zod';
+          if (/\/node_modules\/(react|react-dom|scheduler)\//.test(id)) return 'react';
+          return undefined;
+        },
       },
     },
   },

@@ -30,6 +30,22 @@ for (const file of walk(dist)) {
   if (TOKEN_ASSIGN.test(text)) hits.push(`${relative(dist, file)}: ${TOKEN_LABEL}`);
 }
 
+// One React copy: its core (marked by `isReactComponent={}`) must live in exactly one chunk, and react-dom must import it.
+const REACT_CORE = 'isReactComponent={}';
+const assets = join(dist, 'assets');
+if (existsSync(assets)) {
+  const js = readdirSync(assets).filter((f) => f.endsWith('.js'));
+  const owners = js.filter((f) => readFileSync(join(assets, f), 'latin1').includes(REACT_CORE));
+  if (owners.length > 1) hits.push(`React core defined in ${owners.length} chunks (${owners.join(', ')}), expected 1`);
+  else if (owners.length === 1) {
+    const dom = js.filter((f) => readFileSync(join(assets, f), 'latin1').includes('currentDispatcherRef'));
+    for (const f of dom) {
+      if (f !== owners[0] && !readFileSync(join(assets, f), 'latin1').includes(owners[0]))
+        hits.push(`${f}: react-dom does not import the React core chunk ${owners[0]}`);
+    }
+  }
+}
+
 if (hits.length) {
   console.error(`check-dist: forbidden content in production build:\n${hits.join('\n')}`);
   process.exit(1);
