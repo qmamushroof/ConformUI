@@ -4,11 +4,14 @@ import {
   type AiRequest,
   type ConsentToken,
   CuiError,
+  contextRect,
   type EngineStatus,
   guardNumbers,
+  type ImageRef,
   type JudgeOutput,
   JudgeOutputSchema,
   type NotCheckedReason,
+  type PairLayout,
   type PrecomputedJudged,
   type Rect,
   type Requirement,
@@ -110,11 +113,20 @@ const roundRect = (r: Rect): Rect => ({
   h: Math.round(r.h),
 });
 
+const boundsOf = (i: ImageRef | undefined) => (i ? { w: i.cssWidth, h: i.height } : undefined);
+
 interface Prepared {
   images: (AiImage & { label: string })[];
   user: string;
   allowed: number[];
   captureCrop: Rect;
+}
+
+function pairText(layout: PairLayout, letterbox: boolean): string {
+  if (!letterbox) return 'design on the left, implementation on the right';
+  const where =
+    layout === 'stack' ? 'design on top, implementation below' : 'design on the left, implementation on the right';
+  return `${where}, on a square canvas; grey bars are padding, not part of either page`;
 }
 
 /** Fixed or flawed: the sample captures carry their set in the page URL (SPEC-DEMO-02, SPEC-DEMO-04). */
@@ -165,6 +177,10 @@ export async function judgeStage(
       ? roundRect(scaleRect(designRect, scale))
       : { x: 0, y: 0, w: v.captureImage.cssWidth, h: Math.min(v.captureImage.height, 900) };
     const images: Prepared['images'] = [];
+    // On-device only: the model sees a square canvas (Chrome would stretch anything else) with context around the region.
+    const letterbox = !textOnly && maxSide === ON_DEVICE_MAX_SIDE;
+    let layout: PairLayout = 'side';
+    let shown: { design?: Rect; implementation: Rect } = { implementation: captureCrop };
 
     if (!textOnly) {
       const [dBlob, cBlob] = await Promise.all([v.designBlob(), v.captureBlob()]);
@@ -175,7 +191,13 @@ export async function judgeStage(
           const located = await v.m.locateOnCapture(dPx, designRect, cPx, v.t);
           if (located.score >= 0.5) captureCrop = roundRect(located.rect);
         }
-        const pair = await d.codec.composePair(dBlob, designRect, cBlob, captureCrop, maxSide);
+        const db = boundsOf(v.designImage);
+        const cb = boundsOf(v.captureImage);
+        const shownDesign = letterbox && db ? contextRect(designRect, db) : designRect;
+        const shownCapture = letterbox && cb ? contextRect(captureCrop, cb) : captureCrop;
+        shown = { design: shownDesign, implementation: shownCapture };
+        const pair = await d.codec.composePair(dBlob, shownDesign, cBlob, shownCapture, maxSide, { letterbox });
+        layout = pair.layout ?? 'side';
         images.push({
           label: `${req.id} ${req.viewport}, design and implementation side by side`,
           mime: pair.mime,
@@ -184,7 +206,10 @@ export async function judgeStage(
           role: 'pair',
         });
       } else {
-        const crop = await d.codec.crop(cBlob, captureCrop, maxSide, 'image/jpeg');
+        const cb = boundsOf(v.captureImage);
+        const shownCapture = letterbox && cb ? contextRect(captureCrop, cb) : captureCrop;
+        shown = { implementation: shownCapture };
+        const crop = await d.codec.crop(cBlob, shownCapture, maxSide, 'image/jpeg', { letterbox });
         images.push({
           label: `${req.id} ${req.viewport}, implementation`,
           mime: crop.mime,
@@ -208,12 +233,16 @@ export async function judgeStage(
       },
       viewportWidth: v.captureImage.cssWidth,
       regions: { design: designRect, implementation: captureCrop },
+      ...(letterbox &&
+        images.length > 0 && { shownRegions: { design: shown.design, implementation: shown.implementation } }),
       measurements: need.facts.measurements,
       image: textOnly
         ? 'none'
         : images[0]?.role === 'pair'
-          ? 'design on the left, implementation on the right'
-          : 'implementation only',
+          ? pairText(layout, letterbox)
+          : letterbox
+            ? 'implementation only, on a square canvas with grey padding'
+            : 'implementation only',
       ...(facts && { pageFacts: facts }),
     };
     const user = [

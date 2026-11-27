@@ -3,9 +3,13 @@ import {
   type AiImage,
   CuiError,
   type ImageCodec,
+  LETTERBOX_PAD_COLOUR,
   MAX_CSS_HEIGHT,
   MAX_INPUT_BYTES,
   MAX_SOURCE_SIDE,
+  type PairLayout,
+  planLetterbox,
+  planPairLayout,
   type Rect,
 } from '@kernel';
 
@@ -54,9 +58,9 @@ function context(w: number, h: number): { canvas: OffscreenCanvas; ctx: Offscree
   return { canvas, ctx };
 }
 
-function paintWhite(ctx: OffscreenCanvasRenderingContext2D, w: number, h: number): void {
+function paintWhite(ctx: OffscreenCanvasRenderingContext2D, w: number, h: number, x = 0, y = 0): void {
   ctx.fillStyle = 'white';
-  ctx.fillRect(0, 0, w, h);
+  ctx.fillRect(x, y, w, h);
 }
 
 function encode(canvas: OffscreenCanvas, mime: 'image/jpeg' | 'image/png'): Promise<Blob> {
@@ -111,9 +115,18 @@ export function createImageCodec(): ImageCodec {
       });
     },
 
-    async crop(blob, r, maxSide, mime) {
+    async crop(blob, r, maxSide, mime, opts) {
       return withBitmap(blob, async (bm) => {
         const c = clampRect(r, bm);
+        if (opts?.letterbox) {
+          const lb = planLetterbox(c.w, c.h, maxSide);
+          const { canvas, ctx } = context(lb.side, lb.side);
+          ctx.fillStyle = LETTERBOX_PAD_COLOUR;
+          ctx.fillRect(0, 0, lb.side, lb.side);
+          ctx.drawImage(bm, c.x, c.y, c.w, c.h, lb.dx, lb.dy, lb.w, lb.h);
+          const out = await encode(canvas, mime);
+          return { mime, base64: await toBase64(out), bytes: out.size, role: 'design', blob: out, letterbox: lb };
+        }
         const s = scaleFor(Math.max(c.w, c.h), maxSide);
         const w = dim(c.w, s);
         const h = dim(c.h, s);
@@ -125,13 +138,39 @@ export function createImageCodec(): ImageCodec {
       });
     },
 
-    async composePair(design, dr, capture, cr, maxSide): Promise<AiImage> {
+    async composePair(design, dr, capture, cr, maxSide, opts): Promise<AiImage & { layout?: PairLayout }> {
       return withBitmap(design, (dbm) =>
         withBitmap(capture, async (cbm) => {
           const d = clampRect(dr, dbm);
           const c = clampRect(cr, cbm);
-          const totalW = d.w + PAIR_GAP + c.w;
-          const totalH = Math.max(d.h, c.h);
+          const layout: PairLayout = opts?.letterbox ? planPairLayout(d, c) : 'side';
+          const stacked = layout === 'stack';
+          const totalW = stacked ? Math.max(d.w, c.w) : d.w + PAIR_GAP + c.w;
+          const totalH = stacked ? d.h + PAIR_GAP + c.h : Math.max(d.h, c.h);
+          if (opts?.letterbox) {
+            const lb = planLetterbox(totalW, totalH, maxSide);
+            const s = lb.w / totalW;
+            const { canvas, ctx } = context(lb.side, lb.side);
+            ctx.fillStyle = LETTERBOX_PAD_COLOUR;
+            ctx.fillRect(0, 0, lb.side, lb.side);
+            paintWhite(ctx, lb.w, lb.h, lb.dx, lb.dy);
+            ctx.drawImage(dbm, d.x, d.y, d.w, d.h, lb.dx, lb.dy, dim(d.w, s), dim(d.h, s));
+            const cx = stacked ? 0 : (d.w + PAIR_GAP) * s;
+            const cy = stacked ? (d.h + PAIR_GAP) * s : 0;
+            ctx.drawImage(
+              cbm,
+              c.x,
+              c.y,
+              c.w,
+              c.h,
+              lb.dx + Math.round(cx),
+              lb.dy + Math.round(cy),
+              dim(c.w, s),
+              dim(c.h, s),
+            );
+            const out = await encode(canvas, 'image/jpeg');
+            return { mime: 'image/jpeg', base64: await toBase64(out), bytes: out.size, role: 'pair', layout };
+          }
           const s = scaleFor(Math.max(totalW, totalH), maxSide);
           const w = dim(totalW, s);
           const h = dim(totalH, s);
@@ -140,7 +179,7 @@ export function createImageCodec(): ImageCodec {
           ctx.drawImage(dbm, d.x, d.y, d.w, d.h, 0, 0, dim(d.w, s), dim(d.h, s));
           ctx.drawImage(cbm, c.x, c.y, c.w, c.h, Math.round((d.w + PAIR_GAP) * s), 0, dim(c.w, s), dim(c.h, s));
           const out = await encode(canvas, 'image/jpeg');
-          return { mime: 'image/jpeg', base64: await toBase64(out), bytes: out.size, role: 'pair' };
+          return { mime: 'image/jpeg', base64: await toBase64(out), bytes: out.size, role: 'pair', layout: 'side' };
         }),
       );
     },

@@ -5,7 +5,7 @@
       "statement": "Primary CTA is 220 px wide",
       "condition": "CTA width within 8% of 220 px",
       "checkKind": "size",
-      "box": [120, 640, 300, 700],
+      "box_2d": [640, 120, 700, 300],
       "matchHint": { "tag": "button", "text": "Start free" },
       "primary": true
     },
@@ -14,7 +14,7 @@
       "statement": "Hero heading reads Build faster",
       "condition": "Heading text equals Build faster",
       "checkKind": "text",
-      "box": [100, 200, 700, 320],
+      "box_2d": [200, 100, 320, 700],
       "matchHint": { "tag": "h1" },
       "expectedText": "Build faster"
     },
@@ -23,7 +23,7 @@
       "statement": "Navigation shows 3 links",
       "condition": "Three links inside the header navigation",
       "checkKind": "count",
-      "box": [600, 20, 960, 70],
+      "box_2d": [20, 600, 70, 960],
       "matchHint": { "role": "navigation" },
       "expectedCount": 3
     }

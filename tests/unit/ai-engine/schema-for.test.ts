@@ -55,7 +55,7 @@ describe('SPEC-AI-05: schemaFor round trip for all four tasks', () => {
   it('SPEC-AI-05: optional keys are not required (extract, deep)', () => {
     const req = cloudJson('extract-contract').properties.requirements.items;
     expect(req.required).toEqual(
-      expect.arrayContaining(['category', 'statement', 'condition', 'checkKind', 'box', 'matchHint']),
+      expect.arrayContaining(['category', 'statement', 'condition', 'checkKind', 'box_2d', 'matchHint']),
     );
     for (const k of ['expectedText', 'expectedCount', 'primary']) {
       expect(req.required).not.toContain(k);
@@ -78,12 +78,12 @@ describe('SPEC-AI-05: schemaFor round trip for all four tasks', () => {
   });
 
   it('SPEC-AI-05: the box tuple becomes a bounded array of four numbers in both targets', () => {
-    const box = cloudJson('extract-contract').properties.requirements.items.properties.box;
+    const box = cloudJson('extract-contract').properties.requirements.items.properties.box_2d;
     expect(box.type).toBe('array');
     expect(box.items.type).toBe('number');
     expect([box.minItems, box.maxItems]).toEqual([4, 4]);
     expect([box.items.minimum, box.items.maximum]).toEqual([0, 1000]);
-    const dbox = (schemaFor('extract-contract').device as J).properties.requirements.items.properties.box;
+    const dbox = (schemaFor('extract-contract').device as J).properties.requirements.items.properties.box_2d;
     expect(dbox.type).toBe('array');
     expect(Array.isArray(dbox.items)).toBe(false);
     expect([dbox.minItems, dbox.maxItems]).toEqual([4, 4]);
