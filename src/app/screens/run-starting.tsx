@@ -5,7 +5,7 @@ import type { CSSProperties, FC } from 'react';
  * about 300 ms after its fallback appears, so the fallback of `/p/:id/run/new` is this, not an empty page.
  */
 export const RunStarting: FC = () => (
-  <main id="main" tabIndex={-1} className="page" aria-busy="true">
+  <main id="main" tabIndex={-1} className="tool" aria-busy="true" style={{ paddingTop: 'var(--space-8)' }}>
     <section className="running" aria-label="Run progress">
       <div
         className="bar"

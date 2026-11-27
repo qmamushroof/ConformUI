@@ -207,12 +207,12 @@
   font-family: var(--font-mono);
   font-size: var(--font-size-xs);
 }
-.privacy {
+p.privacy {
   display: flex;
   align-items: center;
   gap: var(--space-2);
 }
-.privacy .ok {
+p.privacy .ok {
   color: var(--success);
 }
 .reads {

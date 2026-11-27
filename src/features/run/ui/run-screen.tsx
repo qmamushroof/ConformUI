@@ -238,7 +238,7 @@ export const RunScreen: FC<RunScreenProps> = (p) => {
   const notFound = !run && !p.progress && !p.error;
 
   return (
-    <main id="main" tabIndex={-1}>
+    <main id="main" tabIndex={-1} className="tool">
       <div className="runhead">
         <div className="stack-sm">
           <h1 id="run-title">{title}</h1>

@@ -17,10 +17,16 @@ const SIZES: [number, number][] = [
   [768, 1024],
   [1024, 768],
   [1280, 800],
+  [1366, 768],
   [1440, 900],
+  [1460, 900],
+  [1500, 900],
+  [1536, 864],
+  [1600, 900],
   [1920, 1080],
   [2560, 1440],
   [2880, 1800],
+  [3840, 2160],
   [5760, 3600],
 ];
 
@@ -85,6 +91,32 @@ async function problems(page: Page): Promise<string[]> {
       if (el.scrollWidth > el.clientWidth + 1 && el.clientWidth > 0)
         out.push(`text overflows box (${el.scrollWidth} > ${el.clientWidth}): ${name(el)}`);
     }
+    // A table header sits above its first body row and spans the table.
+    for (const t of Array.from(document.querySelectorAll('table'))) {
+      const th = t.querySelector('thead');
+      const tb = t.querySelector('tbody');
+      if (!th || !tb || !visible(th) || !visible(tb)) continue;
+      const a = th.getBoundingClientRect();
+      const b = tb.getBoundingClientRect();
+      const tr = t.getBoundingClientRect();
+      if (a.bottom > b.top + 1 || Math.abs(a.left - b.left) > 1 || a.width < tr.width - 2)
+        out.push(
+          `table header misplaced (head ${Math.round(a.left)},${Math.round(a.top)} w${Math.round(a.width)}; body ${Math.round(b.left)},${Math.round(b.top)}): ${name(t)}`,
+        );
+    }
+    // Every page uses the same rule: the main column is centred (equal margins) or fills the viewport.
+    {
+      const m = document.querySelector('main');
+      if (m && visible(m)) {
+        const r = m.getBoundingClientRect();
+        const cw = doc.clientWidth;
+        const left = r.left;
+        const right = cw - r.right;
+        const fills = left < 2 && right < 2;
+        if (!fills && Math.abs(left - right) > 4)
+          out.push(`main is not centred (left ${Math.round(left)}, right ${Math.round(right)} of ${cw})`);
+      }
+    }
     // Sheets fit and scroll.
     for (const d of Array.from(document.querySelectorAll('dialog[open], [role=dialog]'))) {
       if (!visible(d)) continue;
@@ -131,6 +163,11 @@ async function problems(page: Page): Promise<string[]> {
           hiEl = name(el);
         }
       }
+      const cw = doc.clientWidth;
+      const mr = document.querySelector('main')?.getBoundingClientRect();
+      const mainFills = !!mr && mr.left < 2 && cw - mr.right < 2;
+      if (mainFills && !document.querySelector('dialog[open]') && Math.abs(lo - (cw - hi)) > 120)
+        out.push(`content hugs one side (left ${Math.round(lo)}, right ${Math.round(cw - hi)})`);
       if (hi - lo > 1500) out.push(`content spans ${Math.round(hi - lo)}px on a ${W}px viewport (${loEl} .. ${hiEl})`);
     }
     return out;
@@ -149,6 +186,9 @@ async function sweep(page: Page, label: string, sizes = SIZES): Promise<void> {
 }
 
 const projectPath = (page: Page) => new URL(page.url()).pathname;
+
+// Real (non-overlay) scrollbars take 15 px of width, as on a desktop browser.
+test.use({ launchOptions: { ignoreDefaultArgs: ['--hide-scrollbars'] } });
 
 test.describe('responsive', () => {
   test.setTimeout(240_000);
