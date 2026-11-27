@@ -318,6 +318,28 @@ describe('SPEC-AI-06 zod validation and one retry', () => {
   });
 });
 
+describe('opt-in debug log of the raw model text (cui.debug.ai)', () => {
+  const stubStorage = (v: string | null) =>
+    vi.stubGlobal('localStorage', { getItem: (k: string) => (k === 'cui.debug.ai' ? v : null) });
+  afterEach(() => vi.unstubAllGlobals());
+
+  it('logs nothing by default', async () => {
+    const info = vi.spyOn(console, 'info').mockImplementation(() => undefined);
+    stubStorage(null);
+    await runner().run(req());
+    expect(info).not.toHaveBeenCalled();
+    info.mockRestore();
+  });
+
+  it('logs the raw response text with the prefix when switched on', async () => {
+    const info = vi.spyOn(console, 'info').mockImplementation(() => undefined);
+    stubStorage('1');
+    await runner().run(req());
+    expect(info).toHaveBeenCalledWith('[ConformUI AI]', expect.stringContaining('raw response'), JSON.stringify(GOOD));
+    info.mockRestore();
+  });
+});
+
 describe('SPEC-AI-08 timeouts and abort', () => {
   const never = () => new Promise(() => {});
 

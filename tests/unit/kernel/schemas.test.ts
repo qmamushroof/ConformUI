@@ -383,8 +383,12 @@ describe('SPEC-KERNEL-03, SPEC-AI-05: the four AI task outputs', () => {
     const eight = Array.from({ length: 8 }, extractReq);
     expect(ExtractOutputSchema.safeParse({ requirements: eight }).success).toBe(true);
     expect(ExtractOutputSchema.safeParse({ requirements: [...eight, extractReq()] }).success).toBe(false);
+    // a model may answer in canvas pixels; readBox decides what to do with them, so the schema lets them through
     expect(
       ExtractOutputSchema.safeParse({ requirements: [{ ...extractReq(), box_2d: [0, 0, 1001, 10] }] }).success,
+    ).toBe(true);
+    expect(
+      ExtractOutputSchema.safeParse({ requirements: [{ ...extractReq(), box_2d: [0, 0, 5000, 10] }] }).success,
     ).toBe(false);
     expect(
       ExtractOutputSchema.safeParse({ requirements: [{ ...extractReq(), box_2d: [-1, 0, 10, 10] }] }).success,

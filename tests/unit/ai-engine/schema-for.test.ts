@@ -82,7 +82,7 @@ describe('SPEC-AI-05: schemaFor round trip for all four tasks', () => {
     expect(box.type).toBe('array');
     expect(box.items.type).toBe('number');
     expect([box.minItems, box.maxItems]).toEqual([4, 4]);
-    expect([box.items.minimum, box.items.maximum]).toEqual([0, 1000]);
+    expect([box.items.minimum, box.items.maximum]).toEqual([0, 4096]);
     const dbox = (schemaFor('extract-contract').device as J).properties.requirements.items.properties.box_2d;
     expect(dbox.type).toBe('array');
     expect(Array.isArray(dbox.items)).toBe(false);

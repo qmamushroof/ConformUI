@@ -1,4 +1,4 @@
-import { iou, type Rect, type Requirement } from '@kernel';
+import { aiDebug, iou, type Rect, type Requirement } from '@kernel';
 
 const MIN_IOU = 0.5;
 
@@ -44,6 +44,24 @@ export function compareWithVerified(
   return { matched, missing, extra };
 }
 
+/**
+ * Diagnostic only, never used to decide a match: how many verified items have some AI item overlapping at IoU >= 0.5 in
+ * the same viewport whatever the category, so a person can tell a box problem from a category mismatch.
+ */
+export function overlapIgnoringCategory(ai: Requirement[], verified: Requirement[]): { verifiedWithOverlap: string[] } {
+  const hit = verified.filter((v) => {
+    const vr = rectOf(v);
+    return (
+      vr &&
+      ai.some((a) => {
+        const ar = rectOf(a);
+        return ar && a.viewport === v.viewport && iou(ar, vr) >= MIN_IOU;
+      })
+    );
+  });
+  return { verifiedWithOverlap: hit.map((v) => v.id) };
+}
+
 export interface ComparedItem {
   id: string;
   statement: string;
@@ -58,6 +76,13 @@ export function describeComparison(
   verified: Requirement[],
 ): { matched: string[]; missing: ComparedItem[]; extra: ComparedItem[] } {
   const c = compareWithVerified(ai, verified);
+  aiDebug('compare with verified contract', {
+    matched: c.matched.length,
+    missing: c.missing.length,
+    extra: c.extra.length,
+    verifiedWithAnyCategoryOverlap: overlapIgnoringCategory(ai, verified).verifiedWithOverlap,
+    note: 'IoU >= 0.5, same viewport, any category; the match rule itself also needs the same category',
+  });
   const item = (list: Requirement[]) => (id: string) => ({
     id,
     statement: list.find((r) => r.id === id)?.statement ?? '',

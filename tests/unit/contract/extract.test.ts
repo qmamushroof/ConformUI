@@ -18,7 +18,7 @@ import {
   type Settings,
   type TraceStep,
 } from '@kernel';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createFakeAiEngine, type FakeAiConfig, type FakeAiEngine } from '../../../src/app/testing/fake-ai-engine';
 import { type ContractService, createContractService, type ExtractOutcome } from '../../../src/features/contract';
 import { fixedClock, sequentialIds } from '../../helpers/clock-ids';
@@ -249,7 +249,7 @@ describe('SPEC-AI-11 letterbox (on-device only)', () => {
     expect(rect?.h).toBeCloseTo(target.h, 0);
   });
 
-  it('a box inside the padding stays inside the design', async () => {
+  it('a box inside the padding is read against the picture alone, and stays inside the design', async () => {
     fakeLetterbox = true;
     await seed({ height: 1000 });
     fakeCfg.outputs = {
@@ -263,6 +263,35 @@ describe('SPEC-AI-11 letterbox (on-device only)', () => {
     const rect = reg && 'suggested' in reg ? reg.suggested : undefined;
     expect(rect?.y).toBeGreaterThanOrEqual(864);
     expect((rect?.y ?? 0) + (rect?.h ?? 0)).toBeLessThanOrEqual(1000);
+  });
+});
+
+describe('opt-in debug log of extraction (cui.debug.ai)', () => {
+  const stubStorage = (v: string | null) =>
+    vi.stubGlobal('localStorage', { getItem: (k: string) => (k === 'cui.debug.ai' ? v : null) });
+  afterEach(() => vi.unstubAllGlobals());
+
+  it('is silent by default', async () => {
+    const info = vi.spyOn(console, 'info').mockImplementation(() => undefined);
+    stubStorage(null);
+    await seed({ height: 500 });
+    await extract();
+    expect(info).not.toHaveBeenCalled();
+    info.mockRestore();
+  });
+
+  it('logs the image sent and every mapped box in design px when on', async () => {
+    const info = vi.spyOn(console, 'info').mockImplementation(() => undefined);
+    stubStorage('1');
+    fakeLetterbox = true;
+    await seed({ height: 500 });
+    await extract();
+    const lines = info.mock.calls.filter((c) => c[0] === '[ConformUI AI]').map((c) => String(c[1]));
+    expect(lines).toContain('extract image sent');
+    expect(lines.filter((l) => l === 'extract box')).toHaveLength(3);
+    const box = info.mock.calls.find((c) => c[1] === 'extract box')?.[2] as Record<string, unknown>;
+    expect(box).toMatchObject({ raw: expect.any(Array), suggestedDesignPx: expect.any(Object) });
+    info.mockRestore();
   });
 });
 
@@ -416,12 +445,67 @@ describe('SPEC-CON-01 mapping', () => {
     measureRects = () => ({ unresolved: true });
     const c = done(await extract());
     expect(explicit(c)).toHaveLength(2);
-    for (const r of explicit(c)) {
-      const reg = r.region;
-      const rect = reg && 'rect' in reg ? reg.rect : reg && 'suggested' in reg ? reg.suggested : undefined;
-      expect(rect?.w).toBeGreaterThan(0);
-      expect(rect?.h).toBeGreaterThan(0);
-    }
+    const [swapped, collapsed] = explicit(c);
+    const reg = swapped?.region;
+    const rect = reg && 'rect' in reg ? reg.rect : reg && 'suggested' in reg ? reg.suggested : undefined;
+    expect(rect?.w).toBeGreaterThan(0);
+    expect(rect?.h).toBeGreaterThan(0);
+    // a collapsed box is not believed: the item stays, without a region pinned to an edge
+    expect(collapsed?.region).toBeUndefined();
+  });
+
+  it('a degenerate or unreadable box never becomes a region at the top edge', async () => {
+    await seed({ height: 500 });
+    fakeCfg.outputs = {
+      'extract-contract': {
+        requirements: [
+          { ...valid.requirements[0], box_2d: [0, 0, 0, 0] },
+          { ...valid.requirements[1], box_2d: [0, 0, 0.001, 1000] },
+          { ...valid.requirements[2], box_2d: [0, 0, 3000, 3000] },
+        ],
+      },
+    };
+    const c = done(await extract());
+    expect(explicit(c)).toHaveLength(3);
+    for (const r of explicit(c)) expect(r.region).toBeUndefined();
+  });
+
+  it('a box in 0..1 fractions is read as fractions, not as a speck at the top-left corner', async () => {
+    await seed({ height: 500 });
+    fakeCfg.outputs = {
+      'extract-contract': { requirements: [{ ...valid.requirements[0], box_2d: [0.2, 0.1, 0.3, 0.5] }] },
+    };
+    measureRects = () => ({ unresolved: true });
+    const c = done(await extract());
+    const reg = c.requirements[0]?.region;
+    const rect = reg && 'suggested' in reg ? reg.suggested : undefined;
+    expect(rect?.x).toBeCloseTo(144, 0);
+    expect(rect?.y).toBeCloseTo(100, 0);
+    expect(rect?.w).toBeCloseTo(576, 0);
+    expect(rect?.h).toBeCloseTo(50, 0);
+  });
+
+  it('pixel boxes (values above 1000) on the on-device canvas are read as canvas pixels', async () => {
+    fakeLetterbox = true;
+    await seed({ height: 1000 });
+    const band = { x: 0, y: 0, w: 1440, h: 864 };
+    const lb = planLetterbox(band.w, band.h, 1024);
+    const target = { x: 100, y: 300, w: 1330, h: 60 };
+    const norm = rectToNormalised(target, band, lb);
+    const px = norm.map((v) => Math.round((v / 1000) * lb.side)) as [number, number, number, number];
+    expect(Math.max(...px)).toBeGreaterThan(1000);
+    fakeCfg.outputs = {
+      'extract-contract': {
+        sequence: [{ requirements: [{ ...valid.requirements[0], box_2d: px }] }, { requirements: [] }],
+      },
+    };
+    measureRects = () => ({ unresolved: true });
+    const c = done(await extract());
+    const reg = c.requirements[0]?.region;
+    const rect = reg && 'suggested' in reg ? reg.suggested : undefined;
+    expect(rect?.x).toBeCloseTo(target.x, -1);
+    expect(rect?.y).toBeCloseTo(target.y, -1);
+    expect(rect?.w).toBeCloseTo(target.w, -1);
   });
 
   it('SPEC-CON-01: dedupe keeps the first of same-category boxes with IoU >= 0.6, keeps other categories', async () => {

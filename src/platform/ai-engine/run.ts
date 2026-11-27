@@ -1,6 +1,6 @@
 import type { FirebaseApp } from '@fb';
 import type { AiRequest, AiResponse, Clock, EngineStatus, RuntimeConfig } from '@kernel';
-import { CuiError } from '@kernel';
+import { aiDebug, CuiError } from '@kernel';
 import { AIError } from 'firebase/ai';
 import { bytesSentFor, createModelFactory, engineFromSource, ON_DEVICE_MODEL_NAME } from './model-factory';
 import { outputSchemaFor } from './schema-for';
@@ -151,6 +151,7 @@ export function createRunner(d: RunnerDeps) {
     } catch (e) {
       throw new CuiError('AI_BLOCKED', undefined, { cause: e });
     }
+    aiDebug(`raw response text (${task})`, text);
     let parsed: unknown;
     try {
       parsed = JSON.parse(text);
