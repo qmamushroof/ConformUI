@@ -153,3 +153,16 @@ test('PRD-F-11, SPEC-SET-07: Cancel in Clear all data deletes nothing', async ({
   await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Projects' }).click();
   await expect(page.getByRole('heading', { level: 2, name: 'Stays put' })).toBeVisible();
 });
+
+test('SPEC-SET-11: About shows the package version with the short commit and a Source link to the repository', async ({
+  page,
+  fake,
+}) => {
+  await fake({ status: 'available+image' });
+  await page.goto('/settings');
+  const about = page.locator('#about');
+  await expect(about.getByText(/^1\.0\.1( \([0-9a-f]{7,}\))?$/)).toBeVisible();
+  const source = about.getByRole('link', { name: 'https://github.com/qmamushroof/ConformUI' });
+  await expect(source).toHaveAttribute('href', 'https://github.com/qmamushroof/ConformUI');
+  await expect(about).not.toContainText('added at release');
+});

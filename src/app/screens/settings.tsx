@@ -8,10 +8,12 @@ const localDay = (ms: number): string => new Date(ms).toLocaleDateString('en-CA'
 
 export interface SettingsRouteProps {
   appVersion: string;
+  appCommit?: string | undefined;
+  repoUrl?: string | undefined;
 }
 
 /** `/settings` (SPEC-SET-*): the Settings screen over the settings service and the Project store. */
-const SettingsRoute: FC<SettingsRouteProps> = ({ appVersion }) => {
+const SettingsRoute: FC<SettingsRouteProps> = ({ appVersion, appCommit, repoUrl }) => {
   const { settings: service, store, projects, settingsStore, config, clock } = useServices();
   const navigate = useNavigate();
   // The header's engine pill reads the mode and the device status: tell it when either changes here.
@@ -59,7 +61,12 @@ const SettingsRoute: FC<SettingsRouteProps> = ({ appVersion }) => {
         navigate('/welcome', { replace: true });
       }}
       deepUsage={deepUsage}
-      about={{ version: appVersion, licence: 'Apache-2.0' }}
+      about={{
+        version: appVersion,
+        licence: 'Apache-2.0',
+        ...(appCommit ? { commit: appCommit } : {}),
+        ...(repoUrl ? { source: repoUrl } : {}),
+      }}
     />
   );
 };

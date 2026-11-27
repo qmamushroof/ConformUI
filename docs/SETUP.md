@@ -31,7 +31,7 @@ Paths below use `~` for your home directory and `%LOCALAPPDATA%` for the Windows
    | `VITE_RECAPTCHA_ENTERPRISE_KEY` | The reCAPTCHA Enterprise key id (B3): Google Cloud console > Security > Fraud Defense (reCAPTCHA) > Key management |
    | `VITE_APPCHECK_DEBUG` | `1` on a dev machine (SPEC-FB-04) |
    | `VITE_APPCHECK_DEBUG_TOKEN` | Generated in the console (B4) |
-   | `VITE_E2E`, `VITE_APP_VERSION` | Leave blank. Set automatically by `--mode e2e` and by the build (git sha) |
+   | `VITE_E2E`, `VITE_APP_VERSION`, `VITE_APP_COMMIT`, `VITE_REPO_URL` | Leave blank. Set automatically by `--mode e2e` and by the build (package version, git commit, repository URL) |
 
    Preferred: one debug token per machine, revoked when you retire that machine (reusing the same token also works). Verify: `npm run dev` passes env validation and shows no error screen.
 7. **Firebase CLI.** Run `npx firebase login`. Answer `n` to the optional Gemini-in-Firebase and usage-collection prompts. With no browser on the machine use `npx firebase login --no-localhost`. Verify: `npx firebase projects:list` shows `conformui` (the `.firebaserc` default).

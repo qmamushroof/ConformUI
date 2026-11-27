@@ -57,3 +57,23 @@ describe('parseEnv', () => {
     expect(parseEnv({ VITE_E2E: '1' }).env.appVersion).toBe('dev');
   });
 });
+
+describe('parseEnv about fields', () => {
+  it('reads the semantic version, the short commit and the repository URL', () => {
+    const r = parseEnv({
+      ...FULL,
+      VITE_APP_VERSION: '1.0.1',
+      VITE_APP_COMMIT: 'e2b6a69',
+      VITE_REPO_URL: 'https://github.com/qmamushroof/ConformUI',
+    });
+    expect(r.env.appVersion).toBe('1.0.1');
+    expect(r.env.appCommit).toBe('e2b6a69');
+    expect(r.env.repoUrl).toBe('https://github.com/qmamushroof/ConformUI');
+  });
+
+  it('leaves commit and repository URL out when unset or empty', () => {
+    const r = parseEnv({ ...FULL, VITE_APP_COMMIT: '', VITE_REPO_URL: '' });
+    expect(r.env.appCommit).toBeUndefined();
+    expect(r.env.repoUrl).toBeUndefined();
+  });
+});

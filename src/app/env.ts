@@ -6,6 +6,10 @@ import { z } from 'zod';
 export interface AppEnv {
   e2e: boolean;
   appVersion: string;
+  /** Short git commit of the build, shown beside the version. */
+  appCommit?: string;
+  /** Repository URL for the About Source link. */
+  repoUrl?: string;
   /** Present only when every Firebase variable is set. */
   firebase?: FirebaseEnv;
 }
@@ -29,7 +33,14 @@ const str = (v: unknown): string | undefined => (typeof v === 'string' && v !== 
 /** Dev callers throw on `ok: false`; production shows "Configuration error" and keeps the deterministic engine usable. */
 export function parseEnv(raw: Record<string, unknown>): EnvResult {
   const e2e = raw.VITE_E2E === '1';
-  const base = { e2e, appVersion: str(raw.VITE_APP_VERSION) ?? 'dev' };
+  const commit = str(raw.VITE_APP_COMMIT);
+  const repo = str(raw.VITE_REPO_URL);
+  const base: AppEnv = {
+    e2e,
+    appVersion: str(raw.VITE_APP_VERSION) ?? 'dev',
+    ...(commit ? { appCommit: commit } : {}),
+    ...(repo ? { repoUrl: repo } : {}),
+  };
   const parsed = FirebaseVars.safeParse(raw);
   if (!parsed.success) {
     // With VITE_E2E=1 the Firebase variables are optional (SPEC-APP-06).

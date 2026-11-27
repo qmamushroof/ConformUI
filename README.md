@@ -4,7 +4,15 @@ Design acceptance testing for AI-built websites. Turn a design into a checkable 
 
 Hosted demo: https://conformui.web.app
 Repository: https://github.com/qmamushroof/ConformUI
-Video: to be added
+Demo video: (YouTube link)
+
+Built for the #BuildHybridAI 2026 hackathon, Web/Chrome platform. Licence: Apache-2.0.
+
+## The problem and the value
+
+AI coding agents build pages fast, and the pages drift from the design. Spacing is off, a heading is the wrong size, a section is missing on mobile. Checking by eye is slow and misses small deviations. Asking a model "does this match?" gives an opinion, not evidence.
+
+ConformUI turns the design into a checklist you can lock. It measures the page against that list with a deterministic engine. It writes each failure as a prompt your coding agent can act on. You get numbers you can trust, a short list of what to fix, and a way to prove the fix worked. It needs no account and no backend, and it is free to try.
 
 ## What it does
 
@@ -30,6 +38,31 @@ All model calls go through the Firebase AI Logic web SDK (`firebase/ai`) using h
 | First pass in Cloud only mode | `ONLY_IN_CLOUD` | Setting chosen by the user, after Project consent |
 | Deep Analysis | `ONLY_IN_CLOUD` | Explicit button, after the confirm sheet |
 
+### Where the code is
+
+These files import and call `firebase/ai` at runtime:
+
+- [`src/platform/ai-engine/model-factory.ts`](src/platform/ai-engine/model-factory.ts): `getAI`, `getGenerativeModel` and the `InferenceMode` mapping.
+- [`src/platform/ai-engine/run.ts`](src/platform/ai-engine/run.ts): runs a request, reads `inferenceSource`, retries and validates.
+- [`src/platform/ai-engine/status.ts`](src/platform/ai-engine/status.ts): on-device availability and model download.
+- [`src/platform/ai-engine/schema-for.ts`](src/platform/ai-engine/schema-for.ts): builds the response schemas from the zod types.
+- [`src/platform/ai-engine/index.ts`](src/platform/ai-engine/index.ts): the public API of the module.
+
+The mode and consent rules are pure code in [`src/shared/kernel/consent.ts`](src/shared/kernel/consent.ts). An excerpt from `model-factory.ts`:
+
+```ts
+let params: HybridParams;
+if (spec.mode === 'ONLY_ON_DEVICE') {
+  params = { mode: InferenceMode.ONLY_ON_DEVICE, onDeviceParams };
+} else if (spec.mode === 'PREFER_ON_DEVICE') {
+  params = { mode: InferenceMode.PREFER_ON_DEVICE, onDeviceParams, inCloudParams };
+} else {
+  params = { mode: InferenceMode.ONLY_IN_CLOUD, inCloudParams };
+}
+ai ??= getAI(d.app, { backend: new GoogleAIBackend() });
+return getGenerativeModel(ai, params);
+```
+
 ### Details
 
 - **`inferenceSource` badge.** Every AI output stores and shows the Engine that produced it, read from the SDK's reported `inferenceSource` (`InferenceSource.ON_DEVICE` or `InferenceSource.IN_CLOUD`). Measured outputs are labelled Measured. The Engine trace shows the bytes sent to the cloud, which is 0 for on-device calls.
@@ -37,6 +70,20 @@ All model calls go through the Firebase AI Logic web SDK (`firebase/ai`) using h
 - **Consent-safe mode mapping.** One pure function, `resolveMode`, picks the mode, and the adapter guards it again. Before consent only `ONLY_ON_DEVICE` can be used; the `PREFER_*` modes are never used before consent because they fall back to the cloud silently. A cloud-capable call needs a consent token that can only be minted from a user click. When the device cannot answer, the app asks once per Project instead of calling.
 - **App Check.** Cloud calls are protected with App Check: reCAPTCHA Enterprise on the hosted domain, the debug provider on localhost only. App Check is enforced for AI Logic.
 - **Remote Config keys.** Model names, thresholds and flags come from Remote Config with bundled defaults, so the app works offline. The keys, with defaults, live in [`remoteconfig.template.json`](remoteconfig.template.json): `cloud_first_pass_model`, `deep_model`, `prompt_version`, `cloud_enabled`, `deep_daily_cap`, `feature_ai_infer_responsive`, `size_tolerance_pct`, `major_deviation_pct`, `spacing_tolerance_pct`, `pixel_threshold`, `visual_diff_ratio`, `presence_ink_ratio`, `colour_delta_e`, `snap_min_iou`, `search_window_px`, `width_mismatch_pct`.
+
+## Hybrid strategy
+
+| Situation | What happens |
+|---|---|
+| On-device model ready | The first pass runs on the device. Nothing leaves the machine. The badge says On-device. |
+| Model missing, downloading or without image input | The app asks once per Project whether to use the cloud. It never calls the cloud before you say yes. |
+| Cloud consent granted | Auto mode uses `PREFER_ON_DEVICE`: the device answers when it can and the cloud answers when it cannot. The badge shows which one did. |
+| Deep Analysis | Always cloud, and only after you confirm a sheet that lists what is sent. |
+| Offline | The app shell, the sample and saved Projects open. The on-device first pass still works. Cloud steps are off with a plain message, and your results are kept. |
+| Errors | Quota, App Check, timeout and invalid output each show a plain message. Invalid output is retried once, then the item is marked Needs review. Raw model text is never shown. |
+| Badge | Every AI output shows the Engine that made it (On-device, Cloud or Measured), taken from the SDK's `inferenceSource`. |
+
+Measured and Visual checks never use a model, so they run the same in every case.
 
 ## The three engines
 
@@ -63,7 +110,29 @@ All model calls go through the Firebase AI Logic web SDK (`firebase/ai`) using h
 
 ## Screenshots
 
-Screenshots are added at release under `docs/screenshots/` (for example `docs/screenshots/projects.png`, `docs/screenshots/contract.png`, `docs/screenshots/finding.png`).
+The demo video shows every screen. To see them yourself, open the hosted app and click **Try the sample**.
+
+## Test it as a judge
+
+No login, no payment and no install are needed. Use desktop Chrome for the full hybrid experience. Other browsers use the cloud path after consent.
+
+Quickest path, the sample project:
+
+1. Open https://conformui.web.app. You land on the welcome page.
+2. Click **Try the sample**. A sample landing page Project opens with its Contract.
+3. Click **Run**. The deterministic engine measures the sample's captures and shows Findings with Evidence, severity and a suggested fix.
+4. Open a Finding to see the design and implementation crops and the measured numbers. The Engine pill in the header, and Settings, show which engine is active.
+5. Click **Copy fix prompt** to get the prompt for a coding agent. Use **Re-verify** to check the fixed captures against the same Contract.
+6. Open **Deep Analysis** and confirm the sheet to run the cloud pass. It shows the Cloud badge and what was sent.
+
+With your own design:
+
+1. Click **Start a project** and name it. Add a design image and an implementation screenshot for Desktop (PNG, JPEG or WebP, up to 20 MB). Add a Mobile pair if you like. Optional: copy the DOM snippet from the app, run it on your page and add its output.
+2. Click **Extract contract**. If the on-device model is ready this runs locally. Otherwise the app asks for cloud consent for this Project.
+3. Review the Requirements (accept, edit or reject), lock the Contract and click **Run**.
+4. Fix what the Findings say, replace the capture and **Re-verify**.
+
+To see the on-device path, enable the Chrome flags in [Enabling on-device AI in Chrome](#enabling-on-device-ai-in-chrome) and use **Download model** in Settings.
 
 ## Quick start
 
@@ -95,7 +164,28 @@ On-device inference needs desktop Chrome 139 or newer. The on-device model is Ge
 2. In the app, open Settings and use **Download model**. The download needs a click and can take several minutes.
 3. To confirm Gemma 4 answers, open `chrome://on-device-internals`, go to Event Logs before prompting, then run a prompt. You should see "Loading model [gemma4_gpu_high_tier_model] on backend [GPU]".
 
-The app detects a missing flag or API and shows these steps. Chrome decides which model variant runs; a page cannot choose.
+The app detects a missing flag or API and shows these steps. Chrome decides which model variant runs; a page cannot choose. On an older Chrome the multimodal flag is named `#prompt-api-for-gemini-nano-multimodal-input`. Hardware needs and the full steps are in [docs/SETUP.md](docs/SETUP.md), section C.
+
+If on-device AI is unavailable (other browser, no flag, not enough disk or GPU, model not downloaded), the app still works. Measured and Visual checks run in full and the sample opens with its stored results. AI steps offer the cloud after you consent for the Project. In On-device only mode the AI steps stay off and say why.
+
+## Architecture
+
+The app is a React 19 and TypeScript PWA with no backend. The code is split into modules with enforced dependency rules (dependency-cruiser and architecture tests in CI):
+
+- `src/shared/kernel`: types, zod schemas, errors, consent and mode rules. It has no dependencies.
+- `src/platform`: adapters for `firebase`, `ai-engine`, `storage` (IndexedDB) and `imaging`.
+- `src/features`: `measure`, `dom-snippet`, `demo`, `contract`, `run`, `deep-analysis`, `export`, `projects` and `settings`. Features use the kernel and ports. They do not use each other's internals or the app.
+- `src/app`: the composition root, routes, service worker and copy.
+
+The design documents are [docs/PRD.md](docs/PRD.md), [docs/SPEC.md](docs/SPEC.md) and [docs/ROADMAP.md](docs/ROADMAP.md).
+
+## Tests
+
+- Unit and component tests with Vitest: `npm test`. They cover the kernel, the measure engine, the AI engine adapter, Run, Contract, storage and every screen.
+- Architecture tests in [tests/architecture](tests/architecture).
+- End-to-end tests with Playwright, run against a build with a fake AI engine so CI needs no secrets: `npm run test:e2e`. They cover the two-click sample flow, offline, consent, PWA install, keyboard use and axe accessibility checks.
+- A smoke test of the production build: `npm run test:prod`.
+- `npm run check` runs lint, types, dependency rules, tests, build, size and dist checks.
 
 ## Tested browsers
 
@@ -131,7 +221,7 @@ Results were recorded on the hosted app at https://conformui.web.app. Rows marke
 
 ## Demo video
 
-Video: to be added
+Demo video: (YouTube link)
 
 ## Honest limits
 
@@ -145,6 +235,14 @@ Video: to be added
 ## Privacy
 
 Projects, images, DOM snapshots, Contracts, Runs and settings stay on your device in IndexedDB. Nothing is sent to Google until you grant cloud consent for a Project or press Send in Deep Analysis. Then the listed images, prompt text, Contract and measurements are sent through Firebase AI Logic (Gemini Developer API), together with an App Check token and a Firebase installation id. The DOM snippet never reads form values, cookies or storage, and the app has no account, analytics or backend of its own. Settings shows a counter of what has been sent, and you can delete one Project or everything.
+
+## Built during the hackathon
+
+The first commit in this repository is dated 25 November 2026, and work continued to 27 November 2026 (see `git log`). The hackathon submission period began on 11 November 2026, so all of the code, the sample site, the tests and these docs were built inside it. The PRD, SPEC and ROADMAP were written first and the app was built from them.
+
+## Third-party software
+
+Runtime dependencies: `firebase` (Apache-2.0), `react` and `react-dom` (MIT), `react-router` (MIT), `zod` (MIT), `idb` (ISC), `pixelmatch` (ISC), `workbox-window` (MIT), and the IBM Plex fonts through `@fontsource` (SIL Open Font License 1.1). Build, lint and test tools are dev dependencies and ship no code. The sample site and its art are original. See [NOTICE](NOTICE).
 
 ## License
 
