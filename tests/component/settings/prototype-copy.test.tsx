@@ -20,7 +20,9 @@ describe('SPEC-SET-01: engine panel text equals the prototype', () => {
   it('SPEC-SET-01: ready', () => {
     panel({});
     expect(screen.getByText('On-device model ready: first pass stays on this device')).toBeTruthy();
-    expect(screen.getByText(/^Gemini Nano 4 \(Gemma 4\) in Chrome on this computer\. Contract extraction/)).toBeTruthy();
+    expect(
+      screen.getByText(/^Gemini Nano 4 \(Gemma 4\) in Chrome on this computer\. Contract extraction/),
+    ).toBeTruthy();
     expect(image()).toBe('On');
   });
 
