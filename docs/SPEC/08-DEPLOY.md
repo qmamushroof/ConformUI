@@ -24,7 +24,7 @@ Firebase Hosting, one site, `public: "dist"`. Hosted URL = the Hosting default d
 | `VITE_RECAPTCHA_ENTERPRISE_KEY` | App Check site key |
 | `VITE_APPCHECK_DEBUG`, `VITE_APPCHECK_DEBUG_TOKEN` | dev only (`SPEC-FB-04`) |
 | `VITE_E2E` | e2e build only (`SPEC-TEST-01`) |
-| `VITE_APP_VERSION` | git tag/sha injected at build |
+| `VITE_APP_VERSION`, `VITE_APP_COMMIT`, `VITE_REPO_URL` | App version and repository URL from `package.json`, short git commit; injected at build |
 
 One Firebase project (production + preview channels). `app/env.ts` validates with zod (`SPEC-APP-06`).
 

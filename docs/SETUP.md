@@ -31,7 +31,7 @@ Paths below use `~` for your home directory and `%LOCALAPPDATA%` for the Windows
    | `VITE_RECAPTCHA_ENTERPRISE_KEY` | The reCAPTCHA Enterprise key id (B3): Google Cloud console > Security > Fraud Defense (reCAPTCHA) > Key management |
    | `VITE_APPCHECK_DEBUG` | `1` on a dev machine (SPEC-FB-04) |
    | `VITE_APPCHECK_DEBUG_TOKEN` | Generated in the console (B4) |
-   | `VITE_E2E`, `VITE_APP_VERSION` | Leave blank. Set automatically by `--mode e2e` and by the build (git sha) |
+   | `VITE_E2E`, `VITE_APP_VERSION`, `VITE_APP_COMMIT`, `VITE_REPO_URL` | Leave blank. Set automatically by `--mode e2e` and by the build (package version, git commit, repository URL) |
 
    Preferred: one debug token per machine, revoked when you retire that machine (reusing the same token also works). Verify: `npm run dev` passes env validation and shows no error screen.
 7. **Firebase CLI.** Run `npx firebase login`. Answer `n` to the optional Gemini-in-Firebase and usage-collection prompts. With no browser on the machine use `npx firebase login --no-localhost`. Verify: `npx firebase projects:list` shows `conformui` (the `.firebaserc` default).
@@ -57,7 +57,7 @@ Needed only on the demo machine (ROADMAP 2.8).
 1. **Chrome ≥ 139**, 64-bit desktop (verified on 158.0.8127.x, Windows). Open `chrome://on-device-internals` > Broker State to see the install criteria: ≥ 3000 MiB VRAM, ≥ 20480 MiB free disk to install, ≥ 5120 MiB to retain. The verified machine reported performance class High.
 2. **Flags** (`chrome://flags`), then Relaunch:
    - `#prompt-api-multimodal-input` (older name: `#prompt-api-for-gemini-nano-multimodal-input`): Enabled.
-   - `#gemma4-for-built-in-ai` ("Gemma 4 for Built-in AI"): Enabled. Required: the product uses the Gemma 4 on-device model (PRD-D-33). Chrome's default Gemini Nano v3 may remain installed; that is fine, Chrome uses Gemma 4 once this flag is on and the model is downloaded.
+   - `#gemma4-for-built-in-ai` ("Gemma 4 for Built-in AI"): Enabled. Required: the product uses Gemini Nano 4 (built on Gemma 4) on device (PRD-D-33). Older Chrome builds ship the previous Nano v3 by default and may keep it installed; enable the flag to get Nano 4. Chrome downloads `gemma4_component` once the flag is on and the model is requested.
    - "Decisions API" and "Multi-Token Prediction": leave at Default.
 3. **Start the model download.** It needs a user click on a page. Open https://example.com, open DevTools > Console (type `allow pasting` if Chrome asks), paste the snippet, then click the page content (not the console):
 

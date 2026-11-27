@@ -20,7 +20,7 @@ export interface SettingsScreenProps {
   usage?: { projects: number; images: number; contracts: number; runs: number; bytes: number };
   /** Today's Deep Analysis count, named in the clear sheet. */
   deepUsage?: { count: number; cap: number };
-  about?: { version: string; built?: string; licence?: string; source?: string };
+  about?: { version: string; commit?: string; licence?: string; source?: string };
   /** Latest run's engine trace, linked from Privacy. */
   trace?: { href: string; label: string };
 }
@@ -49,6 +49,9 @@ const SECTIONS = [
 ] as const;
 
 const THEME_KEY = 'cui-theme';
+/** The public repository: the Source link falls back to it when the build supplies none, so it is never a placeholder. */
+export const REPO_URL = 'https://github.com/qmamushroof/ConformUI';
+const APP_VERSION_FALLBACK = '1.0.1';
 type Theme = 'system' | 'light' | 'dark';
 
 function storedTheme(): Theme {
@@ -170,6 +173,7 @@ export const SettingsScreen: FC<SettingsScreenProps> = ({
   about,
   trace,
 }) => {
+  const source = about?.source || REPO_URL;
   const [view, setView] = useState<EngineView | null>(null);
   const [progress, setProgress] = useState<number | null>(null);
   const [dlError, setDlError] = useState<string | undefined>();
@@ -411,12 +415,14 @@ export const SettingsScreen: FC<SettingsScreenProps> = ({
             <h2 id="about-h">About</h2>
             <dl className="kv">
               <dt>Version</dt>
-              <dd>{about ? `${about.version}${about.built ? `, built ${about.built}` : ''}` : '0.1.0'}</dd>
+              <dd title={about?.commit ? `Build ${about.commit}` : undefined}>
+                {about?.version ?? APP_VERSION_FALLBACK}
+              </dd>
               <dt>Licence</dt>
               <dd>{about?.licence ?? 'Apache-2.0'}</dd>
               <dt>Source</dt>
-              <dd className={about?.source ? undefined : 'muted'}>
-                {about?.source ? <a href={about.source}>{about.source}</a> : 'Repository link added at release'}
+              <dd>
+                <a href={source}>{source}</a>
               </dd>
             </dl>
             <div className="field" style={{ maxWidth: 280 }}>

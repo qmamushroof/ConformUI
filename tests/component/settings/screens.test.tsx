@@ -31,6 +31,7 @@ function mount(
     onRevoke?: (id: string) => Promise<void>;
     onCleared?: () => void;
     usage?: { projects: number; images: number; contracts: number; runs: number; bytes: number };
+    about?: { version: string; commit?: string; source?: string };
   } = {},
 ) {
   const settings = o.settings ?? fakeSettings();
@@ -43,6 +44,7 @@ function mount(
       onRevoke={onRevoke}
       onCleared={o.onCleared}
       usage={o.usage}
+      about={o.about}
     />,
   );
   return { settings, onRevoke, loadProjects };
@@ -356,6 +358,47 @@ describe('S10: theme and about', () => {
     mount();
     expect(await screen.findByText('Apache-2.0')).toBeTruthy();
     expect(screen.getByText('Version').nextElementSibling?.textContent).toMatch(/^\d+\.\d+\.\d+/);
+  });
+
+  it('About shows only the version; the short commit is a tooltip, never visible text', async () => {
+    mount({ about: { version: '1.0.1', commit: 'e2b6a69' } });
+    await screen.findByText('Apache-2.0');
+    const dd = screen.getByText('Version').nextElementSibling as HTMLElement;
+    expect(dd.textContent).toBe('1.0.1');
+    expect(dd.getAttribute('title')).toBe('Build e2b6a69');
+    expect(document.body.textContent).not.toContain('e2b6a69');
+  });
+
+  it('About shows the bare version when no commit is known, and never a bare hash', async () => {
+    mount({ about: { version: '1.0.1' } });
+    await screen.findByText('Apache-2.0');
+    const dd = screen.getByText('Version').nextElementSibling as HTMLElement;
+    expect(dd.textContent).toBe('1.0.1');
+    expect(dd.hasAttribute('title')).toBe(false);
+  });
+
+  it('About treats an empty commit like a missing one', async () => {
+    mount({ about: { version: '1.0.1', commit: '' } });
+    await screen.findByText('Apache-2.0');
+    const dd = screen.getByText('Version').nextElementSibling as HTMLElement;
+    expect(dd.textContent).toBe('1.0.1');
+    expect(dd.hasAttribute('title')).toBe(false);
+  });
+
+  it('About always links Source to the repository, with or without a build-time value, never a placeholder', async () => {
+    const repo = 'https://github.com/qmamushroof/ConformUI';
+    mount();
+    await screen.findByText('Apache-2.0');
+    expect(screen.getByRole('link', { name: repo }).getAttribute('href')).toBe(repo);
+    expect(document.body.textContent).not.toMatch(/added at release/i);
+    cleanup();
+    mount({ about: { version: '1.0.1', source: '' } });
+    await screen.findByText('Apache-2.0');
+    expect(screen.getByRole('link', { name: repo }).getAttribute('href')).toBe(repo);
+    cleanup();
+    mount({ about: { version: '1.0.1', source: 'https://example.test/fork' } });
+    await screen.findByText('Apache-2.0');
+    expect(screen.getByRole('link', { name: 'https://example.test/fork' })).toBeTruthy();
   });
 });
 

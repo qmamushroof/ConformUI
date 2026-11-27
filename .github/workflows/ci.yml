@@ -39,6 +39,9 @@ jobs:
         run: npx playwright test -c playwright.prod.config.ts
       - name: E2E (e2e build + Playwright)
         run: npx playwright test
+      - run: npx playwright install --with-deps firefox
+      - name: Cross-browser smoke (Chromium, Firefox, Pixel 7)
+        run: npx playwright test -c playwright.cross.config.ts
       - name: Upload Playwright report
         if: failure()
         uses: actions/upload-artifact@v7

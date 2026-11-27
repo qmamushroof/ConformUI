@@ -1,25 +1,36 @@
 import { execSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import { moduleAliases } from './vite.aliases.ts';
 
-function appVersion(): string {
+const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')) as {
+  version: string;
+  repository?: { url?: string };
+};
+
+/** The short git commit, or empty when the build is not in a git checkout. */
+function appCommit(): string {
   try {
     return execSync('git rev-parse --short HEAD', { stdio: ['ignore', 'pipe', 'ignore'] })
       .toString()
       .trim();
   } catch {
-    return 'dev';
+    return '';
   }
 }
+
+const REPO_URL = (pkg.repository?.url ?? 'https://github.com/qmamushroof/ConformUI').replace(/\.git$/, '');
 
 // `--mode e2e` builds with the FakeAiEngine seam enabled (SPEC-TEST-01). Production builds define it empty so the
 // branch is dead-code-eliminated (SPEC-TEST-02).
 export default defineConfig(({ mode }) => ({
   resolve: { alias: moduleAliases(), dedupe: ['react', 'react-dom'] },
   define: {
-    'import.meta.env.VITE_APP_VERSION': JSON.stringify(appVersion()),
+    'import.meta.env.VITE_APP_VERSION': JSON.stringify(pkg.version),
+    'import.meta.env.VITE_APP_COMMIT': JSON.stringify(appCommit()),
+    'import.meta.env.VITE_REPO_URL': JSON.stringify(REPO_URL),
     'import.meta.env.VITE_E2E': JSON.stringify(mode === 'e2e' ? '1' : ''),
   },
   build: {

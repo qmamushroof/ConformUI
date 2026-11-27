@@ -16,7 +16,7 @@
 **Accept:** GitHub detects Apache-2.0; `npm pkg get license` prints `"Apache-2.0"`.
 
 ### 16.2 README · A · 0.4 h · needs 14.4, 15.3
-- [ ] Every section of SPEC-DEPLOY-04, in that order: what it does; **how Firebase AI Logic is used** (`InferenceMode` per feature table, SPEC-AI-13; `inferenceSource` badge; zod-validated structured output; consent-safe mode mapping; App Check; Remote Config keys); the three engines; features and value; screenshots; Quick start; Setup (SPEC §8.3 steps 1–5); enabling on-device in Chrome; tested browsers; Deploy (manual command); Verify checklist with the 14.4 results and 15.3 scores; demo video link; honest limits; privacy statement; license.
+- [x] Every section of SPEC-DEPLOY-04, in that order: what it does; **how Firebase AI Logic is used** (`InferenceMode` per feature table, SPEC-AI-13; `inferenceSource` badge; zod-validated structured output; consent-safe mode mapping; App Check; Remote Config keys); the three engines; features and value; screenshots; Quick start; Setup (SPEC §8.3 steps 1–5); enabling on-device in Chrome; tested browsers; Deploy (manual command); Verify checklist with the 14.4 results and 15.3 scores; demo video link; honest limits; privacy statement; license. Done in `README.md` and `docs/SUBMISSION.md` (screenshots in `docs/screenshots/`, regenerated with `npm run screenshots`). Rows still pending a live run stay marked pending in the README Verify checklist.
 - [x] Limits line if any 9.5 seed ships: "The sample's pre-computed results are hand-authored" (SPEC §4.11.2).
 - [x] Link the code that calls AI Logic (`src/platform/ai-engine/`), the Chrome model info from 4.4, and the hosted URL (replaces `<HOSTED_URL>`, PRD-D-30).
 
@@ -48,14 +48,14 @@
 | Challenge requirement | Evidence | Done |
 |---|---|---|
 | Working application | Hosted URL (16.3) and 16.5 smoke | [ ] |
-| Public repository | Repo (PRD-D-30) opens signed out | [ ] |
-| Open-source license (Apache preferred) | `LICENSE` Apache-2.0 (16.1) | [ ] |
-| Firebase AI Logic implemented and called | `firebase/ai` in `src/platform/ai-engine/`; Engine badge shows `inferenceSource` | [ ] |
-| ≥ 1 supported Firebase product | App Check (enforced for AI Logic) + Remote Config (16.4) | [ ] |
+| Public repository | Repo (PRD-D-30) opens signed out | [x] |
+| Open-source license (Apache preferred) | `LICENSE` Apache-2.0 (16.1) | [x] |
+| Firebase AI Logic implemented and called | `firebase/ai` in `src/platform/ai-engine/`; Engine badge shows `inferenceSource` | [x] |
+| ≥ 1 supported Firebase product | App Check (enforced for AI Logic) + Remote Config (16.4) | [x] |
 | Supported platform | Web/Chrome desktop with on-device Gemma 4 via hybrid; installed PWA (cloud-only path checked in device emulation, PRD-D-32) | [ ] |
-| Description: what it does, how AI Logic is used, features and value | README sections (16.2) | [ ] |
+| Description: what it does, how AI Logic is used, features and value | README sections (16.2) | [x] |
 | Demo video ≤ 3 min, public | YouTube link (16.6) | [ ] |
-| Hosted demo | README link to the hosted URL | [ ] |
+| Hosted demo | README link to the hosted URL | [x] |
 | Original, no third-party IP | Unbranded sample (S28), original art, font licence file (SPEC §4.11.2) | [ ] |
 | Not a chatbot; hybrid shows its value | PRD-P-08; on-device first pass + cloud Deep Analysis in the video | [ ] |
 

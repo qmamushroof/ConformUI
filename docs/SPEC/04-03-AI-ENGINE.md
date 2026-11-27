@@ -28,9 +28,9 @@ export function schemaFor(task: AiTask): { cloud: Schema; device: object /*JSON 
 | On-device: single-turn only, text and text+image (JPEG, PNG; inline data only), JSON/enum output, **9,216-token limit**, no tools/grounding/function calling, no PDF/audio/video; absent from AI monitoring | Docs |
 | Default cloud model `gemini-3.5-flash-lite` (SDK >= 13.0.0), overridable via `inCloudParams.model` | Docs |
 | `LanguageModel.availability()` → `available` / `downloadable` / `downloading` (and `unavailable`) | Docs (Chrome Prompt API) |
-| Image token cost on-device, and whether one on-device prompt accepts more than one image | Answered 2026-11-26 (A2, Chrome 158, Gemma 4): a 1024x512 JPEG q0.85 band passes (~6.6 s), two such images in one prompt pass (~13.8 s), no token-limit error; max side stays 1024 |
+| Image token cost on-device, and whether one on-device prompt accepts more than one image | Answered 2026-11-26 (A2, Chrome 158, Gemini Nano 4 / Gemma 4): a 1024x512 JPEG q0.85 band passes (~6.6 s), two such images in one prompt pass (~13.8 s), no token-limit error; max side stays 1024 |
 | Exact availability signal when the multimodal flag is off (image `availability` returns `unavailable` vs throws) and whether the flag is still required on current stable Chrome | Answered 2026-11-26 (A1, desktop Chrome 158): with the multimodal and Gemma 4 flags off the image `availability` returns `unavailable` (no throw), with them on `available`; a reliable signal, `'unknown'` stays only as a defensive branch for a throw |
-| The on-device model is Gemma 4 (PRD-D-33), enabled by `chrome://flags/#gemma4-for-built-in-ai`. The Prompt API has no model/version parameter and reports no model name; identity is proven in `chrome://on-device-internals` > Event Logs ("Loading model [gemma4_gpu_high_tier_model] on backend [GPU]"). Verified 2026-11-26, Chrome 158.0.8127.89 | Verified, spike A3 |
+| The on-device model is Gemini Nano 4 (Gemma 4) (PRD-D-33), enabled by `chrome://flags/#gemma4-for-built-in-ai`. The Prompt API has no model/version parameter and reports no model name; identity is proven in `chrome://on-device-internals` > Event Logs ("Loading model [gemma4_gpu_high_tier_model] on backend [GPU]"). Verified 2026-11-26, Chrome 158.0.8127.89 | Verified, spike A3 |
 
 ## 4.3.3 Model construction (`SPEC-AI-01`, PRD-H-04, PRD-D-18)
 

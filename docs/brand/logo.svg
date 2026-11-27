@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="ConformUI">
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 64 64" role="img" aria-label="ConformUI">
   <title>ConformUI</title>
   <!-- Logo spec: straight segments only. C = 40x40 square with the right side open in the middle
        (stubs of 10 at top and bottom). Inside, centred at (32,32): U (three segments) and I (one
