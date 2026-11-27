@@ -343,17 +343,17 @@ describe('SPEC-AI-08 timeouts and abort', () => {
   it.each([
     ['ONLY_ON_DEVICE', 180_000],
     ['PREFER_ON_DEVICE', 180_000], // the device is usable, so it may be the one answering
-    ['ONLY_IN_CLOUD', 60_000],
+    ['ONLY_IN_CLOUD', 120_000],
   ] as const)('SPEC-AI-08: %s times out after %d ms -> AI_TIMEOUT (retryable)', (mode, ms) => timesOutAfter(mode, ms));
 
-  it('SPEC-AI-08: PREFER_ON_DEVICE with no usable device is a cloud wait of 60 s', async () => {
+  it('SPEC-AI-08: PREFER_ON_DEVICE with no usable device is a cloud wait of 120 s', async () => {
     status = { ...okStatus, device: 'unavailable' };
-    await timesOutAfter('PREFER_ON_DEVICE', 60_000);
+    await timesOutAfter('PREFER_ON_DEVICE', 120_000);
   });
 
   it('SPEC-AI-08: PREFER_ON_DEVICE with an image the device cannot take is a cloud wait of 60 s', async () => {
     status = { ...okStatus, deviceImage: false };
-    await timesOutAfter('PREFER_ON_DEVICE', 60_000, { images: [img] });
+    await timesOutAfter('PREFER_ON_DEVICE', 120_000, { images: [img] });
   });
 
   it('SPEC-AI-08: the on-device wait follows on_device_timeout_s from Remote Config, read per request', async () => {
@@ -363,7 +363,46 @@ describe('SPEC-AI-08 timeouts and abort', () => {
 
   it('SPEC-AI-08: the cloud wait does not change with on_device_timeout_s', async () => {
     values = { ...DEFAULT_RUNTIME_VALUES, on_device_timeout_s: 600 };
-    await timesOutAfter('ONLY_IN_CLOUD', 60_000);
+    await timesOutAfter('ONLY_IN_CLOUD', 120_000);
+  });
+
+  it.each([45, 300])(
+    'SPEC-AI-08: the cloud wait follows cloud_timeout_s = %d s from Remote Config, read per request',
+    async (s) => {
+      values = { ...DEFAULT_RUNTIME_VALUES, cloud_timeout_s: s };
+      await timesOutAfter('ONLY_IN_CLOUD', s * 1000);
+    },
+  );
+
+  it('SPEC-AI-08: the on-device wait does not change with cloud_timeout_s', async () => {
+    values = { ...DEFAULT_RUNTIME_VALUES, cloud_timeout_s: 30 };
+    await timesOutAfter('ONLY_ON_DEVICE', 180_000);
+  });
+
+  it('SPEC-AI-08: a slow cloud answer at 100 s is kept (the old 60 s limit cancelled it)', async () => {
+    vi.useFakeTimers();
+    generate.mockImplementation(() => new Promise((r) => setTimeout(() => r(reply(JSON.stringify(GOOD))), 100_000)));
+    const p = runner().run(req({ mode: 'ONLY_IN_CLOUD' }));
+    await vi.advanceTimersByTimeAsync(100_000);
+    await expect(p).resolves.toMatchObject({ engine: 'cloud' });
+  });
+
+  it('SPEC-AI-08: the timeout error says where the call ran, so the screen can name the right engine', async () => {
+    vi.useFakeTimers();
+    generate.mockImplementation(never);
+    const catchErr = async (mode: AiMode, ms: number) => {
+      let err: unknown;
+      const p = runner()
+        .run(req({ mode }))
+        .catch((e) => {
+          err = e;
+        });
+      await vi.advanceTimersByTimeAsync(ms);
+      await p;
+      return err as CuiError;
+    };
+    expect((await catchErr('ONLY_IN_CLOUD', 120_000)).engine).toBe('cloud');
+    expect((await catchErr('ONLY_ON_DEVICE', 180_000)).engine).toBe('on-device');
   });
 
   it('SPEC-AI-08: a slow but successful on-device answer at 100 s is kept (the old 45 s limit would have failed it)', async () => {
@@ -390,7 +429,7 @@ describe('SPEC-AI-08 timeouts and abort', () => {
     const p = runner()
       .run(req({ mode: 'ONLY_IN_CLOUD' }))
       .catch(() => {});
-    await vi.advanceTimersByTimeAsync(60_000);
+    await vi.advanceTimersByTimeAsync(120_000);
     await p;
     expect(sdkSignal?.aborted).toBe(true);
   });
@@ -410,7 +449,7 @@ describe('SPEC-AI-08 timeouts and abort', () => {
       .catch((e) => {
         err = e;
       });
-    await vi.advanceTimersByTimeAsync(59_999);
+    await vi.advanceTimersByTimeAsync(119_999);
     expect(err).toBeUndefined();
     await vi.advanceTimersByTimeAsync(1);
     await p;

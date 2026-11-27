@@ -113,6 +113,37 @@ describe('SPEC-AI-01: model construction per AiMode', () => {
   });
 });
 
+describe('SPEC-AI-01: thinking level for Deep Analysis', () => {
+  const thinking = () => lastParams().inCloudParams.generationConfig.thinkingConfig;
+
+  it('Deep Analysis on a Gemini 3 model asks for LOW thinking so the answer fits the cloud wait', () => {
+    values = { ...values, deep_model: 'gemini-3.8-flash' };
+    createModelFactory({ app, config }).get(spec({ mode: 'ONLY_IN_CLOUD', task: 'deep-analysis' }));
+    expect(thinking()).toEqual({ thinkingLevel: 'LOW' });
+  });
+
+  it('a model that is not Gemini 3 gets no thinking config (a level on 2.5 is an SDK error)', () => {
+    values = { ...values, deep_model: 'gemini-2.5-flash' };
+    createModelFactory({ app, config }).get(spec({ mode: 'ONLY_IN_CLOUD', task: 'deep-analysis' }));
+    expect(thinking()).toBeUndefined();
+    values = { ...values, deep_model: 'deep-model' };
+    createModelFactory({ app, config }).get(spec({ mode: 'ONLY_IN_CLOUD', task: 'deep-analysis' }));
+    expect(thinking()).toBeUndefined();
+  });
+
+  it('other tasks keep the model default', () => {
+    values = { ...values, cloud_first_pass_model: 'gemini-3.5-flash-lite' };
+    createModelFactory({ app, config }).get(spec({ mode: 'ONLY_IN_CLOUD', task: 'judge' }));
+    expect(thinking()).toBeUndefined();
+  });
+
+  it('PREFER_ON_DEVICE for deep-analysis uses the first-pass model and leaves thinking alone', () => {
+    values = { ...values, cloud_first_pass_model: 'gemini-3.5-flash-lite' };
+    createModelFactory({ app, config }).get(spec({ mode: 'PREFER_ON_DEVICE', task: 'deep-analysis' }));
+    expect(thinking()).toBeUndefined();
+  });
+});
+
 describe('SPEC-AI-03: instance cache', () => {
   it('SPEC-AI-03: same (mode, task, model, promptVersion, hasImages) returns the cached instance', () => {
     const f = createModelFactory({ app, config });

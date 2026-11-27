@@ -163,7 +163,7 @@ export class FakeAiEngine implements AiEngine {
 
     if (this.config.delayMs) await new Promise((r) => setTimeout(r, this.config.delayMs));
     const scripted = this.config.errors?.[req.task];
-    if (scripted) throw new CuiError(scripted);
+    if (scripted) throw new CuiError(scripted, undefined, { engine });
 
     return {
       json: structuredClone(this.nextOutput(req)),

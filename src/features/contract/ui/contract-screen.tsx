@@ -112,7 +112,7 @@ const EngineText: FC<{ engine: Engine }> = ({ engine }) => (
 );
 
 /** Seconds since it appeared: the extraction view mounts it per run, so it restarts at 0 for each. Not a live region (one update a second would be noise). */
-const Elapsed: FC = () => {
+export const Elapsed: FC = () => {
   const [s, setS] = useState(0);
   useEffect(() => {
     const id = setInterval(() => setS((n) => n + 1), 1000);

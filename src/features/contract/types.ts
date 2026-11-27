@@ -35,5 +35,7 @@ export type ExtractOutcome =
       reason: NotCheckedReason;
       /** The engine error behind `reason`, when there was one (a timeout and a failure are both `ai-failed`). */
       errorCode?: ErrorCode;
+      /** Where that engine error happened, so a timeout names the right engine. */
+      errorEngine?: 'on-device' | 'cloud';
       contract: Contract /*rule-based items only*/;
     };

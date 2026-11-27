@@ -275,6 +275,25 @@ describe('7.3 Deep Analysis and Re-verify', () => {
     await waitFor(async () => expect((await services.store.list())[0]?.cloudUsage.requests).toBe(1));
   });
 
+  it('SPEC-DEEP-01: while Deep Analysis waits it shows the elapsed seconds', async () => {
+    await mount({ status: NO_DEVICE, delayMs: 2500 }, '/?sample=1');
+    await sampleToFindings();
+    click('Deep Analysis');
+    await screen.findByRole('heading', { name: 'Send this run for Deep Analysis?' });
+    click('Send to cloud');
+    expect(await screen.findByText(/[0-9]+ s elapsed/, undefined, { timeout: 5000 })).toBeTruthy();
+  });
+
+  it('SPEC-AI-08, SPEC-UI-05: a cloud timeout in Deep Analysis blames the cloud model, not the device', async () => {
+    await mount({ status: NO_DEVICE, errors: { 'deep-analysis': 'AI_TIMEOUT' } }, '/?sample=1');
+    await sampleToFindings();
+    click('Deep Analysis');
+    await screen.findByRole('heading', { name: 'Send this run for Deep Analysis?' });
+    click('Send to cloud');
+    expect(await screen.findByText(/cloud model took too long/i, undefined, { timeout: 30_000 })).toBeTruthy();
+    expect(screen.queryByText(/slower device/i)).toBeNull();
+  });
+
   it('SPEC-DEMO-05, SPEC-DEEP-01: after a failed Deep request, Show pre-computed result applies the stored refinement, labelled', async () => {
     await mount({ status: NO_DEVICE, errors: { 'deep-analysis': 'AI_FAILED' } }, '/?sample=1');
     await sampleToFindings();

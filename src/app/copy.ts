@@ -89,7 +89,7 @@ export const copy = {
       showPrecomputed: 'Show pre-computed result',
       failed: 'Deep Analysis did not finish. Your results are kept.',
       running: 'Deep Analysis is running',
-      runningDetail: 'The cloud is reviewing the findings that need a closer look. This can take up to a minute.',
+      runningDetail: 'The cloud is reviewing the findings that need a closer look. This can take a minute or two.',
       refined: (n: number) => `Deep Analysis refined ${n} ${n === 1 ? 'finding' : 'findings'}`,
       refinedDetail: 'They are labelled Refined by Cloud, and the trace has a Cloud step.',
       nothing: 'Deep Analysis finished: nothing to refine',
@@ -113,6 +113,14 @@ export const copy = {
     analytics: 'None.',
   },
 } as const;
+
+/** SPEC-UI-05: `AI_TIMEOUT` when the call ran in the cloud (`CuiError.engine`). Deep Analysis does not count a timeout. */
+export const cloudTimeoutCopy: NoticeCopy = {
+  tone: 'danger',
+  title: 'The cloud model took too long to answer. Nothing was lost.',
+  detail: 'This try was not counted against today’s Deep Analysis uses. Try again.',
+  action: 'Try again',
+};
 
 /** SPEC-UI-05: one `StateNotice`, copy keyed by `ErrorCode` or reason. */
 export const stateCopy: Record<ErrorCode | NoticeReason, NoticeCopy> = {

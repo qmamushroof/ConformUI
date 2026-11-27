@@ -55,8 +55,11 @@ export const RETRYABLE: Record<ErrorCode, boolean> = {
 export class CuiError extends Error {
   readonly code: ErrorCode;
   readonly retryable: boolean;
-  constructor(code: ErrorCode, message?: string, options?: { cause?: unknown }) {
+  /** Where the failed call ran, when it matters to the copy (a timeout on the device and in the cloud read differently). */
+  readonly engine?: 'on-device' | 'cloud';
+  constructor(code: ErrorCode, message?: string, options?: { cause?: unknown; engine?: 'on-device' | 'cloud' }) {
     super(message ?? code, options);
+    if (options?.engine) this.engine = options.engine;
     this.name = 'CuiError';
     this.code = code;
     this.retryable = RETRYABLE[code];

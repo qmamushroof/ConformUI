@@ -7,8 +7,8 @@ import { outputSchemaFor } from './schema-for';
 
 // SPEC-AI-02, SPEC-AI-06, SPEC-AI-08..11: guards, one validated retry, timeouts and the error map around one request.
 // The on-device wait is `on_device_timeout_s` (default 180 s): Gemma 4 with an image took 46 s on a Medium-class device.
+// The cloud wait is `cloud_timeout_s` (default 120 s): a 239 KB Deep Analysis request was still unanswered at 59 s.
 
-const CLOUD_TIMEOUT_MS = 60_000;
 const RETRY_SUFFIX = '\nReturn only valid JSON matching the schema.';
 const BLOCKING_FINISH = new Set(['SAFETY', 'BLOCKLIST', 'PROHIBITED_CONTENT', 'SPII', 'RECITATION']);
 
@@ -114,6 +114,7 @@ export function createRunner(d: RunnerDeps) {
     content: unknown,
     timeoutMs: number,
     external: AbortSignal | undefined,
+    engine: 'on-device' | 'cloud',
   ): Promise<SdkResponse> {
     const ctl = new AbortController();
     let timer: ReturnType<typeof setTimeout> | undefined;
@@ -121,7 +122,7 @@ export function createRunner(d: RunnerDeps) {
     const guard = new Promise<never>((_, reject) => {
       timer = setTimeout(() => {
         ctl.abort();
-        reject(new CuiError('AI_TIMEOUT', 'The AI took too long'));
+        reject(new CuiError('AI_TIMEOUT', 'The AI took too long', { engine }));
       }, timeoutMs);
       onAbort = () => {
         ctl.abort();
@@ -177,7 +178,8 @@ export function createRunner(d: RunnerDeps) {
       });
       // PREFER_ON_DEVICE may be answered by the device, so it waits as long as the device needs when the device is usable.
       const onDevice = req.mode === 'ONLY_ON_DEVICE' || (req.mode === 'PREFER_ON_DEVICE' && deviceUsable);
-      const timeoutMs = onDevice ? d.config.get().on_device_timeout_s * 1000 : CLOUD_TIMEOUT_MS;
+      const values = d.config.get();
+      const timeoutMs = (onDevice ? values.on_device_timeout_s : values.cloud_timeout_s) * 1000;
       const images = req.images.map((i) => ({ type: 'inlineData', inlineData: { mimeType: i.mime, data: i.base64 } }));
       let payloadBytes = 0;
       for (let attempt = 0; attempt < 2; attempt++) {
@@ -185,7 +187,7 @@ export function createRunner(d: RunnerDeps) {
         const content = [{ type: 'text', text: user }, ...images];
         payloadBytes += bytesSentFor('cloud', { system: req.system, user, images: req.images });
         try {
-          const response = await callSdk(model as never, content, timeoutMs, signal);
+          const response = await callSdk(model as never, content, timeoutMs, signal, onDevice ? 'on-device' : 'cloud');
           // SPEC-AI-04, SPEC-AI-02 (b): throws AI_FAILED for a missing source or an ONLY_ON_DEVICE cloud result.
           const engine = engineFromSource(response.inferenceSource, req.mode);
           if (req.mode === 'ONLY_ON_DEVICE' && engine !== 'on-device') throw new CuiError('AI_FAILED');

@@ -93,6 +93,13 @@ export function createDeepService(d: DeepDeps): DeepService {
     return { mode: s.mode, used: s.deepUsage.day === today() ? s.deepUsage.count : 0 };
   };
 
+  /** Gives back the use taken when a request was sent. Re-reads the count: the day may have turned meanwhile. */
+  const refund = async () => {
+    const s = await d.settings.read();
+    if (s.deepUsage.day !== today()) return;
+    await d.settings.write({ deepUsage: { day: s.deepUsage.day, count: Math.max(0, s.deepUsage.count - 1) } });
+  };
+
   const full = (img: ImageRef): Rect => ({ x: 0, y: 0, w: img.width, h: img.height });
 
   async function build(run: Run, targets: Finding[]): Promise<Payload> {
@@ -307,6 +314,8 @@ export function createDeepService(d: DeepDeps): DeepService {
         if (ok.success) parsed = ok.data;
       }
     } catch (e) {
+      // SPEC-DEEP-04: a request that outlived its wait gave no answer, so it is not one of the day's uses.
+      if (e instanceof CuiError && e.code === 'AI_TIMEOUT') await refund();
       if (e instanceof CuiError) throw e;
       throw new CuiError('AI_FAILED', undefined, { cause: e });
     }

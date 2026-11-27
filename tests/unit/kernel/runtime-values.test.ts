@@ -16,6 +16,7 @@ import { ROOT } from '../../architecture/helpers';
 const CLAMPS: Record<string, [number, number]> = {
   deep_daily_cap: [0, 100],
   on_device_timeout_s: [30, 600],
+  cloud_timeout_s: [30, 300],
   size_tolerance_pct: [2, 30],
   major_deviation_pct: [10, 80],
   spacing_tolerance_pct: [5, 50],
@@ -76,9 +77,9 @@ describe('SPEC-KERNEL-03, SPEC §4.1.6: RuntimeValuesSchema clamps', () => {
     expect(RuntimeValuesSchema.safeParse({ ...DEFAULT_RUNTIME_VALUES, deep_model: 5 }).success).toBe(false);
   });
 
-  it('SPEC §4.1.6: the schema has exactly the 17 table keys', () => {
+  it('SPEC §4.1.6: the schema has exactly the 18 table keys', () => {
     expect(Object.keys(RuntimeValuesSchema.shape).sort()).toEqual(Object.keys(DEFAULT_RUNTIME_VALUES).sort());
-    expect(Object.keys(DEFAULT_RUNTIME_VALUES)).toHaveLength(17);
+    expect(Object.keys(DEFAULT_RUNTIME_VALUES)).toHaveLength(18);
   });
 });
 

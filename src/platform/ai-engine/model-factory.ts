@@ -10,6 +10,7 @@ import {
   type HybridParams,
   InferenceMode,
   InferenceSource,
+  ThinkingLevel,
 } from 'firebase/ai';
 import { schemaForTask } from './schema-for';
 
@@ -49,6 +50,16 @@ export function bytesSentFor(
   return new TextEncoder().encode(JSON.stringify({ system, user, images })).length;
 }
 
+/**
+ * Deep Analysis reads a long, image-heavy request on a Gemini 3 model, which thinks at a high level by default and
+ * outlived the cloud wait. A low level keeps it well inside. Only Gemini 3 models take a level (2.5 takes a budget,
+ * and a level on another model is an SDK error), so any other id keeps its default.
+ */
+function thinkingFor(spec: ModelSpec, modelName: string) {
+  const cloudDeep = spec.mode === 'ONLY_IN_CLOUD' && spec.task === 'deep-analysis';
+  return cloudDeep && /^gemini-3/.test(modelName) ? { thinkingConfig: { thinkingLevel: ThinkingLevel.LOW } } : {};
+}
+
 export function createModelFactory(d: { app: FirebaseApp; config: RuntimeConfig }) {
   let ai: AI | undefined;
   const cache = new Map<string, BuiltModel>();
@@ -74,7 +85,11 @@ export function createModelFactory(d: { app: FirebaseApp; config: RuntimeConfig 
     const inCloudParams = {
       model: modelName,
       systemInstruction: spec.system,
-      generationConfig: { responseMimeType: 'application/json', responseSchema: schemas.cloud },
+      generationConfig: {
+        responseMimeType: 'application/json',
+        responseSchema: schemas.cloud,
+        ...thinkingFor(spec, modelName),
+      },
     };
     let params: HybridParams;
     if (spec.mode === 'ONLY_ON_DEVICE') {
