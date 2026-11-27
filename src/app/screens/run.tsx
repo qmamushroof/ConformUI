@@ -308,7 +308,7 @@ const RunRoute: FC = () => {
     </div>
   ) : deepDone !== undefined ? (
     <div className="notice notice-info" role="status">
-      <Glyph d="M12 11v6M12 7.5v.5" />
+      <Glyph d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0zM12 11v6M12 7.5v.5" />
       <p className="title">{deepDone > 0 ? copy.flows.deep.refined(deepDone) : copy.flows.deep.nothing}</p>
       <p className="small muted">{deepDone > 0 ? copy.flows.deep.refinedDetail : copy.flows.deep.nothingDetail}</p>
     </div>

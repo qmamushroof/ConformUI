@@ -11,6 +11,7 @@ import { useConsentPrompt } from '../flows/consent';
 import { type FallbackWhy, precomputedNote, whyFromBlocked, whyFromError } from '../flows/extract-reason';
 import { downloadText, MIME } from '../flows/files';
 import { blockedView, type ErrorView, errorView, stepper } from '../flows/helpers';
+import { Toasts, useToast } from '../flows/ui';
 import { recordCloudStep } from '../flows/usage';
 import { NotFound } from '../not-found';
 import { useServices } from '../services';
@@ -75,6 +76,7 @@ const ContractRoute: FC = () => {
   const refresh = useCallback(() => setVersion((v) => v + 1), []);
   const project = load.kind === 'ready' ? load.data.project : undefined;
   const consent = useConsentPrompt(sv, project);
+  const [toast, say] = useToast();
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: `version` re-reads after a service call.
   useEffect(() => {
@@ -197,6 +199,7 @@ const ContractRoute: FC = () => {
   const keepVerified = async () => {
     const { pendingAiContractId: _gone, ...rest } = proj;
     await store.put({ ...rest, updatedAt: sv.clock.now() });
+    say('Kept the verified contract');
     refresh();
   };
 
@@ -218,18 +221,26 @@ const ContractRoute: FC = () => {
         onExtract={() => void extract()}
         onStopExtract={() => {
           cancelled.current.v = true;
+          say('Extraction stopped. The verified contract is unchanged.');
           setSteps(undefined);
           setWaiting(false);
         }}
         onAddDesign={() => navigate(`/p/${proj.id}#captures`)}
         onContinue={() => navigate(`/p/${proj.id}#captures`)}
-        onUseAi={() => void adoptAi(projectId).then(refresh)}
+        onUseAi={() =>
+          void adoptAi(projectId).then((c) => {
+            say(`AI contract is now active as Contract v${c.version}`);
+            refresh();
+          })
+        }
         onKeepVerified={() => void keepVerified()}
         onExport={exportContract}
         onChange={refresh}
+        onNotify={say}
         renderBadge={(r) => <EngineBadge engine={r.engine ?? 'measured'} origin={r.origin} />}
       />
       {consent.sheet}
+      <Toasts message={toast} />
     </>
   );
 };

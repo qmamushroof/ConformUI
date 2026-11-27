@@ -148,3 +148,24 @@ test('SPEC-DEEP-06: a success that refines nothing says so', async ({ page, fake
   await expect(page.getByRole('status').filter({ hasText: /nothing to refine/i })).toBeVisible(BIG);
   await expect(page.getByText('Refined by Cloud')).toHaveCount(0);
 });
+
+test('prototype notices: the refined notice has the circled info icon and is spaced from the sample banner', async ({
+  page,
+  fake,
+}) => {
+  await fake({ status: 'available+image', inferenceSource: 'cloud' });
+  await answerFor(page, true);
+  await sampleRun(page);
+  await page.getByRole('button', { name: 'Deep Analysis' }).click();
+  await page.getByRole('button', { name: 'Send to cloud' }).click();
+  const refined = page.getByRole('status').filter({ hasText: /refined \d+ finding|nothing to refine|did not change/i });
+  await expect(refined).toBeVisible(BIG);
+  // Circled info glyph (an arc segment), not the bare "i" strokes.
+  const d = await refined.locator('svg').first().locator('path').first().getAttribute('d');
+  expect(d).toMatch(/a9 9/);
+  const banner = page.getByRole('status').filter({ hasText: 'Sample results (pre-computed)' });
+  await expect(banner).toBeVisible();
+  const a = await refined.boundingBox();
+  const b = await banner.boundingBox();
+  expect(a && b && b.y - (a.y + a.height)).toBeGreaterThanOrEqual(8);
+});

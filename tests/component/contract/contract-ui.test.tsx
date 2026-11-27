@@ -518,3 +518,45 @@ describe('SPEC-DEMO-03: review draft and sample comparison', () => {
     ).toBeTruthy();
   });
 });
+
+describe('prototype toasts: review actions give visible feedback (onNotify)', () => {
+  it('Accept all says how many requirements were newly accepted', async () => {
+    const onNotify = vi.fn();
+    mount({
+      onNotify,
+      contract: contract([req('R-01'), req('R-02', { accepted: false }), req('R-03', { accepted: false })]),
+    });
+    fireEvent.click(screen.getByRole('button', { name: /Accept all/ }));
+    await waitFor(() => expect(onNotify).toHaveBeenCalledWith('Accepted 2 requirements'));
+  });
+
+  it('Accept all on one unaccepted item is singular', async () => {
+    const onNotify = vi.fn();
+    mount({ onNotify, contract: contract([req('R-01'), req('R-02', { accepted: false })]) });
+    fireEvent.click(screen.getByRole('button', { name: /Accept all/ }));
+    await waitFor(() => expect(onNotify).toHaveBeenCalledWith('Accepted 1 requirement'));
+  });
+
+  it('Accept all in the draft notice gives feedback and does not announce on a failed call', async () => {
+    const onNotify = vi.fn();
+    const p = contract([req('R-01', { accepted: false }), req('R-02', { accepted: false })], { id: 'ctr_ai' });
+    const svc = service(p);
+    svc.accept.mockRejectedValueOnce(new Error('boom'));
+    mount({ onNotify, pending: p, service: asSvc(svc) });
+    fireEvent.click(screen.getByRole('button', { name: /Accept all/ }));
+    await waitFor(() => expect(screen.getByRole('alert')).toBeTruthy());
+    expect(onNotify).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: /Accept all/ }));
+    await waitFor(() => expect(onNotify).toHaveBeenCalledWith('Accepted 2 requirements'));
+  });
+
+  it('a row Accept, Delete and Save each say what happened', async () => {
+    const onNotify = vi.fn();
+    mount({ onNotify });
+    fireEvent.click(screen.getByRole('option', { name: /Statement R-02/ }));
+    fireEvent.click(screen.getByRole('button', { name: 'Accept' }));
+    await waitFor(() => expect(onNotify).toHaveBeenCalledWith('Accepted R-02'));
+    fireEvent.click(screen.getByRole('button', { name: 'Delete' }));
+    await waitFor(() => expect(onNotify).toHaveBeenCalledWith('Deleted R-02'));
+  });
+});

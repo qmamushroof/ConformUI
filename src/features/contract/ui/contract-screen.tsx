@@ -63,6 +63,8 @@ export interface ContractScreenProps {
   onKeepVerified?(): void;
   onExport?(format: 'md' | 'json'): void;
   onChange?(c: Contract): void;
+  /** Short confirmation after a review action (the prototype toast); `app` shows it. */
+  onNotify?(message: string): void;
   /** `EngineBadge` from settings, passed by `app` so features do not import each other. */
   renderBadge?(r: Requirement): ReactNode;
 }
@@ -212,7 +214,11 @@ export const ContractScreen: FC<ContractScreenProps> = (props) => {
     }
     const condition = draftCond.trim() || r.condition;
     setEditing(null);
-    if (cur) void run(() => service.editText(cur.id, r.id, { statement, condition }));
+    if (cur)
+      void run(
+        () => service.editText(cur.id, r.id, { statement, condition }),
+        () => props.onNotify?.(`Saved ${r.id}`),
+      );
   };
 
   const addDraft = async (draft: ManualRequirementDraft) => {
@@ -227,7 +233,10 @@ export const ContractScreen: FC<ContractScreenProps> = (props) => {
       () => service.add(base.id, draft),
       (_b, next) => {
         const added = next.requirements.find((r) => !known.has(r.id));
-        if (added) select(added.id);
+        if (added) {
+          select(added.id);
+          props.onNotify?.(`Added ${added.id}`);
+        }
       },
     );
   };
@@ -264,7 +273,12 @@ export const ContractScreen: FC<ContractScreenProps> = (props) => {
         : 'Nothing was sent off this device. AI regions are suggestions, snapped to element bounds on the design image. The verified contract stays active until you choose below.';
 
   const acceptAll = () => {
-    if (cur) void run(() => service.accept(cur.id, 'all'));
+    if (!cur) return;
+    const n = cur.requirements.filter((r) => !r.accepted).length;
+    void run(
+      () => service.accept(cur.id, 'all'),
+      () => props.onNotify?.(`Accepted ${plural(n, 'requirement', 'requirements')}`),
+    );
   };
 
   return (
@@ -605,14 +619,23 @@ export const ContractScreen: FC<ContractScreenProps> = (props) => {
                 onEdit={() => startEdit(selected)}
                 onCancelEdit={() => setEditing(null)}
                 onSave={() => saveEdit(selected)}
-                onAccept={() => cur && void run(() => service.accept(cur.id, [selected.id]))}
+                onAccept={() =>
+                  cur &&
+                  void run(
+                    () => service.accept(cur.id, [selected.id]),
+                    () => props.onNotify?.(`Accepted ${selected.id}`),
+                  )
+                }
                 onDelete={() => {
                   if (!cur) return;
                   const i = reqs.findIndex((x) => x.id === selected.id);
                   const nextId = (reqs[i + 1] ?? reqs[i - 1])?.id;
                   void run(
                     () => service.remove(cur.id, selected.id),
-                    () => setSel(nextId),
+                    () => {
+                      setSel(nextId);
+                      props.onNotify?.(`Deleted ${selected.id}`);
+                    },
                   );
                 }}
               />
