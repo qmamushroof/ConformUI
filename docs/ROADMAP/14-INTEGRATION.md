@@ -41,7 +41,7 @@ Within a milestone, merge in the order listed; each lane rebases on `main` and r
 **Accept:** specs green; PRD-F-06, PRD-F-07.2, PRD-F-09, PRD-F-13 cited.
 
 ### 14.3 E8, E9, E10, E13, export snapshots · C · 0.4 h · needs 14.0, 14.4
-- [ ] E8 inputs (picker, drop, paste, error copy, viewport suggestion and change), E9 projects persist and cascade delete, E10 settings (mode, revoke → asks again, clear data, download from click), E13 every `ErrorCode` copy.
+- [x] E8 inputs (picker, drop, paste, error copy, viewport suggestion and change), E9 projects persist and cascade delete, E10 settings (mode, revoke → asks again, clear data, download from click), E13 every `ErrorCode` copy.
 - [ ] Snapshot tests of `fixPrompt` and `reportMarkdown` on the sample flawed Run (SPEC §4.10.4), taken after the 14.4 re-record.
 
 **Accept:** specs green; PRD-F-01, PRD-F-02, PRD-F-11, SPEC-UI-05, SPEC-EXP-01 cited.

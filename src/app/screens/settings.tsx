@@ -1,5 +1,5 @@
 import { SettingsScreen } from '@settings';
-import { type FC, useEffect, useState } from 'react';
+import { type FC, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { USAGE_EVENT } from '../hooks';
 import { useServices } from '../services';
@@ -12,8 +12,24 @@ export interface SettingsRouteProps {
 
 /** `/settings` (SPEC-SET-*): the Settings screen over the settings service and the Project store. */
 const SettingsRoute: FC<SettingsRouteProps> = ({ appVersion }) => {
-  const { settings, store, projects, settingsStore, config, clock } = useServices();
+  const { settings: service, store, projects, settingsStore, config, clock } = useServices();
   const navigate = useNavigate();
+  // The header's engine pill reads the mode and the device status: tell it when either changes here.
+  const settings = useMemo(
+    () => ({
+      ...service,
+      setMode: async (m: Parameters<typeof service.setMode>[0]) => {
+        await service.setMode(m);
+        window.dispatchEvent(new Event(USAGE_EVENT));
+      },
+      downloadModel: async (onProgress: Parameters<typeof service.downloadModel>[0]) => {
+        const view = await service.downloadModel(onProgress);
+        window.dispatchEvent(new Event(USAGE_EVENT));
+        return view;
+      },
+    }),
+    [service],
+  );
   const [deepUsage, setDeepUsage] = useState<{ count: number; cap: number }>();
 
   useEffect(() => {
