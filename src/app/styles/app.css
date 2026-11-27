@@ -776,6 +776,7 @@ main:focus {
   height: 14px;
 }
 .rowi .t {
+  overflow-wrap: anywhere;
   font-size: var(--font-size-sm);
   font-weight: var(--weight-medium);
   line-height: var(--leading-snug);
@@ -1199,7 +1200,7 @@ legend {
 /* Project cards (discrete objects) */
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
   gap: var(--space-4);
 }
 .card {
@@ -1546,4 +1547,28 @@ body:has(main.page:not(.page-wide)) .phead > * {
 .state-wrap .notice h1 {
   font-size: var(--font-size-xl);
   line-height: var(--leading-snug);
+}
+
+/* Narrow phones: a menu opened near the left edge stays inside the screen. */
+@media (max-width: 400px) {
+  .menu-wrap {
+    position: static;
+  }
+  .menu {
+    position: fixed;
+    top: auto;
+    left: var(--space-4);
+    right: var(--space-4);
+    min-width: 0;
+  }
+}
+/* Long status text wraps instead of widening the page on small screens. */
+@media (max-width: 640px) {
+  .st {
+    white-space: normal;
+    max-width: 100%;
+  }
+  .st .i {
+    flex: none;
+  }
 }

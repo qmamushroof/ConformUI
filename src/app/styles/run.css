@@ -1,5 +1,6 @@
 /* Run screen: page-level rules of design/prototype/run.html (SPEC-UI-01). Tokens only. */
 .runhead {
+  max-width: 1440px;
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
