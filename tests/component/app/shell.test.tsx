@@ -184,6 +184,37 @@ describe('error handling', () => {
     expect(within(alert).getByText('ROUTE_ERROR')).toBeTruthy();
   });
 
+  it.each([
+    'installations/app-offline',
+    'installations/request-failed',
+    'appCheck/fetch-status-error',
+    'remoteconfig/fetch-client-network',
+  ])('SPEC-APP-03: a background Firebase SDK rejection (%s) is swallowed, not shown as a route error', async (code) => {
+    await mount({ screens });
+    await screen.findByRole('heading', { level: 1, name: 'Projects screen' });
+    const reason = Object.assign(new Error(`Firebase: ${code}`), { name: 'FirebaseError', code });
+    const ev = Object.assign(new Event('unhandledrejection', { cancelable: true }), { reason });
+    act(() => {
+      window.dispatchEvent(ev);
+    });
+    expect(ev.defaultPrevented).toBe(true);
+    expect(screen.queryByRole('alert')).toBeNull();
+    expect(screen.queryByText('ROUTE_ERROR')).toBeNull();
+  });
+
+  it('SPEC-APP-03: an error that only looks like a Firebase one still shows the generic route error', async () => {
+    await mount({ screens });
+    await screen.findByRole('heading', { level: 1, name: 'Projects screen' });
+    act(() => {
+      window.dispatchEvent(
+        Object.assign(new Event('unhandledrejection', { cancelable: true }), {
+          reason: Object.assign(new Error('x'), { code: 'other/thing' }),
+        }),
+      );
+    });
+    expect(await screen.findByText('ROUTE_ERROR')).toBeTruthy();
+  });
+
   it('SPEC-APP-06: a configuration error is shown above the screens, which keep working', async () => {
     await mount({ screens, configError: true });
     expect(await screen.findByText('Configuration error')).toBeTruthy();
