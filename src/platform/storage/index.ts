@@ -28,7 +28,8 @@ interface CuiDb extends DBSchema {
     value: unknown;
     indexes: { byProject: string; byProjectCreatedAt: [string, number] };
   };
-  blobs: { key: string; value: { id: string; blob: Blob } };
+  // New records hold bytes + type (WebKit cannot store a Blob in IndexedDB); older records hold a Blob.
+  blobs: { key: string; value: { id: string; bytes?: ArrayBuffer; type?: string; blob?: Blob } };
   settings: { key: string; value: unknown };
 }
 
@@ -206,12 +207,16 @@ export async function openStorage(): Promise<{ projects: ProjectStore; blobs: Bl
     put: (blob) =>
       guardWrite(async () => {
         const id = crypto.randomUUID();
-        await db.put('blobs', { id, blob });
+        const bytes = await blob.arrayBuffer();
+        await db.put('blobs', { id, bytes, type: blob.type });
         return id;
       }),
     get: (id) =>
       guard(async () => {
         const row = await db.get('blobs', id);
+        if (row?.bytes instanceof ArrayBuffer) {
+          return new Blob([row.bytes], { type: typeof row.type === 'string' ? row.type : '' });
+        }
         return row?.blob instanceof Blob ? row.blob : undefined;
       }),
     remove: (id) => guardWrite(() => db.delete('blobs', id)),

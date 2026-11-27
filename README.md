@@ -169,9 +169,11 @@ One codebase, one installable PWA. The layout adapts from phone to desktop. Dete
 |---|---|---|---|---|
 | Chrome on desktop (Windows, macOS, Linux, ChromeOS) | Install from the address bar | Yes, with built-in AI enabled | Yes, after consent, labelled Cloud | Chromium, desktop |
 | Firefox on desktop | Runs in the browser | Not used | Automatic after consent, labelled Cloud | Firefox, desktop |
+| Safari on desktop (macOS) | Runs in the browser | Not used | Automatic after consent, labelled Cloud | WebKit / Safari, desktop |
 | Chrome on Android | Install or Add to Home screen | Not used | Automatic after consent, labelled Cloud | Pixel 7 viewport (emulated) |
+| Safari on iPhone | Add to Home Screen | Not used | Automatic after consent, labelled Cloud | iPhone 14, iOS-emulated |
 
-Tested with Playwright on Chromium, Firefox and a Pixel 7 viewport: load, sample project, Run, Findings, Settings, manifest and service worker (`npm run test:cross`). The app shell and the sample open offline.
+Tested with Playwright on Chromium, WebKit / Safari and Firefox at desktop size, plus Pixel 7 and iPhone 14 (iOS-emulated) viewports: load, sample project, Run, Findings, Settings, manifest and service worker (`npm run test:cross`). The app shell and the sample open offline.
 
 Where on-device AI is not available, the same Firebase AI Logic hybrid call uses cloud Gemini after the person consents, and every AI result is labelled Cloud.
 
@@ -304,7 +306,7 @@ The design documents are [docs/PRD.md](docs/PRD.md), [docs/SPEC.md](docs/SPEC.md
 ## Tested browsers
 
 - Desktop Chrome 158 on Windows: on-device and cloud paths.
-- Chromium, Firefox and a Pixel 7 viewport: cross-browser smoke test with Playwright (`npm run test:cross`).
+- Chromium, WebKit / Safari, Firefox, a Pixel 7 viewport and an iPhone 14 (iOS-emulated) viewport: cross-browser smoke test with Playwright (`npm run test:cross`).
 - Other browsers run on cloud Gemini after consent.
 
 ## Deploy

@@ -64,7 +64,7 @@ All model calls go through the Firebase AI Logic web SDK (`firebase/ai`) with hy
 - A DOM snippet that reads element boxes, text and key styles from your page and sends nothing over the network.
 - One-click sample Project with planted defects.
 - Engine status and settings: model readiness, mode, cloud consent, privacy counter and data deletion.
-- Installable, with the app shell and sample available offline. One codebase, responsive from phone to desktop, tested with Playwright on Chromium, Firefox and a Pixel 7 viewport.
+- Installable, with the app shell and sample available offline. One codebase, responsive from phone to desktop, tested with Playwright on Chromium, WebKit / Safari and Firefox at desktop size, plus Pixel 7 and iPhone 14 (iOS-emulated) viewports.
 
 ## Value proposition
 
