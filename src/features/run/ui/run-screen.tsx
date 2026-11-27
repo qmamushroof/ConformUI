@@ -350,7 +350,11 @@ export const RunScreen: FC<RunScreenProps> = (p) => {
           </p>
         </Notice>
       )}
-      {p.notices && <div style={{ padding: '0 var(--space-6) var(--space-5)', maxWidth: 1440 }}>{p.notices}</div>}
+      {p.notices && (
+        <div className="stack" style={{ padding: '0 var(--space-6) var(--space-5)', maxWidth: 1440 }}>
+          {p.notices}
+        </div>
+      )}
 
       {!run && p.progress && <RunProgress {...p.progress} />}
       {notFound && (
