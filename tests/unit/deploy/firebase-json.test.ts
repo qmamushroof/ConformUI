@@ -13,7 +13,7 @@ interface Rule {
 const cfg = JSON.parse(readFileSync('firebase.json', 'utf8')) as { hosting: { headers: Rule[] } };
 const all = cfg.hosting.headers.find((r) => r.source === '**');
 const header = (key: string): string | undefined => all?.headers.find((h) => h.key === key)?.value;
-const csp = header('Content-Security-Policy-Report-Only') ?? '';
+const csp = header('Content-Security-Policy') ?? '';
 const directive = (name: string): string[] => {
   const d = csp
     .split(';')
@@ -23,10 +23,10 @@ const directive = (name: string): string[] => {
 };
 
 describe('firebase.json hosting headers', () => {
-  it('SPEC-SEC-08: a "**" rule carries Content-Security-Policy-Report-Only (enforced header waits for 15.3 proof)', () => {
+  it('SPEC-SEC-08: a "**" rule carries the enforced Content-Security-Policy, not the report-only header (15.3 proof: zero violations on Hosting)', () => {
     expect(all).toBeDefined();
     expect(csp).not.toBe('');
-    expect(header('Content-Security-Policy')).toBeUndefined();
+    expect(header('Content-Security-Policy-Report-Only')).toBeUndefined();
   });
   it('SPEC-SEC-08: default-src self and object-src none, base-uri none, form-action self', () => {
     expect(directive('default-src')).toEqual(["'self'"]);
