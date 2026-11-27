@@ -58,7 +58,14 @@ export const Boot: FC<BootProps> = ({ env, configError }) => {
   }
   return (
     <ServicesProvider services={state.composed.services}>
-      <AppRoutes appVersion={env.appVersion} install={installPrompt} update={updateFlow} configError={configError} />
+      <AppRoutes
+        appVersion={env.appVersion}
+        appCommit={env.appCommit}
+        repoUrl={env.repoUrl}
+        install={installPrompt}
+        update={updateFlow}
+        configError={configError}
+      />
     </ServicesProvider>
   );
 };

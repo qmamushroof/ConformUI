@@ -50,21 +50,41 @@ async function withBitmap<T>(blob: Blob, fn: (bm: ImageBitmap) => Promise<T> | T
   }
 }
 
-function context(w: number, h: number): { canvas: OffscreenCanvas; ctx: OffscreenCanvasRenderingContext2D } {
-  const canvas = new OffscreenCanvas(w, h);
+type Canvas2D = OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D;
+type Surface = OffscreenCanvas | HTMLCanvasElement;
+
+/** OffscreenCanvas where it exists; a detached canvas element on older Safari and WebKit builds that lack it. */
+function context(w: number, h: number): { canvas: Surface; ctx: Canvas2D } {
+  let canvas: Surface;
+  if (typeof OffscreenCanvas === 'function') {
+    canvas = new OffscreenCanvas(w, h);
+  } else {
+    canvas = document.createElement('canvas');
+    canvas.width = w;
+    canvas.height = h;
+  }
   const ctx = canvas.getContext('2d');
   if (!ctx) throw fail('IMAGE_DECODE_FAILED', 'Image processing is not available.');
   ctx.imageSmoothingQuality = 'high';
   return { canvas, ctx };
 }
 
-function paintWhite(ctx: OffscreenCanvasRenderingContext2D, w: number, h: number, x = 0, y = 0): void {
+function paintWhite(ctx: Canvas2D, w: number, h: number, x = 0, y = 0): void {
   ctx.fillStyle = 'white';
   ctx.fillRect(x, y, w, h);
 }
 
-function encode(canvas: OffscreenCanvas, mime: 'image/jpeg' | 'image/png'): Promise<Blob> {
-  return canvas.convertToBlob(mime === 'image/jpeg' ? { type: mime, quality: JPEG_QUALITY } : { type: mime });
+function encode(canvas: Surface, mime: 'image/jpeg' | 'image/png'): Promise<Blob> {
+  const quality = mime === 'image/jpeg' ? JPEG_QUALITY : undefined;
+  if ('convertToBlob' in canvas)
+    return canvas.convertToBlob({ type: mime, ...(quality === undefined ? {} : { quality }) });
+  return new Promise((resolve, reject) => {
+    canvas.toBlob(
+      (blob) => (blob ? resolve(blob) : reject(fail('IMAGE_DECODE_FAILED', 'The image could not be encoded.'))),
+      mime,
+      quality,
+    );
+  });
 }
 
 async function toBase64(blob: Blob): Promise<string> {

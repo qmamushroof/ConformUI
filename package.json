@@ -1,6 +1,6 @@
 {
   "name": "conformui",
-  "version": "0.1.0",
+  "version": "1.0.1",
   "private": true,
   "sideEffects": [
     "**/*.css",
@@ -28,8 +28,10 @@
     "test": "vitest run",
     "build:e2e": "vite build --mode e2e --outDir dist-e2e",
     "check:size": "node scripts/check-size.mjs",
+    "screenshots": "node scripts/capture-screenshots.mjs",
     "check:dist": "node scripts/check-dist.mjs",
     "test:e2e": "playwright test",
+    "test:cross": "playwright test -c playwright.cross.config.ts",
     "test:prod": "playwright test -c playwright.prod.config.ts",
     "icons": "pwa-assets-generator && pwa-assets-generator --config scripts/pwa-assets.favicon.config.mjs",
     "sample:capture": "node scripts/capture-sample.mjs",

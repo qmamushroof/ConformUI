@@ -25,6 +25,8 @@ export interface ScreenOverrides {
 
 export interface AppRoutesProps extends ShellProps {
   appVersion: string;
+  appCommit?: string | undefined;
+  repoUrl?: string | undefined;
   /** Reload button of the route error screen (injectable for tests). */
   onReload?: () => void;
   /** Replaces a route's screen; for tests. */
@@ -75,7 +77,14 @@ const Home: FC<{ Projects: Screen }> = ({ Projects }) => {
   return <Projects />;
 };
 
-export const AppRoutes: FC<AppRoutesProps> = ({ appVersion, onReload = reloadPage, screens = {}, ...shell }) => {
+export const AppRoutes: FC<AppRoutesProps> = ({
+  appVersion,
+  appCommit,
+  repoUrl,
+  onReload = reloadPage,
+  screens = {},
+  ...shell
+}) => {
   const Projects = screens.projects ?? Projects_;
   const guard = (route: RouteKey, node: ReactNode) => (
     <Guarded route={route} onReload={onReload}>
@@ -99,7 +108,14 @@ export const AppRoutes: FC<AppRoutesProps> = ({ appVersion, onReload = reloadPag
         <Route path="snippet" element={guard('snippet', <Snippet_ />)} />
         <Route
           path="settings"
-          element={guard('settings', SettingsScreen_ ? <SettingsScreen_ /> : <Settings appVersion={appVersion} />)}
+          element={guard(
+            'settings',
+            SettingsScreen_ ? (
+              <SettingsScreen_ />
+            ) : (
+              <Settings appVersion={appVersion} appCommit={appCommit} repoUrl={repoUrl} />
+            ),
+          )}
         />
         <Route path="*" element={guard('not-found', <NotFound />)} />
       </Route>
