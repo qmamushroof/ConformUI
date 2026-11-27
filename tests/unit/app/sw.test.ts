@@ -6,7 +6,9 @@ const m = vi.hoisted(() => ({
   registerRoute: vi.fn(),
   createHandlerBoundToURL: vi.fn((url: string) => ({ handlerFor: url })),
   NavigationRoute: vi.fn(),
+  clientsClaim: vi.fn(),
 }));
+vi.mock('workbox-core', () => ({ clientsClaim: m.clientsClaim }));
 vi.mock('workbox-precaching', () => ({
   precacheAndRoute: m.precacheAndRoute,
   createHandlerBoundToURL: m.createHandlerBoundToURL,
@@ -51,6 +53,10 @@ describe('service worker', () => {
   it('SPEC-PWA-05: does not skip waiting on install or activate', () => {
     expect(skipWaiting).not.toHaveBeenCalled();
     expect(listeners.install).toBeUndefined();
+  });
+  it('SPEC-PWA-05: claims open pages on activation, so the first visit works offline (O1) without skipping the wait', () => {
+    expect(m.clientsClaim).toHaveBeenCalledTimes(1);
+    expect(skipWaiting).not.toHaveBeenCalled();
   });
   it('SPEC-PWA-05: skipWaiting only on a SKIP_WAITING message', () => {
     const onMessage = (listeners.message as Listener[])[0] as Listener;
