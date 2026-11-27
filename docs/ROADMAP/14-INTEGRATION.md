@@ -36,7 +36,7 @@ Within a milestone, merge in the order listed; each lane rebases on `main` and r
 **Accept:** specs green; titles cite PRD-M-13, PRD-M-04, PRD-M-06, PRD-H-05, PRD-M-12, SPEC-PERF-06.
 
 ### 14.2 E4, E5, E6, E7 · B · 0.4 h · needs 14.0
-- [ ] E4 Deep Analysis, E5 Re-verify "6 resolved, 1 remaining", E6 exports (copy and download), E7 snippet on `sample-site/flawed/` at 390 px, opened via `file://` or a `page.route` static serve (zero network requests, no form value or cookie in output, SPEC-SNIP-07 runtime).
+- [x] E4 Deep Analysis, E5 Re-verify "6 resolved, 1 remaining", E6 exports (copy and download), E7 snippet on `sample-site/flawed/` at 390 px, opened via `file://` or a `page.route` static serve (zero network requests, no form value or cookie in output, SPEC-SNIP-07 runtime).
 
 **Accept:** specs green; PRD-F-06, PRD-F-07.2, PRD-F-09, PRD-F-13 cited.
 
