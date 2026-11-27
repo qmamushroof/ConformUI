@@ -51,7 +51,7 @@ function mount(
 describe('SPEC-SET-01, SPEC-UI-06: SettingsScreen structure', () => {
   it('SPEC-UI-06: has one h1, a labelled section nav and the six section headings', async () => {
     mount();
-    await screen.findByText('On-device model ready. First pass stays on this device.');
+    await screen.findByText('On-device model ready: first pass stays on this device');
     expect(screen.getAllByRole('heading', { level: 1 }).length).toBe(1);
     expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Settings');
     const nav = screen.getByRole('navigation', { name: 'Settings sections' });
@@ -94,7 +94,7 @@ describe('SPEC-SET-01, SPEC-UI-06: SettingsScreen structure', () => {
     expect(screen.getByText(/still finishing/)).toBeTruthy();
     await act(async () => finish());
     expect(screen.queryByRole('progressbar')).toBeNull();
-    expect(screen.getByText('On-device model ready. First pass stays on this device.')).toBeTruthy();
+    expect(screen.getByText('On-device model ready: first pass stays on this device')).toBeTruthy();
   });
 
   it('SPEC-SET-03: a failed download shows an alert and returns to the Download button', async () => {
@@ -118,7 +118,7 @@ describe('SPEC-SET-01, SPEC-UI-06: SettingsScreen structure', () => {
     });
     mount({ settings });
     await screen.findByRole('heading', { name: 'Turn on image input in Chrome' });
-    expect(screen.getAllByRole('button', { name: 'Copy flag address' }).length).toBe(2);
+    expect(screen.getAllByRole('button', { name: /^Copy flag address/ }).length).toBe(2);
   });
 });
 

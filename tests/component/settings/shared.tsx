@@ -3,7 +3,7 @@ import { vi } from 'vitest';
 
 export const view = (o: Partial<EngineView> = {}): EngineView => ({
   device: 'available',
-  headline: 'On-device model ready. First pass stays on this device.',
+  headline: 'On-device model ready: first pass stays on this device',
   detail: 'Image input: on',
   canDownload: false,
   imageOnDevice: true,

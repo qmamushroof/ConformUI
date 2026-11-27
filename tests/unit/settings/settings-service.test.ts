@@ -95,8 +95,8 @@ describe('engine() text per status', () => {
   it('SPEC-SET-01, PRD-F-11.1: available shows ready text and image input on', async () => {
     const v = await svc.engine();
     expect(v.device).toBe('available');
-    expect(v.headline).toBe('On-device model ready. First pass stays on this device.');
-    expect(v.detail).toBe('Image input: on');
+    expect(v.headline).toBe('On-device model ready: first pass stays on this device');
+    expect(v.detail).toMatch(/^Gemma 4 in Chrome on this computer\./);
     expect(v.canDownload).toBe(false);
     expect(v.enableSteps).toBeUndefined();
     expect(v.imageOnDevice).toBe(true);
@@ -105,7 +105,7 @@ describe('engine() text per status', () => {
 
   it('SPEC-SET-01: available with image input off or unknown', async () => {
     make(status({ deviceImage: false }));
-    expect((await svc.engine()).detail).toBe('Image input: off');
+    expect((await svc.engine()).headline).toBe('On-device image input is off');
     make(status({ deviceImage: 'unknown' }));
     const v = await svc.engine();
     expect(v.imageOnDevice).toBe('unknown');
@@ -124,7 +124,9 @@ describe('engine() text per status', () => {
     make(status({ device: 'downloading', downloadProgress: 0.426 }));
     const v = await svc.engine();
     expect(v.headline).toBe('Downloading 43%');
-    expect(v.detail).toBe('You can use the cloud meanwhile, with your consent');
+    expect(v.detail).toBe(
+      'Chrome is downloading Gemma 4. You can keep working; the download continues in the background.',
+    );
     expect(v.canDownload).toBe(false);
     make(status({ device: 'downloading' }));
     expect((await svc.engine()).headline).toBe('Downloading 0%');

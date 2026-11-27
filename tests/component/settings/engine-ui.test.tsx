@@ -97,7 +97,7 @@ describe('SPEC-SET-06, PRD-F-11.5: PrivacyCounter', () => {
 describe('SPEC-SET-01, PRD-H-06: EnginePanel states', () => {
   it('SPEC-SET-01: available with image on', () => {
     render(<EnginePanel status={status()} mode="auto" onDownload={vi.fn()} />);
-    expect(screen.getByText('On-device model ready. First pass stays on this device.')).toBeTruthy();
+    expect(screen.getByText('On-device model ready: first pass stays on this device')).toBeTruthy();
     expect(screen.getByText('Image input').nextElementSibling?.textContent).toBe('On');
     expect(screen.queryByRole('button', { name: /Download model/ })).toBeNull();
     expect(screen.queryByRole('progressbar')).toBeNull();
@@ -205,10 +205,10 @@ describe('SPEC-SET-01, PRD-H-06: EnginePanel states', () => {
       Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText } });
       render(<EnginePanel status={status({ device: 'unavailable', reason })} mode="auto" onDownload={vi.fn()} />);
       const steps = screen.getByRole('list');
-      expect(within(steps).getAllByRole('listitem').length).toBe(5);
+      expect(within(steps).getAllByRole('listitem').length).toBe(4);
       expect(steps.textContent).toContain('chrome://flags/#prompt-api-multimodal-input');
       expect(steps.textContent).toContain('chrome://flags/#gemma4-for-built-in-ai');
-      const copies = screen.getAllByRole('button', { name: 'Copy flag address' });
+      const copies = screen.getAllByRole('button', { name: /^Copy flag address/ });
       expect(copies.length).toBe(2);
       await act(async () => {
         fireEvent.click(copies[1] as HTMLElement);
@@ -239,7 +239,7 @@ describe('SPEC-SET-01, PRD-H-06: EnginePanel states', () => {
       />,
     );
     await act(async () => {
-      fireEvent.click(screen.getAllByRole('button', { name: 'Copy flag address' })[0] as HTMLElement);
+      fireEvent.click(screen.getAllByRole('button', { name: /^Copy flag address/ })[0] as HTMLElement);
     });
     expect(screen.getByRole('status').textContent).toContain('Couldn’t copy');
   });
