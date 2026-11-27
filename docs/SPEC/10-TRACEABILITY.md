@@ -39,6 +39,7 @@ PRD column uses short form; read as `PRD-<id>`.
 | F-09.1, F-09.3, F-09.4 ([P1] F-09.2, F-09.5) | EXP-01..05 |
 | F-10.1–10.5 ([P1] F-10.6) | DEMO-01..07, RUN-13, S28, S29 ([P1] DEMO-08) |
 | F-11.1–11.5 | SET-01..07, AI-07 |
+| F-11 screen layout, theme | SET-11 (`src/features/settings/ui`, `tests/component/settings`) |
 | F-12.1, F-12.2 ([P1] F-12.3) | PWA-01..05, SET-08 |
 | F-13.1–13.7 ([P1] F-13.8) | SNIP-01..08 |
 | §8 empty/error states | UI-05 |

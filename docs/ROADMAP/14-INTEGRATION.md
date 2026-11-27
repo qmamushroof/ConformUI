@@ -25,7 +25,7 @@ Within a milestone, merge in the order listed; each lane rebases on `main` and r
 ## Tasks
 
 ### 14.0 E2E harness · A · 0.15 h · needs M3
-- [ ] `tests/e2e/fixtures.ts`: e2e build + preview, `window.__CUI_FAKE__` scenarios of SPEC §7.2, network spy on `*.googleapis.com`, helpers to read `calls[]`. Other lanes import it, never edit it.
+- [x] `tests/e2e/fixtures.ts`: e2e build + preview, `window.__CUI_FAKE__` scenarios of SPEC §7.2, network spy on `*.googleapis.com`, helpers to read `calls[]`. Other lanes import it, never edit it.
 
 **Accept:** the 3.7 smoke spec runs through the fixture; spy records zero AI requests on it.
 
