@@ -57,7 +57,7 @@ Needed only on the demo machine (ROADMAP 2.8).
 1. **Chrome ≥ 139**, 64-bit desktop (verified on 158.0.8127.x, Windows). Open `chrome://on-device-internals` > Broker State to see the install criteria: ≥ 3000 MiB VRAM, ≥ 20480 MiB free disk to install, ≥ 5120 MiB to retain. The verified machine reported performance class High.
 2. **Flags** (`chrome://flags`), then Relaunch:
    - `#prompt-api-multimodal-input` (older name: `#prompt-api-for-gemini-nano-multimodal-input`): Enabled.
-   - `#gemma4-for-built-in-ai` ("Gemma 4 for Built-in AI"): Enabled. Required: the product uses the Gemma 4 on-device model (PRD-D-33). Chrome's default Gemini Nano v3 may remain installed; that is fine, Chrome uses Gemma 4 once this flag is on and the model is downloaded.
+   - `#gemma4-for-built-in-ai` ("Gemma 4 for Built-in AI"): Enabled. Required: the product uses Gemini Nano 4 (built on Gemma 4) on device (PRD-D-33). Older Chrome builds ship the previous Nano v3 by default and may keep it installed; enable the flag to get Nano 4. Chrome downloads `gemma4_component` once the flag is on and the model is requested.
    - "Decisions API" and "Multi-Token Prediction": leave at Default.
 3. **Start the model download.** It needs a user click on a page. Open https://example.com, open DevTools > Console (type `allow pasting` if Chrome asks), paste the snippet, then click the page content (not the console):
 

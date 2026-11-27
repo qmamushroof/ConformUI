@@ -8,7 +8,7 @@ ConformUI
 
 ## Tagline
 
-Turn a design into a checkable contract, measure the page against it, and hand the failures back to your coding agent.
+Check AI-built pages against the design with Gemini Nano 4 (Gemma 4) on-device and Gemini in the cloud, then hand the failures back to your coding agent.
 
 ## Selected platform category
 
@@ -22,7 +22,7 @@ Web/Chrome
 
 ## Description
 
-AI coding agents build pages fast, and the pages drift from the design. Spacing is off, a heading is the wrong size, a section is missing on mobile. Checking by eye is slow, and asking a model "does this match?" gives an opinion, not evidence.
+Gemini Nano 4 (Gemma 4) on-device via Firebase AI Logic hybrid inference, with Gemini cloud fallback. AI coding agents build pages fast, and the pages drift from the design. Spacing is off, a heading is the wrong size, a section is missing on mobile. Checking by eye is slow, and asking a model "does this match?" gives an opinion, not evidence.
 
 ConformUI is an installable web app (PWA) that answers one question: does this implementation satisfy the design it was meant to implement?
 
@@ -35,11 +35,13 @@ Every number comes from a deterministic engine, never from a model. Models only 
 
 ## How Firebase AI Logic is used
 
+Gemini Nano 4 (Gemma 4) runs on-device through Firebase AI Logic hybrid inference, with Gemini in the cloud as a labelled fallback. On-device inference runs Gemma 4 through Chrome's built-in AI (Prompt API, enabled with `#gemma4-for-built-in-ai`). Google describes Gemma 4 as the foundation for Gemini Nano 4, so the app targets the Gemini Nano 4 generation on-device. Source: [Announcing Gemma 4 in the AICore Developer Preview](https://developer.android.com/blog/posts/announcing-gemma-4-in-the-ai-core-developer-preview) (Android Developers blog, 2 April 2026): "These models are the foundation for the next generation of Gemini Nano, so code you write today for Gemma 4 will automatically work on Gemini Nano 4-enabled devices". That post is about Android AICore and does not mention Chrome.
+
 All model calls go through the Firebase AI Logic web SDK (`firebase/ai`) with hybrid inference and the Gemini Developer API. The code is in `src/platform/ai-engine/` (`model-factory.ts` calls `getAI`, `getGenerativeModel` and sets the `InferenceMode`; `run.ts` runs the request and reads `inferenceSource`).
 
 | Feature | InferenceMode |
 |---|---|
-| First pass before cloud consent | `ONLY_ON_DEVICE` (Gemma 4 through the Chrome Prompt API) |
+| First pass before cloud consent | `ONLY_ON_DEVICE` (Gemini Nano 4 (Gemma 4) through the Chrome Prompt API) |
 | First pass after the Project has cloud consent (Auto mode) | `PREFER_ON_DEVICE` |
 | First pass in Cloud only mode | `ONLY_IN_CLOUD` |
 | Deep Analysis (explicit button, after a confirm sheet) | `ONLY_IN_CLOUD` |

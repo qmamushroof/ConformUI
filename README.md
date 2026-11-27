@@ -2,17 +2,19 @@
 
 Design acceptance testing for AI-built websites. Turn a design into a checkable contract, verify the implementation against it with measured evidence, and hand the failures back to your coding agent.
 
+**Gemini Nano 4 (Gemma 4) runs on your device through Firebase AI Logic hybrid inference, with Gemini in the cloud as a labelled fallback.** Your designs stay private by default, and the first AI pass is free and works offline.
+
 Hosted demo: https://conformui.web.app
 Repository: https://github.com/qmamushroof/ConformUI
 Demo video: (YouTube link)
 
-Built for the #BuildHybridAI 2026 hackathon, Web/Chrome platform. Licence: Apache-2.0.
+Built for the #BuildHybridAI 2026 hackathon, Web/Chrome platform. Licence: Apache-2.0. To see on-device AI, use desktop Chrome and follow [Enabling on-device AI in Chrome](#enabling-on-device-ai-in-chrome).
 
 ## The problem and the value
 
 AI coding agents build pages fast, and the pages drift from the design. Spacing is off, a heading is the wrong size, a section is missing on mobile. Checking by eye is slow and misses small deviations. Asking a model "does this match?" gives an opinion, not evidence.
 
-ConformUI turns the design into a checklist you can lock. It measures the page against that list with a deterministic engine. It writes each failure as a prompt your coding agent can act on. You get numbers you can trust, a short list of what to fix, and a way to prove the fix worked. It needs no account and no backend, and it is free to try.
+ConformUI turns the design into a checklist you can lock. It measures the page against that list with a deterministic engine. It writes each failure as a prompt your coding agent can act on. You get numbers you can trust, a short list of what to fix, and a way to prove the fix worked. The first AI pass runs on device with Gemini Nano 4 (Gemma 4), so your designs stay private and the pass is free and works offline. The cloud adds depth only when you ask. It needs no account and no backend, and it is free to try.
 
 ## What it does
 
@@ -69,7 +71,25 @@ return getGenerativeModel(ai, params);
 - **Structured output validated by zod.** Each call is one task with one schema. The schema is passed to the SDK (`responseConstraint` on device, `responseSchema` in the cloud) and the result is validated again with zod. Invalid output is retried once, then the item is marked Needs review. Raw model text is never shown as a result. Numbers in model text are checked against engine measurements and replaced by a deterministic template if they do not match.
 - **Consent-safe mode mapping.** One pure function, `resolveMode`, picks the mode, and the adapter guards it again. Before consent only `ONLY_ON_DEVICE` can be used; the `PREFER_*` modes are never used before consent because they fall back to the cloud silently. A cloud-capable call needs a consent token that can only be minted from a user click. When the device cannot answer, the app asks once per Project instead of calling.
 - **App Check.** Cloud calls are protected with App Check: reCAPTCHA Enterprise on the hosted domain, the debug provider on localhost only. App Check is enforced for AI Logic.
-- **Remote Config keys.** Model names, thresholds and flags come from Remote Config with bundled defaults, so the app works offline. The keys, with defaults, live in [`remoteconfig.template.json`](remoteconfig.template.json): `cloud_first_pass_model`, `deep_model`, `prompt_version`, `cloud_enabled`, `deep_daily_cap`, `feature_ai_infer_responsive`, `size_tolerance_pct`, `major_deviation_pct`, `spacing_tolerance_pct`, `pixel_threshold`, `visual_diff_ratio`, `presence_ink_ratio`, `colour_delta_e`, `snap_min_iou`, `search_window_px`, `width_mismatch_pct`.
+- **Remote Config keys.** Model names, thresholds and flags come from Remote Config with bundled defaults, so the app works offline. The keys, with defaults, live in [`remoteconfig.template.json`](remoteconfig.template.json): `cloud_first_pass_model`, `deep_model`, `on_device_timeout_s`, `cloud_timeout_s`, `prompt_version`, `cloud_enabled`, `deep_daily_cap`, `feature_ai_infer_responsive`, `size_tolerance_pct`, `major_deviation_pct`, `spacing_tolerance_pct`, `pixel_threshold`, `visual_diff_ratio`, `presence_ink_ratio`, `colour_delta_e`, `snap_min_iou`, `search_window_px`, `width_mismatch_pct`.
+
+## On-device AI (Gemini Nano 4)
+
+ConformUI runs its first AI pass on the device. On-device inference runs Gemma 4 through Chrome's built-in AI (the Prompt API, enabled with `#gemma4-for-built-in-ai`; Chrome downloads `gemma4_component`), and Firebase AI Logic hybrid inference calls it. Google describes Gemma 4 as the foundation for Gemini Nano 4, so the app targets the Gemini Nano 4 generation on-device. The Android Developers blog post [Announcing Gemma 4 in the AICore Developer Preview](https://developer.android.com/blog/posts/announcing-gemma-4-in-the-ai-core-developer-preview) (2 April 2026) says: "These models are the foundation for the next generation of Gemini Nano, so code you write today for Gemma 4 will automatically work on Gemini Nano 4-enabled devices". That post is about Android AICore and does not mention Chrome. The cloud Gemini model is the fallback and the deeper pass.
+
+How the hybrid mode works:
+
+- **Prefer on-device.** In Auto mode the first pass uses `ONLY_ON_DEVICE` before consent and `PREFER_ON_DEVICE` after you allow the cloud for a Project. Measured and Visual checks never use a model.
+- **Cloud fallback, Gemini.** When the device cannot answer, the app asks once per Project and then uses `ONLY_IN_CLOUD` or the `PREFER_ON_DEVICE` fallback. Deep Analysis always uses the cloud, after a confirm sheet.
+- **Timeouts from Remote Config.** `on_device_timeout_s` and `cloud_timeout_s` set how long each side may take. Model names and thresholds also come from Remote Config, with bundled defaults for offline use.
+- **Offline and model unavailable.** Offline, the on-device pass still works and cloud steps wait with a plain message. If the model is missing, downloading or lacks image input, the header chip and Settings say so, and the cloud path is offered with consent. Nothing is called silently.
+- **Mode indicator.** The header chip (for example "On-device ready"), the Engine panel in Settings, and a label on every AI result say which engine answered: On-device, Cloud or Measured.
+
+![Settings Engine panel and header chip showing On-device model ready, with the Auto, Cloud only and On-device only modes](docs/screenshots/13-settings-mode.png)
+
+This screenshot was taken with the app's test build, where a fake engine reports "on-device ready". It shows the real interface and the real mode indicator, but it is not a capture of live Gemini Nano 4 output. Live on-device runs are recorded in the Verify checklist below and in the demo video.
+
+To turn it on, follow [Enabling on-device AI in Chrome](#enabling-on-device-ai-in-chrome).
 
 ## Hybrid strategy
 
@@ -89,7 +109,7 @@ Measured and Visual checks never use a model, so they run the same in every case
 
 | Engine | What it is | Strength |
 |---|---|---|
-| On-device | Gemma 4 (Chrome built-in AI, enabled by `#gemma4-for-built-in-ai`) in desktop Chrome, through AI Logic hybrid inference | Private, free, works offline |
+| On-device | Gemini Nano 4 (Gemma 4, Chrome built-in AI, enabled by `#gemma4-for-built-in-ai`) in desktop Chrome, through AI Logic hybrid inference | Private, free, works offline |
 | Cloud | Gemini through Firebase AI Logic | More capable reasoning, works in any browser |
 | Measured | Deterministic TypeScript engine: region snapping, image and region diff, geometry, DOM snapshot measurements | Exact and reproducible |
 
@@ -205,15 +225,16 @@ One-time steps for your own Firebase project (details in [docs/SETUP.md](docs/SE
 
 ## Enabling on-device AI in Chrome
 
-On-device inference needs desktop Chrome 139 or newer. The on-device model is Gemma 4; Chrome's default Gemini Nano does not satisfy the requirement.
+On-device inference runs Gemini Nano 4 (Gemma 4) through Chrome's built-in AI (Prompt API). It needs desktop Chrome 139 or newer. Older Chrome builds ship the previous Nano v3 by default; enable the flag to get Gemma 4. Steps for judges:
 
-1. Open `chrome://flags`, enable `#gemma4-for-built-in-ai` and `#prompt-api-multimodal-input`, and relaunch.
-2. In the app, open Settings and use **Download model**. The download needs a click and can take several minutes.
-3. To confirm Gemma 4 answers, open `chrome://on-device-internals`, go to Event Logs before prompting, then run a prompt. You should see "Loading model [gemma4_gpu_high_tier_model] on backend [GPU]".
+1. Update desktop Chrome to version 139 or newer (the project was verified on Chrome 158).
+2. Open `chrome://flags`, set `#gemma4-for-built-in-ai` and `#prompt-api-multimodal-input` to Enabled, and relaunch Chrome.
+3. Open https://conformui.web.app, go to Settings and press **Download model**. The download needs a click and can take several minutes (about 2 GB, once). The header chip changes to "On-device ready".
+4. To confirm Gemma 4 answers, open `chrome://on-device-internals`, go to Event Logs before prompting, then run a prompt in the app (for example **Extract contract** on a new Project). You should see "Loading model [gemma4_gpu_high_tier_model] on backend [GPU]".
 
 The app detects a missing flag or API and shows these steps. Chrome decides which model variant runs; a page cannot choose. On an older Chrome the multimodal flag is named `#prompt-api-for-gemini-nano-multimodal-input`. Hardware needs and the full steps are in [docs/SETUP.md](docs/SETUP.md), section C.
 
-If on-device AI is unavailable (other browser, no flag, not enough disk or GPU, model not downloaded), the app still works. Measured and Visual checks run in full and the sample opens with its stored results. AI steps offer the cloud after you consent for the Project. In On-device only mode the AI steps stay off and say why.
+If on-device AI is unavailable (other browser, no flag, not enough disk or GPU, model not downloaded), you will see "On-device unavailable" in the header chip and the Engine panel, with the steps above. The app still works. Measured and Visual checks run in full and the sample opens with its stored results. AI steps offer the cloud after you consent for the Project, and every cloud result is labelled Cloud. In On-device only mode the AI steps stay off and say why.
 
 ## Architecture
 
