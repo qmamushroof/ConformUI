@@ -715,7 +715,6 @@ main:focus {
 .split {
   display: grid;
   grid-template-columns: var(--layout-list) minmax(0, 1fr);
-  min-height: calc(100vh - 220px);
   border-top: 1px solid var(--border);
 }
 .split-list {
