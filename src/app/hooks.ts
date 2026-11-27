@@ -19,7 +19,7 @@ export interface EngineView {
   mode: Settings['mode'];
 }
 
-/** Engine status, refreshed on the browser's online and offline events and when the lazy engine resolves. */
+/** Engine status, refreshed on online/offline, when the lazy engine resolves and on `USAGE_EVENT` (mode, download). */
 export function useEngineView(): EngineView | undefined {
   const { ai, settingsStore, onEngineChange } = useServices();
   const [view, setView] = useState<EngineView>();
@@ -33,11 +33,13 @@ export function useEngineView(): EngineView | undefined {
     refresh();
     window.addEventListener('online', refresh);
     window.addEventListener('offline', refresh);
+    window.addEventListener(USAGE_EVENT, refresh); // Settings changed the mode or finished the model download
     const off = onEngineChange(refresh);
     return () => {
       live = false;
       window.removeEventListener('online', refresh);
       window.removeEventListener('offline', refresh);
+      window.removeEventListener(USAGE_EVENT, refresh);
       off();
     };
   }, [ai, settingsStore, onEngineChange]);

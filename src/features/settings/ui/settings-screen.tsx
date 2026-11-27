@@ -1,5 +1,5 @@
 import type { EngineStatus, Project, Settings } from '@kernel';
-import { type FC, useCallback, useEffect, useId, useRef, useState } from 'react';
+import { type FC, useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import type { EngineView, SettingsService } from '../types';
 import { EnginePanel } from './engine-panel';
 import { Icon } from './icon';
@@ -199,7 +199,8 @@ export const SettingsScreen: FC<SettingsScreenProps> = ({
     };
   }, [settings, loadProjects]);
 
-  useEffect(() => {
+  // Layout effect: focus lands in the same commit as the new rows, before any observer sees them.
+  useLayoutEffect(() => {
     if (!focusNext.current) return;
     focusNext.current = false;
     const first = listRef.current?.querySelector<HTMLElement>('button');
