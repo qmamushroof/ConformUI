@@ -22,6 +22,11 @@ img,
 svg {
   max-width: 100%;
 }
+/* The prototype has no Tailwind preflight: replaced elements stay inline (icons sit in the text line). */
+img,
+svg {
+  display: inline;
+}
 a {
   color: var(--accent);
   text-decoration: underline; /* prototype keeps the UA underline; links in text are not told apart by colour alone (SPEC-UI-06) */
@@ -1531,4 +1536,14 @@ dialog.sheet::backdrop {
 body:has(main.page:not(.page-wide)) .phead > * {
   max-width: var(--layout-content);
   margin-inline: auto;
+}
+
+/* Not-found screen (prototype 404.html). */
+.state-wrap {
+  max-width: 560px;
+  padding-top: var(--space-12);
+}
+.state-wrap .notice h1 {
+  font-size: var(--font-size-xl);
+  line-height: var(--leading-snug);
 }

@@ -9,7 +9,7 @@ const PATHS = {
   code: 'M8 7l-5 5 5 5M16 7l5 5-5 5',
   desktop: 'M3 4h18v12H3zM8 20h8M12 16v4',
   phone: 'M7 2h10v20H7zM11 18h2',
-  more: 'M5 12h.01M12 12h.01M19 12h.01',
+  more: '',
   x: 'M6 6l12 12M18 6L6 18',
   check: 'M5 12.5l4.5 4.5L19 7.5',
   dash: 'M7 12h10',
@@ -27,6 +27,21 @@ const PATHS = {
   file: 'M6 3h8l4 4v14H6zM14 3v4h4',
 } as const;
 
+// Sprite shapes that are not plain paths: the dashed review ring, the three "more" dots and the image sun.
+const Shapes: FC<{ name: string }> = ({ name }) => {
+  if (name === 'review') return <circle cx="12" cy="12" r="9" strokeDasharray="3 2.6" />;
+  if (name === 'more')
+    return (
+      <>
+        <circle cx="5" cy="12" r="1.2" />
+        <circle cx="12" cy="12" r="1.2" />
+        <circle cx="19" cy="12" r="1.2" />
+      </>
+    );
+  if (name === 'image') return <circle cx="15.5" cy="8.5" r="1.5" />;
+  return null;
+};
+
 export type IconName = keyof typeof PATHS;
 
 export const Icon: FC<{ name: IconName; small?: boolean; large?: boolean; className?: string }> = ({
@@ -40,7 +55,7 @@ export const Icon: FC<{ name: IconName; small?: boolean; large?: boolean; classN
     aria-hidden="true"
     viewBox="0 0 24 24"
   >
-    {name === 'review' ? <circle cx="12" cy="12" r="9" strokeDasharray="3 2.6" /> : null}
+    <Shapes name={name} />
     <path d={PATHS[name]} />
   </svg>
 );

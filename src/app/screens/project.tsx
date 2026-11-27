@@ -9,7 +9,7 @@ import { copy } from '../copy';
 import { useBlobUrls } from '../flows/blob-urls';
 import { downloadText, MIME } from '../flows/files';
 import { stepper } from '../flows/helpers';
-import { CloseButton, Glyph, Sheet, Toasts, useToast } from '../flows/ui';
+import { CloseButton, Glyph, MORE_DOTS, Sheet, Toasts, useToast } from '../flows/ui';
 import { enginePill } from '../hooks';
 import { NotFound } from '../not-found';
 import { useServices } from '../services';
@@ -39,9 +39,9 @@ const ICONS = {
   play: 'M7 4l13 8-13 8z',
   refresh: 'M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5',
   file: 'M6 3h8l4 4v14H6zM14 3v4h4',
-  more: 'M5 12h.01M12 12h.01M19 12h.01',
+  more: MORE_DOTS,
   download: 'M12 4v11M7 10l5 5 5-5M4 20h16',
-  trash: 'M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3',
+  trash: 'M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13',
   edit: 'M4 20h4L19 9l-4-4L4 16z',
   close: 'M6 6l12 12M18 6L6 18',
 } as const;
@@ -263,7 +263,7 @@ const ProjectRoute: FC = () => {
               </Link>
             </dd>
             <dt>Cloud</dt>
-            <dd>{privacy.text}</dd>
+            <dd>{privacy.text.startsWith('Nothing') ? `${privacy.text}.` : privacy.text}</dd>
           </dl>
         </section>
 
