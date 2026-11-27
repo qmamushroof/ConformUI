@@ -26,6 +26,33 @@ describe('scripts/check-dist.mjs', () => {
   it('SPEC-TEST-02, SPEC-FB-04: passes a clean build', () => {
     expect(run('check-dist.mjs', fakeDist()).status).toBe(0);
   });
+  it('fails when the React core is defined in two chunks (two React copies break every route)', () => {
+    const core = 'function y(){}y.prototype.isReactComponent={}';
+    const r = run('check-dist.mjs', fakeDist({ 'assets/jsx-runtime.js': core, 'assets/services.js': core }));
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain('React core defined in 2 chunks');
+  });
+  it('fails when react-dom does not import the chunk that holds the React core', () => {
+    const r = run(
+      'check-dist.mjs',
+      fakeDist({
+        'assets/react.js': 'function y(){}y.prototype.isReactComponent={}',
+        'assets/index.js': 'var d={currentDispatcherRef:1}',
+      }),
+    );
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain('react-dom does not import');
+  });
+  it('passes when one chunk holds the React core and react-dom imports it', () => {
+    const r = run(
+      'check-dist.mjs',
+      fakeDist({
+        'assets/react.js': 'function y(){}y.prototype.isReactComponent={}',
+        'assets/index.js': 'import"./react.js";var d={currentDispatcherRef:1}',
+      }),
+    );
+    expect(r.status).toBe(0);
+  });
   it.each(['__CUI_FAKE__', 'FakeAiEngine'])('SPEC-TEST-02, SPEC-FB-04: fails when %s is present', (marker) => {
     const r = run('check-dist.mjs', fakeDist({ 'assets/leak.js': `self.${marker}=1` }));
     expect(r.status).toBe(1);

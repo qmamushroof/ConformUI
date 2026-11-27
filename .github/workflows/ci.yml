@@ -35,6 +35,8 @@ jobs:
           node scripts/check-size.mjs
           node scripts/check-dist.mjs
       - run: npx playwright install --with-deps chromium
+      - name: Production build smoke
+        run: npx playwright test -c playwright.prod.config.ts
       - name: E2E (e2e build + Playwright)
         run: npx playwright test
       - name: Upload Playwright report

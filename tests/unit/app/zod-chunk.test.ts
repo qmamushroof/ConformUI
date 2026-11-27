@@ -26,6 +26,13 @@ describe('vite chunking for zod-jitless', () => {
   });
   it('SPEC-SEC-08: kernel and other modules are not forced into that chunk', () => {
     expect(manual?.('/repo/src/shared/kernel/schemas.ts')).toBeUndefined();
-    expect(manual?.('/repo/node_modules/react/index.js')).toBeUndefined();
+    expect(manual?.('/repo/node_modules/firebase/app/dist/index.mjs')).toBeUndefined();
+  });
+  it('React, react-dom, scheduler and the jsx runtime share one chunk, apart from zod', () => {
+    const react = manual?.('/repo/node_modules/react/index.js');
+    expect(react).toBeTruthy();
+    expect(react).not.toBe(manual?.('/repo/node_modules/zod/v4/core/schemas.js'));
+    for (const id of ['react/jsx-runtime.js', 'react-dom/client.js', 'scheduler/index.js'])
+      expect(manual?.(`/repo/node_modules/${id}`)).toBe(react);
   });
 });
