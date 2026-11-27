@@ -13,13 +13,8 @@ export default defineConfig({
     { name: 'chromium-desktop', use: { ...devices['Desktop Chrome'] } },
     { name: 'firefox-desktop', use: { ...devices['Desktop Firefox'] } },
     { name: 'pixel-7', use: { ...devices['Pixel 7'] } },
-    // WebKit projects are opt-in (CROSS_WEBKIT=1): the WebKit build Playwright ships for Windows cannot store Blobs in IndexedDB.
-    ...(process.env.CROSS_WEBKIT
-      ? [
-          { name: 'webkit-desktop', use: { ...devices['Desktop Safari'] } },
-          { name: 'iphone-14', use: { ...devices['iPhone 14'] } },
-        ]
-      : []),
+    { name: 'webkit-desktop', use: { ...devices['Desktop Safari'] } },
+    { name: 'iphone-14', use: { ...devices['iPhone 14'] } },
   ],
   webServer: {
     command: `npm run build:e2e && npx vite preview --mode e2e --outDir dist-e2e --port ${PORT} --strictPort`,
